@@ -1,0 +1,71 @@
+.weekly-wr {
+    width: 99vw;
+    height: 100vh;
+    margin-top: 10px;
+}
+
+.topbar-btns div{
+    background-color: rgb(251, 179, 46);
+    border-radius: 8px ;
+    height: 30px;
+    margin: 1px 50px 3px 0;
+    padding: 0 20px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.topbar-wr{
+    margin-top: 30px;
+}
+.topbar-wr ul, .worker-wr ul  {
+    display: grid;
+    grid-template-columns: 7% 7% 11% 3% 9% 5% 4% 4% 4% 4% 4% 4% 4% 4% 5% 5% 5% 5% 5% 6%;
+}
+.topbar-wr li, .worker-wr li {
+    text-align: center !important;
+    margin: auto;
+}
+.topbar-wr ul div, .worker-wr ul div {
+    border: 1.5px solid #aaa;
+    border-left: none;
+    text-align: center;
+    padding: 5px 1px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #171166;
+    font-weight: bolder;
+    height: 50px;
+    background-color: #fafafa;
+    display: grid;
+}
+
+.test div {
+    border-left: none;
+    border-top: none !important;
+    text-align: center;
+    padding: 5px 1px;
+    font-size: 14px;
+    line-height: 16px;
+    height: 30px !important;
+    color: #000 !important;
+    font-weight: 100 !important;
+    background-color: #fff !important;
+}
+
+.small-text {
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.weekly-wr input {
+    border: none;
+    width: 100%;
+    background-color: inherit;
+    text-align: center;
+    color: #000;
+    font-size: inherit;
+    outline: none;
+    font-weight: 700;
+}
