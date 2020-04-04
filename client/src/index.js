@@ -10,7 +10,8 @@ import './index.css';
 
 import rootReducer from './reducers/rootReducer';
 
-const store = createStore(rootReducer, compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
+//, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
 ReactDOM.render(
   <IntlProvider locale='en'>
