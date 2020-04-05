@@ -40,10 +40,6 @@ router.post('/generate-invoice', async (req, res) => {
         totalTaxAmount = totalTaxAmount + ((parseFloat(rate)*parseFloat(worker.hours)) *0.2)
         totalNetAmount = totalNetAmount + ( parseFloat(rate)*parseFloat(worker.hours) + parseFloat(otRate)*parseFloat(worker.hoursOT) )
 
-        // ***NEED FIXING*** DATE OF ISSUE
-        if (data['DATE OF ISSUE']) {
-            weekEnding = data['DATE OF ISSUE'];
-        }
     });
   
     date = new Date(weekEnding);
@@ -94,7 +90,6 @@ async function generatePDF(data) {
     });
     const page = await browser.newPage();
 
-    // console.log(data)
     const content = await compile('invoice', data);
 
     await page.setContent(content);
