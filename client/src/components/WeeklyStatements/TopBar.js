@@ -11,6 +11,8 @@ const TopBar = ({site,company ,workers}) => {
 
         let wrs = workers.filter(item =>item.company.companyName === company.companyName)
         setWrC(wrs)
+
+        console.log('fitler data from redux', workersList, workersForCompany)
     }, [site])
 
     // GENERATE INVOICE FOR SITE FUNCTION
