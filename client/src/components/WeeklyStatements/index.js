@@ -18,6 +18,10 @@ const WeeklyStatemnt = ({dispatch, workers}) => {
     }, [])
 
 
+    useEffect(() => {
+        console.log('workers from redux', workers)
+    }, [workers])
+
     return (
         <div className='weekly-wr' id='test'>
             Week Ending 09.02.2020
