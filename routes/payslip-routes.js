@@ -11,7 +11,8 @@ router.post('/generate-payslip', async (req, res) => {
 
     const data = req.body.worker;
     console.log('loaded data...', data);
-    let amount = data.site.gotClient*data.hours
+    const { rate, otRate } = getRates(data)
+    let amount = rate*data.hours+ otRate*data.hoursOT
 
     data.Amount = amount.toFixed(2);
     data.B = amount * 0.2;
@@ -67,3 +68,29 @@ router.post('/generate-payslip', async (req, res) => {
 });
 
 module.exports = router;
+
+// WORKER RATES
+
+const getRates = (worker) => {
+    console.log('error: ', worker)
+    if (!!worker.sitesData  ) {
+        let site = worker.sitesData.find(item => item._id === worker.site._id);
+        if(!!site) {
+          if(site.gotClient !== '0') {
+              rate = site.paidWorker
+              otRate =  site.overtimePaid
+          } else if( site.gotClient === '0' ) {
+              let site = worker.site
+              rate = site.paidWorker
+              otRate =  site.overtimePaid
+          }
+          
+        } else {
+            let site = worker.site
+            rate = site.paidWorker
+            otRate =  site.overtimePaid
+        }   
+    }
+
+    return { rate, otRate }
+}
