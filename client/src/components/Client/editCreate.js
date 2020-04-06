@@ -103,14 +103,17 @@ const EditCreate = props => {
         return false;
       };
     }
-    // if (/([0-9]{5})\s[0-9]{5}/g.test(temporaryData.utr) === false) {
-    //   setUtrError(true);
-    //   let timer = setTimeout(() => setUtrError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
+
+    if(temporaryData.utr.length < 1) {}
+    else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
+      setUtrError(true);
+      let timer = setTimeout(() => setUtrError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
+
     if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
       setVatError(true);
       let timer = setTimeout(() => setVatError(false), 3000);
@@ -119,7 +122,9 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
+
+    if(temporaryData.phone.length < 4) {}
+    else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
       setPhoneError(true);
       let timer = setTimeout(() => setPhoneError(false), 3000);
       return () => {
@@ -127,7 +132,9 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (
+
+    if(temporaryData.email.length < 1) {}
+    else if (
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         temporaryData.email
       ) === false
@@ -139,7 +146,10 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.communicationChannel.length === 0) {
+
+
+    if (temporaryData.communicationChannel.length === 0) {}
+    else {
       setCommChannelError(true);
       let timer = setTimeout(() => setCommChannelError(false), 3000);
       return () => {

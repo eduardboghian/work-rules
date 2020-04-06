@@ -34,7 +34,7 @@ const SitesTable = props => {
   const { sites } = props;
 
   return (
-    <TableContainer style={{border: '1px solid red'}}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>

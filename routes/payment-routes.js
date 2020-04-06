@@ -41,14 +41,17 @@ router.get('/get-payments', async (req, res)=> {
 
 router.post('/make-payment', async (req, res)=> {
 	await loadData()
-	let workersList = req.body.workers
+  let workersList = req.body.workers
 	//console.log('worker list from the table',workersList)
 
     let paymentlist = []
     let oks = 0
-	let notoks = 0
+	  let notoks = 0
 	
     paymentlist = await Promise.all( workersList.map(async workers=>{
+      let { rate, otRate } = getRates(workers)
+      let payableAmount = parseFloat(rate*workers.hours+ otRate*workers.hoursOT)*0.8
+      
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {
 			
 		  let sortCode 
@@ -56,12 +59,11 @@ router.post('/make-payment', async (req, res)=> {
 		  let paymentResponse 
 
 		  // CHECKING THE ACCOUNT AND THE SORT CODE
-		  console.log('should be a worker',sortCode, data.accounts[0].sort_code, data.accounts[0].account_no, workers.account)
           if(data.accounts[0].account_no == workers.account &&  data.accounts[0].sort_code==sortCode){
-			const requestId = uuid()
-			let { rate, otRate } = getRates(workers)
-			let payableAmount = (rate*data.hours+ otRate*data.hoursOT)*0.8
-			console.log('3 ok', payableAmount)
+            const requestId = uuid()
+            let { rate, otRate } = getRates(workers)
+            let payableAmount = parseFloat(rate*workers.hours+ otRate*workers.hoursOT)*0.8
+            console.log('3 ok', payableAmount, rate, otRate,'hrs...' ,workers.hours)
 
             paymentResponse = new Promise((resolve, reject)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
@@ -113,7 +115,7 @@ router.post('/make-payment', async (req, res)=> {
           clientRes = {
             "date": date,
             "name": workers.firstname+' '+workers.lastname,
-            "amount": workers.Amount,
+            "amount": payableAmount,
             "status": 'OK' 
           }
           oks +=1
@@ -121,7 +123,7 @@ router.post('/make-payment', async (req, res)=> {
           clientRes = {
             "date": date,
             "name": workers.firstname+' '+workers.lastname,
-            "amount": workers.Amount,
+            "amount": payableAmount,
             "status": 'NOTOK' 
           }
           notoks +=1

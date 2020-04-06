@@ -192,14 +192,15 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.vat.length === 0) {
-      setVatError(true);
-      let timer = setTimeout(() => setVatError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
+    if (temporaryData.vat.length < 4 ) {
+      // setVatError(true);
+      // let timer = setTimeout(() => setVatError(false), 3000);
+      // return () => {
+      //   clearTimeout(timer);
+      //   return false;
+      // };
     } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
+      
       setVatError(true);
       let timer = setTimeout(() => setVatError(false), 3000);
       return () => {
@@ -216,15 +217,10 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (/[0-9]{20}/g.test(temporaryData.crn) === false) {
-      setCrnError(true);
-      let timer = setTimeout(() => setCrnError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
+    
+    if(temporaryData.phone.length < 4) {}
+    else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
+      console.log(temporaryData.phone.length)
       setPhoneError(true);
       let timer = setTimeout(() => setPhoneError(false), 3000);
       return () => {
@@ -232,7 +228,9 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (
+
+    if(temporaryData.email.length < 1) {}
+    else if (
       /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         temporaryData.email
       ) === false
@@ -244,7 +242,8 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.communicationChannel.length === 0) {
+    if (temporaryData.communicationChannel.length === 0) {}
+    else{
       setCommChanError(true);
       let timer = setTimeout(() => setCommChanError(false), 3000);
       return () => {
@@ -364,13 +363,6 @@ const EditCreate = props => {
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, '');
           setData({ ...temporaryData, phone: `+44${checked}` });
-          break;
-        }
-        break;
-      case 'crn':
-        if (data.length <= 20) {
-          let crn = data.replace(/[^[0-9]/g, '');
-          setData({ ...temporaryData, crn: crn });
           break;
         }
         break;
@@ -695,18 +687,6 @@ const EditCreate = props => {
         </Grid>
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
-            <Typography>CRN</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={crnError} title='Please provide valid CRN' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={crnError}>
-                <Input value={temporaryData.crn} classes={{ input: classes.input }} onChange={e => inputHadnler(e.target.value, 'crn')} />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
             <Typography>Phone Number</Typography>
           </Grid>
           <Grid item xs={9}>
@@ -888,7 +868,7 @@ const EditCreate = props => {
         </Grid>
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
-            <Typography>Percentage Tax paid</Typography>
+            <Typography>Tax</Typography>
           </Grid>
           <Grid item xs={9}>
             <FormControl fullWidth classes={{ root: classes.inputContainer }}>
