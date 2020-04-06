@@ -16,8 +16,6 @@ router.post('/generate-invoice', async (req, res) => {
     let workers = req.body.workersList
     let client = await Clients.findOne({ companyName: workers[0].company.companyName })
 
-    
-
     let data = []
     let totalNetAmount = 0;
     let totalTaxAmount = 0;

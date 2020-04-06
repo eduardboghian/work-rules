@@ -90,13 +90,21 @@ const TopBar = ({site,company ,workers}) => {
         })
     }
 
+    // MAKE PAYMETN
+
+    const makePayment = (workersList) => {
+        axios.post('/api/make-payment', { workers: workersList })
+        .then(res => console.log(res))
+        .catch(err=> console.error(err))
+    }
+
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
                 <div onClick={ e => generateInvoice(workersList) }>Generate Invoice for Site</div>
                 <div onClick={ e=> generateInvoice(workersForCompany) }>Generate Invoice for Client</div>
                 <div onClick={ e => generatePayslip(workersList) }>Generate Payslip for Site</div>
-                <div>Make Payment</div>
+                <div onClick={ e => makePayment(workersList) } >Make Payment</div>
             </div>
             <ul>
                 <div><li>Client</li></div>

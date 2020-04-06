@@ -103,14 +103,14 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (/([0-9]{5})\s[0-9]{5}/g.test(temporaryData.utr) === false) {
-      setUtrError(true);
-      let timer = setTimeout(() => setUtrError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    // if (/([0-9]{5})\s[0-9]{5}/g.test(temporaryData.utr) === false) {
+    //   setUtrError(true);
+    //   let timer = setTimeout(() => setUtrError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
     if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
       setVatError(true);
       let timer = setTimeout(() => setVatError(false), 3000);

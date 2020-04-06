@@ -16,6 +16,7 @@ const sitesRouter = require('./routes/site-routes');
 const workersRouter = require('./routes/worker-routes');
 const generateInvoice = require('./routes/invoice-routes')
 const generatePayslip = require('./routes/payslip-routes')
+const makePayment = require('./routes/payment-routes')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -33,6 +34,7 @@ app.use('/site', sitesRouter);
 app.use('/worker', workersRouter);
 app.use('/api', generateInvoice)
 app.use('/api', generatePayslip)
+app.use('/api', makePayment)
 
 // BUILD THE CLIENT SIDE
 
