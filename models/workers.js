@@ -11,6 +11,8 @@ const Worker = new Schema({
     id: { type: String },
     firstPost: { type: String },
     secondPost: { type: String },
+    city: { type: String },
+    zipCode: { type: String },
     utr: { type: String },
     vat: { type: String },
     cis: { type: Boolean },

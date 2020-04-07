@@ -11,8 +11,6 @@ const TopBar = ({site,company ,workers}) => {
 
         let wrs = workers.filter(item =>item.company.companyName === company.companyName)
         setWrC(wrs)
-
-        console.log('fitler data from redux', workersList, workersForCompany, site, company)
     }, [site])
 
     // GENERATE INVOICE FOR SITE FUNCTION
@@ -84,7 +82,7 @@ const TopBar = ({site,company ,workers}) => {
                 link.remove()
             })
             .catch(err=> {
-			        generatePDF(worker)
+			  generatePDF(worker)
               console.log(err)
             })
         })
@@ -132,7 +130,6 @@ const TopBar = ({site,company ,workers}) => {
 }
 
 const mapStateToProps = state => {
-    console.log(state.workersReducer.workers)
     return {
         workers: state.workersReducer.workers
     }
@@ -148,28 +145,28 @@ const generatePDF = (data) => {
     responseType: 'stream'
     })
     .then(async res=> {
-    console.log(res)
-    function arrayBufferToBase64(buffer) {
-        let binary = '';
-        let bytes = new Uint8Array(buffer);
-        let len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
+        console.log(res)
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            let bytes = new Uint8Array(buffer);
+            let len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
         }
-        return window.btoa(binary);
-    }
-    let b64 = arrayBufferToBase64( await res.data[1].data)
+        let b64 = arrayBufferToBase64( await res.data[1].data)
 
-    let link = document.createElement('a');
-    link.innerHTML = `${res.data[0].Name}`;
-    link.download = `Payslip-week-ending-${res.data[0].Date}-${res.data[0].Name}.pdf`;
-    link.href = 'data:application/octet-stream;base64,' + b64;
-    document.body.appendChild(link);
-    link.click()
-    link.remove()
+        let link = document.createElement('a');
+        link.innerHTML = `${res.data[0].Name}`;
+        link.download = `Payslip-week-ending-${res.data[0].Date}-${res.data[0].Name}.pdf`;
+        link.href = 'data:application/octet-stream;base64,' + b64;
+        document.body.appendChild(link);
+        link.click()
+        link.remove()
     })
     .catch(err=> {
-    generatePDF(data)
-    console.log(err)
+        generatePDF(data)
+        console.log(err)
     })
 }

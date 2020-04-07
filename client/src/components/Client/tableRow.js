@@ -29,6 +29,8 @@ const ClientRow = props => {
     id: item.id,
     firstPost: item.firstPost,
     secondPost: item.secondPost,
+    city: item.city,
+    zipCode: item.zipCode,
     utr: item.utr,
     vat: item.vat,
     cis: item.cis,

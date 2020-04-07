@@ -50,7 +50,8 @@ router.post('/make-payment', async (req, res)=> {
 	
     paymentlist = await Promise.all( workersList.map(async workers=>{
       let { rate, otRate } = getRates(workers)
-      let payableAmount = parseFloat(rate*workers.hours+ otRate*workers.hoursOT)*0.8
+      let ot = otRate ? otRate*workers.hoursOT : 0
+      let payableAmount = (parseFloat(rate*workers.hours + ot)*0.8).toFixed(2)
       
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {
 			
@@ -143,9 +144,6 @@ router.post('/make-payment', async (req, res)=> {
 })
 
 module.exports = router
-
-
-
 
 
 const loadData = () => {

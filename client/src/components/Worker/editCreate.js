@@ -116,11 +116,12 @@ const EditCreate = props => {
       id: '',
       firstPost: '',
       secondPost: '',
+      city: '',
+      zipCode: '',
       utr: '',
       vat: 'GB ',
       cis: false,
       nino: '',
-      crn: '',
       phone: '+44',
       email: '',
       communicationChannel: '',
@@ -132,6 +133,8 @@ const EditCreate = props => {
       overtimeGot: '0',
       overtimePaid: '0',
       marginOT: '0',
+      account: '',
+      sortCode: '',
       taxPercentage: '',
       category: '',
       status: ''
@@ -175,16 +178,9 @@ const EditCreate = props => {
         };
       }
     }
-    if (temporaryData.firstPost.length === 0) {
-      setFirstPostError(true);
-      let timer = setTimeout(() => setFirstPostError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+
     if (temporaryData.utr.length === 0) {
-    } else if (/([0-9]{5})\s[0-9]{5}/g.test(temporaryData.utr) === false) {
+    } else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
       setUtrError(true);
       let timer = setTimeout(() => setUtrError(false), 3000);
       return () => {
@@ -193,12 +189,7 @@ const EditCreate = props => {
       };
     }
     if (temporaryData.vat.length < 4 ) {
-      // setVatError(true);
-      // let timer = setTimeout(() => setVatError(false), 3000);
-      // return () => {
-      //   clearTimeout(timer);
-      //   return false;
-      // };
+      
     } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
       
       setVatError(true);
@@ -242,15 +233,7 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.communicationChannel.length === 0) {}
-    else{
-      setCommChanError(true);
-      let timer = setTimeout(() => setCommChanError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    
     if (!!temporaryData.company.companyName === false) {
       setCompanyError(true);
       let timer = setTimeout(() => setCompanyError(false), 3000);
@@ -275,14 +258,14 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.status.length === 0) {
-      setStatusError(true);
-      let timer = setTimeout(() => setStatusError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    // if (temporaryData.status.length === 0) {
+    //   setStatusError(true);
+    //   let timer = setTimeout(() => setStatusError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
     setPending(true);
     await createWorker({ ...temporaryData }, props.actionType);
     await props.update();
@@ -370,7 +353,7 @@ const EditCreate = props => {
       case 'paidWorker':
       case 'overtimeGot':
       case 'overtimePaid':
-        let check = data.replace(/[^0-9]/g, '');
+        let check = data  //.replace(/[^0-9]/g, '');
         if (check.length > 1 && check[0] === '0') {
           check = check.slice(1);
         }
@@ -382,6 +365,13 @@ const EditCreate = props => {
           setData({ ...temporaryData, [fieldName]: check });
         }
         break;
+
+      case 'account':
+      case 'sortCode': 
+      case 'city':
+      case 'zipCode':
+        setData({ ...temporaryData, [fieldName]: data })
+        break
       default:
         break;
     }
@@ -616,6 +606,40 @@ const EditCreate = props => {
             </FormControl>
           </Grid>
         </Grid>
+
+
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>City</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.city}
+                placeholder='City'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, city: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Zip Code</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.zipCode}
+                placeholder='Zip Code'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
+
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>ID</Typography>
@@ -866,6 +890,42 @@ const EditCreate = props => {
             </FormControl>
           </Grid>
         </Grid>
+
+        {/* ACCOUNT INFORMATION */}
+
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Account Number</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.account}
+                placeholder='Account Number'
+                classes={{ input: classes.input }}
+                onChange={e => inputHadnler(e.target.value, 'account')}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Sort Code</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.sortCode}
+                placeholder='Sort Code'
+                classes={{ input: classes.input }}
+                onChange={e => inputHadnler(e.target.value, 'sortCode')}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
+
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>Tax</Typography>

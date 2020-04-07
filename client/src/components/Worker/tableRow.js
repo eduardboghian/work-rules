@@ -29,6 +29,8 @@ const WorkerRow = props => {
     id: item.id,
     firstPost: item.firstPost,
     secondPost: item.secondPost,
+    city: item.city,
+    zipCode: item.zipCode,
     utr: item.utr,
     vat: item.vat,
     cis: item.cis,
@@ -46,6 +48,8 @@ const WorkerRow = props => {
     overtimeGot: item.overtimeGot,
     overtimePaid: item.overtimePaid,
     marginOT: item.marginOT,
+    account: item.account,
+    sortCode: item.sortCode,
     taxPercentage: item.taxPercentage,
     category: item.category,
     status: item.status

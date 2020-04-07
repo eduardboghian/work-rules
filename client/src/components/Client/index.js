@@ -39,6 +39,8 @@ const Client = props => {
     id: '',
     firstPost: '',
     secondPost: '',
+    city: '',
+    zipCode: '',
     utr: '',
     vat: 'GB ',
     cis: false,

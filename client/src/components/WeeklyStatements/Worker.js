@@ -64,12 +64,16 @@ export default function Worker({worker}) {
     }
 
     const invoiced = (worker) => { 
-        let res = (ratesData.gotClient*hours + ratesData.overtimeGot*hoursOT) * (worker.CIS ?  0.7 : 0.8) 
+        let ot = ratesData.overtimeGot*hoursOT ? ratesData.overtimeGot*hoursOT : 0
+
+        let res = (ratesData.gotClient*hours + ot ) * (worker.CIS ?  0.7 : 0.8) 
         res = res.toFixed(1)
         return res
     }    
     const workerAmount = (worker) => {
-        let res = (ratesData.paidWorker*hours + ratesData.overtimePaid*hoursOT) * (worker.CIS ?  0.7 : 0.8)
+      	let ot = ratesData.overtimePaid*hoursOT ? ratesData.overtimePaid*hoursOT : 0
+
+        let res = (ratesData.paidWorker*hours + ot) * (worker.CIS ?  0.7 : 0.8)
         res = res.toFixed(1)
         return res
     }    
@@ -87,14 +91,14 @@ export default function Worker({worker}) {
                 <div><li className='small-text'>upload timesheet</li></div>
 
                 {/* RATES */}
-                <div><li>{ ratesData.gotClient }</li></div>
-                <div><li>{ ratesData.paidWorker}</li></div>
+                <div><li>{ ratesData.gotClient ? parseFloat(ratesData.gotClient).toFixed(1) : null }</li></div>
+                <div><li>{ ratesData.paidWorker ? parseFloat(ratesData.paidWorker).toFixed(1) : null}</li></div>
                 <div><li>{ makeFloat(ratesData.gotClient) - makeFloat(ratesData.paidWorker) }</li></div>
                 <div><li><input value={hours} onChange={ e => setHours(e.target.value) } /></li></div>
 
                 <div><li>{ ratesData.overtimeGot }</li></div>
                 <div><li>{ ratesData.overtimePaid }</li></div>
-                <div><li>{ makeFloat(ratesData.overtimeGot) - makeFloat(ratesData.overtimePaid) }</li></div> 
+                <div><li>{  ratesData.overtimeGot ? makeFloat(ratesData.overtimeGot) - makeFloat(ratesData.overtimePaid) : 0 }</li></div> 
                 <div><li><input value={hoursOT} onChange={ e => setOT(e.target.value) }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}

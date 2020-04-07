@@ -52,6 +52,8 @@ const EditCreate = props => {
       id: "",
       firstPost: "",
       secondPost: "",
+      city: '',
+      zipCode: '',
       utr: "",
       vat: "GB ",
       cis: false,
@@ -367,6 +369,38 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
+
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>City</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.city}
+                placeholder='City'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, city: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Zip Code</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.zipCode}
+                placeholder='Zip Code'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
         <Grid container direction="row" classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>Uniq Taxpayer Reference</Typography>
