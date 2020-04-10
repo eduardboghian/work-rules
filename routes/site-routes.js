@@ -7,7 +7,6 @@ const Sites = require('../models/sites')
 const router = express.Router();
 
 router.get('/get', (req, res) => {
-    console.log('console req info', req.headers, req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
@@ -22,7 +21,6 @@ router.get('/get', (req, res) => {
 });
 
 router.post('/all', (req, res) => {
-    console.log('console req info', req.headers, req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
@@ -65,7 +63,19 @@ router.post('/add', (req, res) => {
     });
 });
 
-router.delete('/delete', async (req, res) => {
+router.put('/add-worker', async (req, res)=> {
+    const site = await Sites.findById({_id: req.body.siteId})
+    if(!site)return res.status(500).send('Somthing went wrong! Please try again!')
+
+    let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId },{ '$push': { 'workers': {
+        worker: req.body.newWorker,
+        rates: req.body.rates
+    } } },{ new: true })
+
+    res.send(response)
+})
+
+router.delete('/deletes', async (req, res) => {
     console.log('delete site attempt', req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', async (err, authData) => {
@@ -86,6 +96,39 @@ router.delete('/delete', async (req, res) => {
             res.status(403).send("You don't have access");
         }
     });
+})
+
+router.put('/add-hours', async (req, res) => {
+    let site = await Sites.find({ _id: req.body.siteId })
+    if(!site) return res.send('no site with this id was found')
+    let newWorkers = site[0].workers
+
+    let worker = site[0].workers.find( item => item.worker._id === req.body.id )
+    let index = site[0].workers.indexOf(worker)
+    worker.worker.hours = req.body.hours
+    worker.worker.hoursOT = req.body.hoursOT
+
+    newWorkers[index] = worker
+    
+    let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
+
+    res.send(response)
+})
+
+router.put('/payment-status', async (req, res) => {
+    let site = await Sites.find({ _id: req.body.siteId })
+    if(!site) return res.send('no site with this id was found')
+    let newWorkers = site[0].workers
+
+    let worker = site[0].workers.find( item => item.worker._id === req.body.id )
+    let index = site[0].workers.indexOf(worker)
+    worker.worker.paymentStatus = 'Yes'
+
+    newWorkers[index] = worker
+    
+    let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
+
+    res.send(response)
 })
 
 module.exports = router;

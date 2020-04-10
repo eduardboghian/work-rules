@@ -81,4 +81,12 @@ router.put('/add-hours', async (req, res) => {
     res.send(worker)
 })
 
+router.put('/payment-status', async (req, res) => {
+    let worker = await Workers.find({ _id: req.body.id })
+    if(!worker) return res.send('no worker with this id was found')
+
+    worker = await Workers.findByIdAndUpdate({ _id: req.body.id }, { paymentStatus: 'yes' }, { new: true })
+    res.send(worker)
+})
+
 module.exports = router;

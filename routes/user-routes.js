@@ -14,7 +14,7 @@ router.post('/login', async (req, res) => {
             res.status(200).send({ token, role: user.role });
         });
     } else {
-        res.sendStatus(400);
+        res.send('try again');
     }
 });
 

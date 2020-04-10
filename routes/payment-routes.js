@@ -5,6 +5,7 @@ const { exec } = require('child_process')
 const uuid = require('uuid-v4')
 const fs = require('fs')
 const { Payments } = require('../models/payments')
+const Worker = require('../models/workers')
 const axios = require('axios')
 
 // JWT 
@@ -14,9 +15,9 @@ const getJwt = () => {
     const client_id = 's11wugRLNjsDL2Zir8RGfahevuSaAac9VTqry4j6StE' // Your client ID
     const aud = 'https://revolut.com' // Constant
     const payload = {
-        "iss": issuer,
-        "sub": client_id,
-        "aud": aud
+        'iss': issuer,
+        'sub': client_id,
+        'aud': aud
     }
     const privateKey = fs.readFileSync(path.resolve(`${__dirname}/privatekey.pem`))
     const token = jwt.sign(payload, privateKey, { algorithm: 'RS256', expiresIn: 60 * 60})
@@ -51,20 +52,18 @@ router.post('/make-payment', async (req, res)=> {
     paymentlist = await Promise.all( workersList.map(async workers=>{
       let { rate, otRate } = getRates(workers)
       let ot = otRate ? otRate*workers.hoursOT : 0
-      let payableAmount = (parseFloat(rate*workers.hours + ot)*0.8).toFixed(2)
+      let payableAmount = (parseFloat(rate*workers.hours + ot)*0.8 +parseFloat(workers.others)).toFixed(2)
       
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {
 			
-		  let sortCode 
-		  workers.sortCode ? sortCode = workers.sortCode.replace(/-/g, '') : null
-		  let paymentResponse 
+          let sortCode 
+          workers.sortCode ? sortCode = workers.sortCode.replace(/-/g, '') : null
+          let paymentResponse 
 
-		  // CHECKING THE ACCOUNT AND THE SORT CODE
+		      // CHECKING THE ACCOUNT AND THE SORT CODE
           if(data.accounts[0].account_no == workers.account &&  data.accounts[0].sort_code==sortCode){
             const requestId = uuid()
-            let { rate, otRate } = getRates(workers)
-            let payableAmount = parseFloat(rate*workers.hours+ otRate*workers.hoursOT)*0.8
-            console.log('3 ok', payableAmount, rate, otRate,'hrs...' ,workers.hours)
+            console.log('3 ok', payableAmount, 'hrs...' ,workers.others)
 
             paymentResponse = new Promise((resolve, reject)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
@@ -83,13 +82,27 @@ router.post('/make-payment', async (req, res)=> {
                   "reference": "Week Ending ${process.env.WEEK_ENDING}"
                 }
                 
-                EOF`, (error, stdout, stderr)=> {
+                EOF`, async (error, stdout, stderr)=> {
                   if(error) {
                       console.log('error thrown by revolut:', error)
                       reject(error)
                   }
                   console.log('stdout: ', stdout)
                   console.log('sterr: ',stderr)
+
+                  // UPDATE PAYMENT STATUS
+
+                  let site = await Sites.find({ _id: req.body.siteId })
+                  if(!site) return res.send('no site with this id was found')
+                  let newWorkers = site[0].workers
+
+                  let worker = site[0].workers.find( item => item.worker._id === req.body.id )
+                  let index = site[0].workers.indexOf(worker)
+                  worker.worker.paymentStatus = 'Yes'
+
+                  newWorkers[index] = worker
+                  
+                  await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
                   resolve(stdout)    
                 })
             })
@@ -105,7 +118,7 @@ router.post('/make-payment', async (req, res)=> {
 
 
       try{
-        paymentResponse =  JSON.parse(paymentResponse.filter(el => el !== undefined))
+        paymentResponse =  paymentResponse.filter(el => el !== undefined)
       }catch(error ) {
           console.log(error)
 	  }
@@ -114,18 +127,20 @@ router.post('/make-payment', async (req, res)=> {
 
       if(paymentResponse.state == 'completed' || paymentResponse.state == 'created' || paymentResponse.state == 'pending') {
           clientRes = {
-            "date": date,
-            "name": workers.firstname+' '+workers.lastname,
-            "amount": payableAmount,
-            "status": 'OK' 
+            '_id': workers._id,
+            'date': date,
+            'name': workers.firstname+' '+workers.lastname,
+            'amount': payableAmount,
+            'status': 'OK' 
           }
           oks +=1
       } else {
           clientRes = {
-            "date": date,
-            "name": workers.firstname+' '+workers.lastname,
-            "amount": payableAmount,
-            "status": 'NOTOK' 
+            '_id': workers._id,
+            'date': date,
+            'name': workers.firstname+' '+workers.lastname,
+            'amount': payableAmount,
+            'status': 'NOTOK' 
           }
           notoks +=1
       }
@@ -212,7 +227,6 @@ const loadData = () => {
 // LOAD RATES
 
 const getRates = (worker) => {
-    console.log('error: ', worker)
     if (!!worker.sitesData  ) {
         let site = worker.sitesData.find(item => item._id === worker.site._id);
         if(!!site) {

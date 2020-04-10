@@ -8,6 +8,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 // import { FormattedMessage } from 'react-intl';
+import axios from 'axios'
 
 import { login, loginFail } from "../../actions/usersActions";
 import { loginRequest } from "../../utils/api";
@@ -47,6 +48,7 @@ const SignIn = props => {
       localStorage.setItem("role", res.data.role);
       history.push("/dashboard");
     }
+
   };
   return (
     <Container maxWidth="xs" classes={{ root: classes.container }}>

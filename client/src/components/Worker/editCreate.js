@@ -125,14 +125,6 @@ const EditCreate = props => {
       phone: '+44',
       email: '',
       communicationChannel: '',
-      company: {},
-      site: {},
-      gotClient: '0',
-      paidWorker: '0',
-      margin: '0',
-      overtimeGot: '0',
-      overtimePaid: '0',
-      marginOT: '0',
       account: '',
       sortCode: '',
       taxPercentage: '',
@@ -234,22 +226,6 @@ const EditCreate = props => {
       };
     }
     
-    if (!!temporaryData.company.companyName === false) {
-      setCompanyError(true);
-      let timer = setTimeout(() => setCompanyError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (!!temporaryData.site.siteName === false) {
-      setSiteError(true);
-      let timer = setTimeout(() => setSiteError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
     if (temporaryData.category.length === 0) {
       setCategoryError(true);
       let timer = setTimeout(() => setCategoryError(false), 3000);
@@ -258,14 +234,7 @@ const EditCreate = props => {
         return false;
       };
     }
-    // if (temporaryData.status.length === 0) {
-    //   setStatusError(true);
-    //   let timer = setTimeout(() => setStatusError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
+    
     setPending(true);
     await createWorker({ ...temporaryData }, props.actionType);
     await props.update();
@@ -348,23 +317,7 @@ const EditCreate = props => {
           setData({ ...temporaryData, phone: `+44${checked}` });
           break;
         }
-        break;
-      case 'gotClient':
-      case 'paidWorker':
-      case 'overtimeGot':
-      case 'overtimePaid':
-        let check = data  //.replace(/[^0-9]/g, '');
-        if (check.length > 1 && check[0] === '0') {
-          check = check.slice(1);
-        }
-        if (!!temporaryData.site._id) {
-          let site = { ...temporaryData.site };
-          site[fieldName] = check;
-          setData({ ...temporaryData, [fieldName]: check, site: site });
-        } else {
-          setData({ ...temporaryData, [fieldName]: check });
-        }
-        break;
+        break;;
 
       case 'account':
       case 'sortCode': 
@@ -377,85 +330,7 @@ const EditCreate = props => {
     }
   };
 
-  // UPDATE SITES ***FIX THIS SHIT***
-  const sitesUpdater = newData => {
-    
-    let site = sites.find(site => site.siteName === newData);
-    let sitesData = temporaryData.sitesData.filter(item => item._id !== temporaryData.site._id);
-    
-    let oldSiteData = temporaryData.sitesData.find(item => item._id === temporaryData.site._id);
-    let newSiteData = temporaryData.sitesData.find(item => item._id === site._id);
-
-    if (!!oldSiteData) {
-      if (!!newSiteData) {
-        setData({
-          ...temporaryData,
-          sitesData: [
-            ...sitesData,
-            {
-              _id: oldSiteData._id,
-              gotClient: temporaryData.gotClient,
-              paidWorker: temporaryData.paidWorker,
-              overtimeGot: temporaryData.overtimeGot,
-              overtimePaid: temporaryData.overtimePaid
-            }
-          ],
-          site: { _id: site._id, siteName: site.siteName },
-          gotClient: newSiteData.gotClient,
-          paidWorker: newSiteData.paidWorker,
-          overtimeGot: newSiteData.overtimeGot,
-          overtimePaid: newSiteData.overtimePaid
-        });
-      } else {
-        setData({
-          ...temporaryData,
-          sitesData: [
-            ...sitesData,
-            {
-              _id: oldSiteData._id,
-              gotClient: temporaryData.gotClient,
-              paidWorker: temporaryData.paidWorker,
-              overtimeGot: temporaryData.overtimeGot,
-              overtimePaid: temporaryData.overtimePaid
-            }
-          ],
-          site: { _id: site._id, siteName: site.siteName },
-          gotClient: '0',
-          paidWorker: '0',
-          overtimeGot: '0',
-          overtimePaid: '0'
-        });
-      }
-    } else if (!!newSiteData) {
-      setData({
-        ...temporaryData,
-        site: { _id: site._id, siteName: site.siteName },
-        gotClient: newSiteData.gotClient,
-        paidWorker: newSiteData.paidWorker,
-        overtimeGot: newSiteData.overtimeGot,
-        overtimePaid: newSiteData.overtimePaid
-      });
-    } else {
-      setData({
-        ...temporaryData,
-        sitesData: [
-          ...sitesData,
-          {
-            _id: site._id,
-            gotClient: '0',
-            paidWorker: '0',
-            overtimeGot: '0',
-            overtimePaid: '0'
-          }
-        ],
-        site: { _id: site._id, siteName: site.siteName },
-        gotClient: '0',
-        paidWorker: '0',
-        overtimeGot: '0',
-        overtimePaid: '0'
-      });
-    }
-  };
+ 
 
   const classes = useStyles();
   return (
@@ -764,132 +639,8 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Working for Company</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={companyError} title='Please select Company' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }}>
-                <Select
-                  placeholder='Choose company working for'
-                  value={!!temporaryData.company.companyName ? temporaryData.company.companyName : ''}
-                  onChange={e => {
-                    let client = clients.find(client => client.companyName === e.target.value);
-                    setData({ ...temporaryData, company: { id: client._id, companyName: client.companyName } });
-                    setCurrentCompany(e.target.value);
-                  }}
-                >
-                  {clients.map(client => (
-                    <MenuItem value={client.companyName}>{client.companyName}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Tooltip>
-          </Grid>
-
-          <Grid item xs={3}>
-            <Typography>Site Name</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={siteError} title='Please select Site' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }}>
-                <Select
-                  value={!!temporaryData.site.siteName ? temporaryData.site.siteName : ''}
-                  onChange={e => {
-                    sitesUpdater(e.target.value);
-                  }}
-                  disabled={sites.length === 0 ? true : false}
-                >
-                  {sites.map(site => (
-                    <MenuItem value={site.siteName}>{site.siteName}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Hourly Rate got Client</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.gotClient}
-                placeholder='Set hourly rate'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'gotClient')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Hourly Rate paid to Worker</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.paidWorker}
-                placeholder='Set hourly rate'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'paidWorker')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Margin</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input value={temporaryData.margin} classes={{ input: classes.input }} disabled />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Hourly Rate Overtime got</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.overtimeGot}
-                placeholder='Set hourly rate'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'overtimeGot')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Hourly Rate Overtime Paid</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.overtimePaid}
-                placeholder='Set hourly rate'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'overtimePaid')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Margin OT</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input value={temporaryData.marginOT} classes={{ input: classes.input }} disabled />
-            </FormControl>
-          </Grid>
-        </Grid>
+        
+        
 
         {/* ACCOUNT INFORMATION */}
 
@@ -1008,9 +759,6 @@ const EditCreate = props => {
             classes={{ root: classes.button }}
             disabled={pending}
             onClick={async () => {
-              if (!!temporaryData.site.siteName) {
-                sitesUpdater(temporaryData.site.siteName);
-              }
               validation();
               setPending(false);
             }}

@@ -17,28 +17,20 @@ const Worker = new Schema({
     vat: { type: String },
     cis: { type: Boolean },
     nino: { type: String },
-    crn: { type: String },
     phone: { type: String },
     email: { type: String },
     communicationChannel: { type: String },
-    company: { type: Object },
-    site: { type: Object },
-    sitesData: {
-        type: Array
-    },
-    //sitesData: { id: String, gotClient: String, paidWorker: String, overtimeGot: String, overtimePaid: String },
-    // gotClient: { type: String },
-    // paidWorker: { type: String },
-    // overtimeGot: { type: String },
-    // overtimePaid: { type: String },
-    margin: { type: String },
-    marginOT: { type: String },
+   
     taxPercentage: { type: String },
     category: { type: String },
     hours: { type: Number },
     hoursOT: { type: Number },
     sortCode: { type: String },
     account: { type: Number }, 
+    paymentStatus: {
+        type: String,
+        default: 'No'
+    },
     status: { type: String },
 });
 
