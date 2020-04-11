@@ -17,6 +17,7 @@ const workersRouter = require('./routes/worker-routes');
 const generateInvoice = require('./routes/invoice-routes')
 const generatePayslip = require('./routes/payslip-routes')
 const makePayment = require('./routes/payment-routes')
+const weekly = require('./routes/weekly-routes')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -35,6 +36,7 @@ app.use('/worker', workersRouter);
 app.use('/api', generateInvoice)
 app.use('/api', generatePayslip)
 app.use('/api', makePayment)
+app.use('/weekly', weekly)
 
 // BUILD THE CLIENT SIDE
 

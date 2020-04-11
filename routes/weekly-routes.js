@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { WeeklyStatements } = require('../models/weeklyStatement')
+const WeeklyStatements = require('../models/weeklyStatement')
 
 router.get('/get/:id', async (req, res)=> {
     let data = await WeeklyStatements.find({ _id: req.params.id })
@@ -14,5 +14,13 @@ router.get('/get-all', async (req, res)=> {
 })
 
 router.post('/add', async (req, res) => {
-    const data
+    let check = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
+    if(check) return res.send('Already Stored!')
+
+    let data = new WeeklyStatements(req.body)
+    data = await data.save()
+
+    res.send('Successfully Stored!')
 })
+
+module.exports = router

@@ -31,8 +31,8 @@ const useStyles = makeStyles({
 });
 
 const SignIn = props => {
-  const [username, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setLogin] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false)
   const classes = useStyles();
   let history = useHistory();
@@ -45,21 +45,19 @@ const SignIn = props => {
   }, [props.loginError]);
 
   const submitLogin = async () => {
-    axios.post("/user/login", {username, password})
+    axios.post('/user/login', {username, password})
     .then(res => {
       setPassword('')
       console.log(res.body)
-      if(res.data === "try again")
+      if(res.data === 'try again')
         setLoginError(true)
-    if (res.data !== "try again") {
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
-      window.location.reload(true);
-    }
-
-
-  }).catch(err => console.log(err))
-
+      if (res.data !== 'try again') {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('role', res.data.role);
+        window.location.reload(true);
+      }
+    })
+    .catch(err => console.log(err))
   };
 
   const handleKeyPress = async (event) => {
@@ -68,10 +66,11 @@ const SignIn = props => {
       event.stopPropagation();
       submitLogin();
       }
-    }
+  }
+
   return (
-    <Container maxWidth="xs" classes={{ root: classes.container }}>
-      <Tooltip title="Wrong username or login" open={props.loginError} placement="top">
+    <Container maxWidth='xs' classes={{ root: classes.container }}>
+      <Tooltip title='Wrong username or login' open={props.loginError} placement="top">
         <Typography component="h1" variant="h5" classes={{ root: classes.header }}>
           Sign In
         </Typography>

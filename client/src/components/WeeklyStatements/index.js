@@ -39,7 +39,12 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
     }, [])
 
     const storeWeekEnding = () => {
-        
+        axios.post('/weekly/add', {
+            weekEnding,
+            data: sites
+        })
+        .then(res => {})
+        .catch(err => console.error(err))
     }
 
     return (
@@ -55,6 +60,8 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
                 </div>
             })}
             
+
+            <button type='submit' onClick={ e => storeWeekEnding() } >store weekly</button>
         </div>
     )
 }

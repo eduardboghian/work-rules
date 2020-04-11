@@ -148,7 +148,7 @@ class Dashboard extends React.Component {
               style={styles.navbarButtons}
               // classes={{ root: classes.navbarButtons }}
             >
-              <Link to='/dashboard/weekly-statement'>Weekly Statements</Link>
+              <Link to='/weekly-statement'>Weekly Statements</Link>
             </Typography>
             <Divider />
           </Grid>
