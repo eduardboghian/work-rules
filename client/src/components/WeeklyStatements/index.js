@@ -55,7 +55,7 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
                 return <div key={i}>
                     <TopBar site={site} />
                     {site.workers.map((worker,i) => {
-                        return <Worker key={i} worker={worker} site={site} />
+                        return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined
                     })}
                 </div>
             })}

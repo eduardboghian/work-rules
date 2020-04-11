@@ -12,8 +12,9 @@ function Worker({dispatch, worker, site}) {
  
     useEffect(() => {
         setHours(worker.worker.hours)
-        setOT(worker.hoursOT)
+        setOT(worker.worker.hoursOT)
         setData(worker.rates)
+        console.log(worker)
     }, [worker])
 
     useEffect(() => {
