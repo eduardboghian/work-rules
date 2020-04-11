@@ -8,11 +8,8 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 // import { FormattedMessage } from 'react-intl';
-<<<<<<< HEAD
+
 import axios from "axios";
-=======
-import axios from 'axios'
->>>>>>> 526bc5210dcb9e3ef85b949fedaeb7023b4847cb
 
 import { login, loginFail } from "../../actions/usersActions";
 import { loginRequest } from "../../utils/api";
