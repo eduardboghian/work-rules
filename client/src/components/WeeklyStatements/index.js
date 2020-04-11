@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './css/index.css'
 import axios from 'axios'
 import { addWorkers } from '../../actions/workerActions'
@@ -7,8 +7,11 @@ import { connect } from 'react-redux'
 
 import TopBar from './TopBar'
 import Worker from './Worker'
+import moment from 'moment'
 
-const WeeklyStatemnt = ({dispatch, workers, sites}) => {
+const WeeklyStatemnt = ({dispatch, sites}) => {
+    const [weekEnding, setWeekEnding] = useState('')
+
     useEffect(() => {
         axios.get('/worker/get')
         .then(res=> {
@@ -25,15 +28,23 @@ const WeeklyStatemnt = ({dispatch, workers, sites}) => {
             dispatch( addSites(res.data) )
         })
         .catch(error=>console.error(error))
+
+        
+        let date = moment().day(0)
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+        let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
+    
+        setWeekEnding(weekE)    
+        
     }, [])
 
     const storeWeekEnding = () => {
-
+        
     }
 
     return (
         <div className='weekly-wr' id='test'>
-            Week Ending 09.02.2020
+            Week Ending {`${weekEnding}`}
                     
             {sites.map((site, i) => {
                 return <div key={i}>

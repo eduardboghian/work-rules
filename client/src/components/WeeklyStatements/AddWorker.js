@@ -39,7 +39,7 @@ export default function AddWorker({formClass, siteId}) {
             newWorker,
             rates
         })
-        .then(res => console.log(res) )
+        .then(res => window.location.reload(true) )
         .catch( error => console.log( error) )   
     }
     

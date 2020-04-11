@@ -33,7 +33,6 @@ const Worker = props => {
   const [searchedData, setSearchedData] = useState(null);
   const [editData, setEditData] = useState({
     type: "physical",
-    companyName: "",
     peer: "",
     firstname: "",
     lastname: "",
@@ -191,7 +190,6 @@ const Worker = props => {
                     <Grid container>NINO {sort.nino === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
                   <TableCell classes={{ root: classes.cellHeader }}>CIS</TableCell>
-                  <TableCell classes={{ root: classes.cellHeader }}>Client + Site</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

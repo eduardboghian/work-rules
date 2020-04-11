@@ -45,42 +45,7 @@ const EditCreate = props => {
     setClientsData(a.data);
     
     console.log('temp data',temporaryData)
-    if (!!temporaryData.site.siteName) {
-      setCurrentCompany(temporaryData.company.companyName);
-      
-      if (!!temporaryData.sitesData  ) {
-        
-        let site = temporaryData.sitesData.find(item => item._id === temporaryData.site._id);
-        if(!!site) {
-          setData({
-            ...temporaryData,
-            gotClient: site.gotClient,
-            paidWorker: site.paidWorker,
-            overtimeGot: site.overtimeGot,
-            overtimePaid: site.overtimePaid
-          });
-        } else if( site.gotClient === '0' ) {
-          let site = temporaryData.site
-          setData({
-            ...temporaryData,
-            gotClient: site.gotClient,
-            paidWorker: site.paidWorker,
-            overtimeGot: site.overtimeGot,
-            overtimePaid: site.overtimePaid
-          });
-        } else {
-          setData({
-            ...temporaryData,
-            gotClient: site.gotClient,
-            paidWorker: site.paidWorker,
-            overtimeGot: site.overtimeGot,
-            overtimePaid: site.overtimePaid
-          });
-        }
-        
-      } 
-
-    }
+    
   };
 
   // LOAD SITES
@@ -109,7 +74,6 @@ const EditCreate = props => {
     props.isDialogOpened(false);
     props.setEditData({
       type: 'physical',
-      companyName: '',
       peer: '',
       firstname: '',
       lastname: '',

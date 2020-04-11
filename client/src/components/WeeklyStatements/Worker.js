@@ -18,16 +18,14 @@ function Worker({dispatch, worker, site}) {
 
     useEffect(() => {
       if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
-					console.log('hours', hours, hoursOT)
           if(hours!==0 || hoursOT !==0) {
-            console.log(worker.worker)
 						axios.put('/site/add-hours', {
               siteId: site._id,
 							id: worker.worker._id,
 							hours: hours,
 							hoursOT: hoursOT
 						})
-						.then(res=> console.log(res))
+						.then(res=> {})
 						.catch(err=> console.log(err))
 					}
         
