@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import TopBar from './TopBar'
 import Worker from './Worker'
 import moment from 'moment'
+import Dashboard from '../../pages/Dashboard'
 
 const WeeklyStatemnt = ({dispatch, sites}) => {
     const [weekEnding, setWeekEnding] = useState('')
@@ -29,13 +30,13 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
         })
         .catch(error=>console.error(error))
 
-        
+
         let date = moment().day(0)
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
         let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
-    
-        setWeekEnding(weekE)    
-        
+
+        setWeekEnding(weekE)
+
     }, [])
 
     const storeWeekEnding = () => {
@@ -48,9 +49,11 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
     }
 
     return (
+      <div>
+        <Dashboard/>
         <div className='weekly-wr' id='test'>
             Week Ending {`${weekEnding}`}
-                    
+
             {sites.map((site, i) => {
                 return <div key={i}>
                     <TopBar site={site} />
@@ -59,10 +62,11 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
                     })}
                 </div>
             })}
-            
+
 
             <button type='submit' onClick={ e => storeWeekEnding() } >store weekly</button>
         </div>
+      </div>
     )
 }
 

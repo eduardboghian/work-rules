@@ -23,6 +23,7 @@ import Search from '../common/Search';
 import { getWorkers } from '../../utils/api';
 import { pageStyles } from '../../utils/styles';
 import { multiSort } from '../../utils/methods';
+import Dashboard from '../../pages/Dashboard'
 
 const useStyles = makeStyles(pageStyles);
 
@@ -72,14 +73,14 @@ const Client = props => {
       }
       setFilteredData(filteredData);
   }, [clientData, archived, searchedData]);
-  
-  
+
+
   useEffect(() => {
     let sortedData = multiSort(filteredData, sort);
     setFilteredData(sortedData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort]);
-  
+
   const openDialog = data => {
     setEditData(data);
     isDialogOpened(true);
@@ -89,7 +90,7 @@ const Client = props => {
     let data = await getWorkers();
     setWorkersData(data.data);
   };
-  
+
   const snackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -107,6 +108,7 @@ const Client = props => {
 
   return (
     <Grid>
+      <Dashboard/>
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (

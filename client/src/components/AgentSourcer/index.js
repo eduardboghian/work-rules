@@ -20,6 +20,7 @@ import { getAgentsSourcersData } from "../../utils/api";
 import EditCreate from "./editCreate";
 import AgentSourcerRow from "./tableRow";
 import Search from "../common/Search";
+import Dashboard from '../../pages/Dashboard';
 
 import { pageStyles } from "../../utils/styles";
 import { multiSort } from "../../utils/methods";
@@ -81,6 +82,7 @@ const AgentSourcer = props => {
   };
   return (
     <Box marginRight="-1px">
+      <Dashboard/>
       {dialog ? (
         <EditCreate
           isDialogOpened={isDialogOpened}

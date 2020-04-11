@@ -110,9 +110,8 @@ class Dashboard extends React.Component {
                 <Typography
                   style={styles.navbarButtons}
                   // classes={{ root: classes.navbarButtons }}
-                  onClick={() => this.changePage('Agent/Sourcer')}
                 >
-                  Agent Sourcer
+                  <Link to='/agent-sourcer'>Agent Sourcer</Link>
                 </Typography>
                 <Divider />
               </>
@@ -122,9 +121,8 @@ class Dashboard extends React.Component {
                 <Typography
                   style={styles.navbarButtons}
                   // classes={{ root: classes.navbarButtons }}
-                  onClick={() => this.changePage('Client')}
                 >
-                  Client
+                  <Link to='/client'>Client</Link>
                 </Typography>
               </>
             ) : null}
@@ -137,9 +135,8 @@ class Dashboard extends React.Component {
                 <Typography
                   style={styles.navbarButtons}
                   // classes={{ root: classes.navbarButtons }}
-                  onClick={() => this.changePage('Worker')}
                 >
-                  Worker
+                  <Link to='/worker'>Worker</Link>
                 </Typography>
                 <Divider />
               </>
@@ -153,13 +150,9 @@ class Dashboard extends React.Component {
             <Divider />
           </Grid>
         </Drawer>
-        <Grid style={{ background: '#eeeeee', minHeight: '100vh', paddingTop: '100px' }}>
-          <Paper style={{ margin: '0 auto', height: '100%', width: '90%' }}>
-            {this.state.currentPage === 'Agent/Sourcer' && <AgentSourcer />}
-            {this.state.currentPage === 'Client' && <Client />}
-            {this.state.currentPage === 'Worker' && <Worker />}
-          </Paper>
+        <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '100px'}}>
         </Grid>
+
       </>
     );
   }

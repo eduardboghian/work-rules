@@ -22,6 +22,7 @@ import { multiSort } from "../../utils/methods";
 import WorkerRow from "./tableRow";
 import EditCreate from "./editCreate";
 import Search from "../common/Search";
+import Dashboard from '../../pages/Dashboard';
 
 const useStyles = makeStyles(pageStyles);
 
@@ -115,6 +116,7 @@ const Worker = props => {
   };
   return (
     <Grid>
+      <Dashboard/>
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (

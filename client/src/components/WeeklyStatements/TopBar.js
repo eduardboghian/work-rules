@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
+import Dashboard from '../../pages/Dashboard/index.js'
 
 const TopBar = ({site, workers}) => {
     const [workersList, setWorkers] = useState([])
@@ -32,26 +33,26 @@ const TopBar = ({site, workers}) => {
               return window.btoa(binary);
             }
             let b64 = arrayBufferToBase64(data.data)
-    
-    
+
+
             // Embed the PDF into the HTML page and show it to the user
             let obj = document.createElement('object');
             obj.style.width = '70%';
             obj.style.height = '842pt';
-            obj.style.float = 'right' 
+            obj.style.float = 'right'
             obj.type = 'application/pdf';
             obj.data = 'data:application/pdf;base64,' + b64;
             document.body.appendChild(obj);
-    
+
             // Insert a link that allows the user to download the PDF file
             let link = document.createElement('a');
             link.innerHTML = 'Download PDF file';
             link.download = 'file.pdf';
             link.href = 'data:application/octet-stream;base64,' + b64;
             document.body.appendChild(link);
-    
+
         })
-    
+
     })
         .catch(err => console.log(err))
     }
@@ -118,7 +119,7 @@ const TopBar = ({site, workers}) => {
                 <div><li>Category</li></div>
                 <div><li>Checked</li></div>
                 <div><li>Rate Got</li></div>
-                <div><li>Rate paid</li></div>                
+                <div><li>Rate paid</li></div>
                 <div><li>Margin</li></div>
                 <div><li>Hours</li></div>
                 <div><li>OT Got</li></div>
@@ -146,9 +147,9 @@ const mapStateToProps = state => {
 export default connect (mapStateToProps)(TopBar)
 
 const generatePDF = (data) => {
-    axios({                 
+    axios({
     method: 'POST',
-    url: `/api/generate-payslip`, 
+    url: `/api/generate-payslip`,
     data: data,
     responseType: 'stream'
     })
