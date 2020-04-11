@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 
 import axios from "axios";
 
+
 import { login, loginFail } from "../../actions/usersActions";
 import { loginRequest } from "../../utils/api";
 
@@ -56,11 +57,9 @@ const SignIn = props => {
       window.location.reload(true);
     }
 
-<<<<<<< HEAD
+
   }).catch(err => console.log(err))
 
-=======
->>>>>>> 526bc5210dcb9e3ef85b949fedaeb7023b4847cb
   };
 
   const handleKeyPress = async (event) => {
