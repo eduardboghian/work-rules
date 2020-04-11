@@ -8,6 +8,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 // import { FormattedMessage } from 'react-intl';
+import axios from "axios";
 
 import { login, loginFail } from "../../actions/usersActions";
 import { loginRequest } from "../../utils/api";
@@ -30,6 +31,7 @@ const useStyles = makeStyles({
 const SignIn = props => {
   const [username, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState(false)
   const classes = useStyles();
   let history = useHistory();
 
@@ -41,13 +43,29 @@ const SignIn = props => {
   }, [props.loginError]);
 
   const submitLogin = async () => {
-    let res = await loginRequest({ username, password });
-    if (!!res) {
+    axios.post("/user/login", {username, password})
+    .then(res => {
+      setPassword('')
+      console.log(res.body)
+      if(res.data === "try again")
+        setLoginError(true)
+    if (res.data !== "try again") {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      history.push("/dashboard");
+      window.location.reload(true);
     }
+
+  }).catch(err => console.log(err))
+
   };
+
+  const handleKeyPress = async (event) => {
+    if(event.key == 'Enter'){
+      event.preventDefault();
+      event.stopPropagation();
+      submitLogin();
+      }
+    }
   return (
     <Container maxWidth="xs" classes={{ root: classes.container }}>
       <Tooltip title="Wrong username or login" open={props.loginError} placement="top">
@@ -58,7 +76,7 @@ const SignIn = props => {
       <TextField
         variant="outlined"
         autoFocus
-        label="Login"
+        label="Usename"
         required
         fullWidth
         value={username}
@@ -76,10 +94,12 @@ const SignIn = props => {
         value={password}
         onChange={e => setPassword(e.target.value)}
         classes={{ root: classes.input }}
+        onKeyPress={e => handleKeyPress(e)}
       />
       <Button variant="contained" color="primary" onClick={submitLogin} classes={{ root: classes.submitBtn }}>
         Submit
       </Button>
+      <div className={ loginError ? 'error-div' : 'none' }>Username or Password incorect!</div>
     </Container>
   );
 };

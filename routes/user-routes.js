@@ -9,12 +9,13 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     const user = await Users.findOne({ email: username, password });
+    console.log(user, username, password)
     if (user) {
         jwt.sign({ user }, 'secretkey', (err, token) => {
             res.status(200).send({ token, role: user.role });
         });
     } else {
-        res.sendStatus(400);
+        res.send("try again");
     }
 });
 

@@ -6,14 +6,15 @@ import SignIn from './pages/SignIn/';
 import Dashboard from './pages/Dashboard/';
 import WeeklyStatemnt from './components/WeeklyStatements';
 
+
 const history = createBrowserHistory();
 
 function App() {
   return (
     <Router history={history}>
-        <Route exact path='/' component={SignIn} />
-        <Route exact path='/dashboard' component={Dashboard} />
-        <Route exact path='/dashboard/weekly-statement' component={WeeklyStatemnt} />
+    {console.log(localStorage.getItem('token'))}
+        <Route exact path='/' component={localStorage.getItem('token')!== null && localStorage.getItem('token')!== undefined ? Dashboard : SignIn} />
+        <Route exact path='/weekly-statement' component={WeeklyStatemnt} />
     </Router>
   );
 }
