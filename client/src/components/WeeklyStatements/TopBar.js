@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import  { connect } from 'react-redux'
 import axios from 'axios'
+import AddWorker from './AddWorker'
 
-const TopBar = ({site,company ,workers}) => {
+const TopBar = ({site, workers}) => {
     const [workersList, setWorkers] = useState([])
     const [workersForCompany, setWrC] = useState([])
-    useEffect(() => {
-        let data = workers.filter(item => item.site.siteName === site.siteName)
-        setWorkers(data)
+    const [formClass, setClass] = useState('none')
 
-        let wrs = workers.filter(item =>item.company.companyName === company.companyName)
-        setWrC(wrs)
+    useEffect(() => {
+        setWorkers(workers)
+        setWrC(site.companyName)
     }, [site])
 
     // GENERATE INVOICE FOR SITE FUNCTION
 
-    const generateInvoice = (workersList) => {
+    const generateInvoice = (workersList, site) => {
         axios.post('/api/generate-invoice', {
-            workersList
+            workersList,
+            site
         })
         .then(res=> {
             res.data.map(data=> {
@@ -57,8 +58,8 @@ const TopBar = ({site,company ,workers}) => {
 
     // GENERATE PAYSLIPS
 
-    const generatePayslip = (workersList) => {
-        workersList.map(worker => {
+    const generatePayslip = (site) => {
+        site.workers.map(worker => {
             axios.post('/api/generate-payslip', { worker })
             .then(async res=> {
                 console.log(res)
@@ -90,19 +91,24 @@ const TopBar = ({site,company ,workers}) => {
 
     // MAKE PAYMETN
 
-    const makePayment = (workersList) => {
-        axios.post('/api/make-payment', { workers: workersList })
-        .then(res => console.log(res))
+    const makePayment = (site) => {
+        axios.post('/api/make-payment', { data: site })
+        .then(res => window.location.reload(true))
         .catch(err=> console.error(err))
+    }
+
+    const addWorkerToSite = () => {
+        setClass('')
     }
 
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
-                <div onClick={ e => generateInvoice(workersList) }>Generate Invoice for Site</div>
+                <div onClick={ e => generateInvoice(workersList, site) }>Generate Invoice for Site</div>
                 <div onClick={ e=> generateInvoice(workersForCompany) }>Generate Invoice for Client</div>
-                <div onClick={ e => generatePayslip(workersList) }>Generate Payslip for Site</div>
-                <div onClick={ e => makePayment(workersList) } >Make Payment</div>
+                <div onClick={ e => generatePayslip(site) }>Generate Payslip for Site</div>
+                <div onClick={ e => makePayment(site) } >Make Payment</div>
+                <div onClick={ e => addWorkerToSite() }>Add Worker</div>
             </div>
             <ul>
                 <div><li>Client</li></div>
@@ -122,9 +128,11 @@ const TopBar = ({site,company ,workers}) => {
                 <div><li>Invoiced</li></div>
                 <div><li>Margin</li></div>
                 <div><li>Worker</li></div>
+                <div><li>Others</li></div>
                 <div><li>Paid</li></div>
                 <div><li>Payslip via</li></div>
             </ul>
+            <AddWorker formClass={formClass} siteId={site._id} />
         </div>
     )
 }

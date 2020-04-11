@@ -1,61 +1,34 @@
 import React, { useEffect, useState } from 'react'
+import { updateWorkers } from '../../actions/workerActions'
+import { connect } from 'react-redux'
 import './css/index.css'
 import axios from 'axios'
 
-export default function Worker({worker}) {
+function Worker({dispatch, worker, site}) {
     const [ratesData, setData] = useState({})
     const [hours, setHours] = useState(0)
     const [hoursOT, setOT] = useState(0)
-
+    const [others, setOthers] = useState(0)
+ 
     useEffect(() => {
-        if (!!worker.sitesData  ) {
-        
-            let site = worker.sitesData.find(item => item._id === worker.site._id);
-            if(!!site) {
-              if(site.gotClient !== '0') {
-                setData({
-                  gotClient: site.gotClient,
-                  paidWorker: site.paidWorker,
-                  overtimeGot: site.overtimeGot,
-                  overtimePaid: site.overtimePaid
-                });
-              } else if( site.gotClient === '0' ) {
-                let site = worker.site
-                setData({
-                  gotClient: site.gotClient,
-                  paidWorker: site.paidWorker,
-                  overtimeGot: site.overtimeGot,
-                  overtimePaid: site.overtimePaid
-                });
-              }
-              
-            } else {
-              let site = worker.site
-              setData({
-                gotClient: site.gotClient,
-                paidWorker: site.paidWorker,
-                overtimeGot: site.overtimeGot,
-                overtimePaid: site.overtimePaid
-              });
-            }
-            
-        }
-
-        setHours(worker.hours)
+        setHours(worker.worker.hours)
         setOT(worker.hoursOT)
+        setData(worker.rates)
     }, [worker])
 
     useEffect(() => {
       if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
-        if(hours > 0 || hoursOT > 0 ) {
-          axios.put('/worker/add-hours', {
-            id: worker._id,
-            hours: hours,
-            hoursOT: hoursOT
-          })
-          .then(res=> console.log(res))
-          .catch(err=> console.log(err))
-        }
+          if(hours!==0 || hoursOT !==0) {
+						axios.put('/site/add-hours', {
+              siteId: site._id,
+							id: worker.worker._id,
+							hours: hours,
+							hoursOT: hoursOT
+						})
+						.then(res=> {})
+						.catch(err=> console.log(err))
+					}
+        
       }
     }, [hours, hoursOT])
 
@@ -64,50 +37,91 @@ export default function Worker({worker}) {
     }
 
     const invoiced = (worker) => { 
-        let ot = ratesData.overtimeGot*hoursOT ? ratesData.overtimeGot*hoursOT : 0
-
-        let res = (ratesData.gotClient*hours + ot ) * (worker.CIS ?  0.7 : 0.8) 
-        res = res.toFixed(1)
+        let ot = ratesData.otGot*hoursOT ? ratesData.otGot*hoursOT : 0
+        let res = (ratesData.rateGot*hours + ot ) * (worker.cis ?  0.8 : 0.7) 
+        res = isNaN( res ) ? 0 : res.toFixed(1)
         return res
     }    
     const workerAmount = (worker) => {
-      	let ot = ratesData.overtimePaid*hoursOT ? ratesData.overtimePaid*hoursOT : 0
+        let ot = ratesData.otPaid*hoursOT ? ratesData.otPaid*hoursOT : 0
 
-        let res = (ratesData.paidWorker*hours + ot) * (worker.CIS ?  0.7 : 0.8)
-        res = res.toFixed(1)
+        let res = (ratesData.ratePaid*hours + ot) * (worker.cis ?  0.8 : 0.7)
+        res = isNaN(res) ? 0 : res.toFixed(1)
         return res
-    }    
+    } 
+    
+    const getMargin = () => {
+        let margin = invoiced(worker.worker) - workerAmount(worker.worker)
+
+        margin = isNaN(margin) ? 0 : margin.toFixed(1)
+        return margin
+    }
+
+    const updateOthers = (value, worker) => {
+        setOthers(value)
+        worker.others = value
+        dispatch( updateWorkers(worker._id, worker) )
+    }
+
+    const updateRates = async (value, worker, field) => {
+      switch(field) {
+				case 'hours': 
+					setHours(value)
+					console.log(await hours)
+          worker[field] = value
+          dispatch( updateWorkers(worker._id, worker) )					
+					break
+         
+        case 'hoursOT':  
+					setOT(value)
+					console.log(await hoursOT)
+          worker[field] = value
+          dispatch( updateWorkers(worker._id, worker) )
+		  		break 
+				default:
+					break  
+      }
+    }
 
     return (
         <div className='worker-wr'>
             <ul className='test'>
 
                 {/* GENERAL INFO */}
-                <div><li>{ worker ? worker.company ? worker.company.companyName: null : null }</li></div>
-                <div><li>{ worker ? worker.site ? worker.site.siteName: null : null }</li></div>
-                <div><li>{ worker ? worker.firstname+' '+ worker.lastname : null }</li></div>
-                <div><li>{ worker ? worker.cis===false ? 'PAYE' : 'CIS' : null }</li></div>
-                <div><li>{ worker ? worker.category : null }</li></div>
+                <div><li>{ site ? site.companyName ? site.companyName: null : null }</li></div>
+                <div><li>{ site ? site.siteName ? site.siteName: null : null }</li></div>
+                <div><li>{ worker ? worker.worker.firstname+' '+ worker.worker.lastname : null }</li></div>
+                <div><li>{ worker ? worker.worker.cis===false ? 'PAYE' : 'CIS' : null }</li></div>
+                <div><li>{ worker ? worker.worker.category : null }</li></div>
                 <div><li className='small-text'>upload timesheet</li></div>
 
                 {/* RATES */}
-                <div><li>{ ratesData.gotClient ? parseFloat(ratesData.gotClient).toFixed(1) : null }</li></div>
-                <div><li>{ ratesData.paidWorker ? parseFloat(ratesData.paidWorker).toFixed(1) : null}</li></div>
-                <div><li>{ makeFloat(ratesData.gotClient) - makeFloat(ratesData.paidWorker) }</li></div>
-                <div><li><input value={hours} onChange={ e => setHours(e.target.value) } /></li></div>
+                <div><li>{ ratesData.rateGot ? parseFloat(ratesData.rateGot).toFixed(1) : null }</li></div>
+                <div><li>{ ratesData.ratePaid ? parseFloat(ratesData.ratePaid).toFixed(1) : null}</li></div>
+                <div><li>{ ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null }</li></div>
+                <div><li><input value={hours} onChange={ e => updateRates(e.target.value, worker, 'hours') } /></li></div>
 
-                <div><li>{ ratesData.overtimeGot }</li></div>
-                <div><li>{ ratesData.overtimePaid }</li></div>
-                <div><li>{  ratesData.overtimeGot ? makeFloat(ratesData.overtimeGot) - makeFloat(ratesData.overtimePaid) : 0 }</li></div> 
-                <div><li><input value={hoursOT} onChange={ e => setOT(e.target.value) }  /></li></div>
+                <div><li>{ ratesData.otGot ? parseFloat(ratesData.otGot).toFixed(1) : null }</li></div>
+                <div><li>{ ratesData.otPaid ? parseFloat(ratesData.otPaid).toFixed(1) : null }</li></div>
+                <div><li>{ ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0 }</li></div> 
+                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker.worker, 'hoursOT')  }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}
-                <div><li>{ worker ? invoiced(worker)===NaN ? null : invoiced(worker) :null }</li></div>
-                <div><li>{ worker ? worker.margin*hours+worker.marginOT*hoursOT : null }</li></div>
-                <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker) : null }</li></div>
-                <div><li>No</li></div>
-                <div><li>{ worker ? worker.communicationChannel : null }</li></div>
+                <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
+                <div><li>{ worker ? getMargin() : null }</li></div>
+                <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
+				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker.worker) }  /></li></div>
+								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
+                <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
             </ul>
         </div>
     )
 }
+
+const mapStateToProps = state => {
+  return {
+      workers: state.workersReducer.workers
+  }
+}
+
+export default connect( mapStateToProps )(Worker)

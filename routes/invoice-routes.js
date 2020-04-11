@@ -12,9 +12,9 @@ const Clients = require('../models/clients');
 router.post('/generate-invoice', async (req, res) => {
     // [ ] STORE THE BUFFER TO DB
 
-    console.log('request informations', req.body)
-    let workers = req.body.workersList
-    let client = await Clients.findOne({ companyName: workers[0].company.companyName })
+    console.log('request informations', req.body.site)
+    let site = req.body.site
+    let client = await Clients.findOne({ companyName: site.companyName })
 
     let data = []
     let totalNetAmount = 0;
@@ -23,20 +23,19 @@ router.post('/generate-invoice', async (req, res) => {
     let weekEnding = process.env.WEEK_ENDING;
     const invoiceStatus = [];
   
-    workers.map((worker, i) => {
-        let { rate, otRate } = getRates(worker)
-
+    site.workers.map((item, i) => {
+        let ot = isNaN(parseFloat(item.rates.otRate)*parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate)*parseFloat(item.worker.hoursOT)
         let payload = {
-            Worker: worker.firstname+' '+worker.lastname,
-            UnitCost: parseFloat(rate).toFixed(1),
-            WorkedHours:parseFloat(worker.hours).toFixed(1),
-            NetAmount: ( parseFloat(rate)*parseFloat(worker.hours) + parseFloat(otRate)*parseFloat(worker.hoursOT) ).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
-            CIS: ((parseFloat(rate)*parseFloat(worker.hours)) *0.2).toFixed(2),
-            VAT: ((parseFloat(rate)*parseFloat(worker.hours)) *0.2).toFixed(2),
+            Worker: item.worker.firstname+' '+item.worker.lastname,
+            UnitCost: parseFloat(item.rates.rateGot).toFixed(1),
+            WorkedHours:parseFloat(item.worker.hours).toFixed(1),
+            NetAmount: ( parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours) + ot ).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
+            CIS: ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2).toFixed(2),
+            VAT: ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2).toFixed(2),
         }
         data.push(payload)
-        totalTaxAmount = totalTaxAmount + ((parseFloat(rate)*parseFloat(worker.hours)) *0.2)
-        totalNetAmount = totalNetAmount + ( parseFloat(rate)*parseFloat(worker.hours) + parseFloat(otRate)*parseFloat(worker.hoursOT) )
+        totalTaxAmount = totalTaxAmount + ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2)
+        totalNetAmount = totalNetAmount + ( parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours) + ot )
 
     });
   
@@ -47,9 +46,11 @@ router.post('/generate-invoice', async (req, res) => {
     
     dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
   
-    data[0].Company = workers[0].company.companyName
-    data[0].Address1 = client.firstPost,
-    data[0].Address2 = client.secondPost,
+    data[0].Company = site.companyName
+    data[0].Address1 = client.firstPost ? client.firstPost : null ,
+    data[0].Address2 = client.secondPost ? client.secondPost : null,
+    data[0].city = client.city ? client.city : null 
+    data[0].zipCode = client.zipCode ? client.zipCode : null 
     data[0].dueDate = dueDate;
     data[0].Week_Ending = weekEnding
     data[0].issueDate = issueDate 

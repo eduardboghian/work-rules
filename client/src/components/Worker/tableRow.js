@@ -18,42 +18,9 @@ const useStyles = makeStyles({
 const WorkerRow = props => {
   const { item, openDialog, setActionType, even } = props;
   const classes = useStyles();
-  console.log('data before edit', item)
-  const data = {
-    _id: item._id,
-    type: item.type,
-    companyName: item.companyName,
-    peer: item.peer,
-    firstname: item.firstname,
-    lastname: item.lastname,
-    id: item.id,
-    firstPost: item.firstPost,
-    secondPost: item.secondPost,
-    city: item.city,
-    zipCode: item.zipCode,
-    utr: item.utr,
-    vat: item.vat,
-    cis: item.cis,
-    nino: item.nino,
-    crn: item.crn,
-    phone: item.phone,
-    email: item.email,
-    communicationChannel: item.communicationChannel,
-    company: item.company,
-    site: item.site,
-    sitesData: item.sitesData,
-    gotClient: item.gotClient,
-    paidWorker: item.paidWorker,
-    margin: item.margin,
-    overtimeGot: item.overtimeGot,
-    overtimePaid: item.overtimePaid,
-    marginOT: item.marginOT,
-    account: item.account,
-    sortCode: item.sortCode,
-    taxPercentage: item.taxPercentage,
-    category: item.category,
-    status: item.status
-  };
+  
+  console.log(item)
+
   return (
     <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
       <TableCell
@@ -78,10 +45,7 @@ const WorkerRow = props => {
         <Typography>{item.nino}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.cis}</Typography>
-      </TableCell>
-      <TableCell classes={{ root: classes.cell }}>
-        <Typography>{`${item.company.companyName} ${item.site.siteName}`}</Typography>
+        <Typography>{`${item.cis}`}</Typography>
       </TableCell>
     </TableRow>
   );

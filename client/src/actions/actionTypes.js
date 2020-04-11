@@ -5,5 +5,11 @@ export const usersTypes = {
 };
 
 export const workersTypes = {
-  ADD_WORKERS: 'ADD_WORKERS'
+  ADD_WORKERS: 'ADD_WORKERS',
+  UPDATE_WORKERS: 'UPDATE_WORKERS'
+}
+
+export const siteTypes = {
+  ADD_SITES: 'ADD_SITES',
+  UPDATE_SITES: 'UPDATE_SITES'
 }

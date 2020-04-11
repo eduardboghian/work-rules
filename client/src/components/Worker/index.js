@@ -33,7 +33,6 @@ const Worker = props => {
   const [searchedData, setSearchedData] = useState(null);
   const [editData, setEditData] = useState({
     type: "physical",
-    companyName: "",
     peer: "",
     firstname: "",
     lastname: "",
@@ -49,15 +48,6 @@ const Worker = props => {
     phone: "+44",
     email: "",
     communicationChannel: "",
-    company: {},
-    site: {},
-    sitesData: [],
-    gotClient: "0",
-    paidWorker: "0",
-    margin: "0",
-    overtimeGot: "0",
-    overtimePaid: "0",
-    marginOT: "0",
     account: '',
     sortCode: '',
     taxPercentage: "",
@@ -200,7 +190,6 @@ const Worker = props => {
                     <Grid container>NINO {sort.nino === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
                   <TableCell classes={{ root: classes.cellHeader }}>CIS</TableCell>
-                  <TableCell classes={{ root: classes.cellHeader }}>Client + Site</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

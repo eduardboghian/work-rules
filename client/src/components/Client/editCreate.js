@@ -219,7 +219,6 @@ const EditCreate = props => {
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-    console.log('testeeee', id)
     axios.delete('http://localhost:3001/site/delete', { 
       headers: {
         authorization: "Bearer " + localStorage.getItem("token")
@@ -516,7 +515,7 @@ const EditCreate = props => {
             <Button
               onClick={async (e) => {
                 e.preventDefault()
-                let a = await createSite({ siteName: newSiteName,  });
+                let a = await createSite({ siteName: newSiteName, companyName: temporaryData.companyName });
                 setData({ ...temporaryData, sites: [...temporaryData.sites, { _id: a.data._id, siteName: a.data.siteName }] });
                 setSites([...sites, a.data]);
               }}
