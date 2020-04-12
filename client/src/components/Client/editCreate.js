@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import Input from "@material-ui/core/Input";
 
-import { createClient, createSite, getSites } from "../../utils/api";
+import { createClient, createSite } from "../../utils/api";
 
 import SitesTable from "./sitesTable";
 
@@ -35,15 +35,15 @@ const EditCreate = props => {
   const [sitesError, setSitesError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [pending, setPending] = useState(false);
+
   useEffect(() => {
     findSites();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
+
   const findSites = async () => {
-    let a = getSites(props.data.sites);
-    console.log('test2....',props.data)
     setSites(props.data.sites);
   };
+  
   const closePage = () => {
     props.isDialogOpened(false);
     props.setEditData({
@@ -231,20 +231,22 @@ const EditCreate = props => {
     .catch( err => console.log(err))
   };
   const classes = useStyles();
-  const createId = () => {
-    const consonants = /[BbCcDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvXxZzWwYy]/g;
-    // const vowels = /[AaEeIiOoUu]/g;
-    let consName = temporaryData.companyName.match(consonants);
-    if (!!consName && consName.length < 6) {
-      let vowName = temporaryData.companyName.match(/[A-Za-z]/g).join("");
-      return setData({ ...temporaryData, id: vowName.toUpperCase() });
-    }
-    if (!!consName) {
-      consName = consName.join("");
-      consName = consName.slice(0, 6);
-      setData({ ...temporaryData, id: consName.toUpperCase() });
-    }
-  };
+  
+  // const createId = () => {
+  //   const consonants = /[BbCcDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvXxZzWwYy]/g;
+  //   // const vowels = /[AaEeIiOoUu]/g;
+  //   let consName = temporaryData.companyName.match(consonants);
+  //   if (!!consName && consName.length < 6) {
+  //     let vowName = temporaryData.companyName.match(/[A-Za-z]/g).join("");
+  //     return setData({ ...temporaryData, id: vowName.toUpperCase() });
+  //   }
+  //   if (!!consName) {
+  //     consName = consName.join("");
+  //     consName = consName.slice(0, 6);
+  //     setData({ ...temporaryData, id: consName.toUpperCase() });
+  //   }
+  // };
+
   return (
     <>
       <Grid container direction="row" justify="space-between" classes={{ root: classes.editContainer }}>

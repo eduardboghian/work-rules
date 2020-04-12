@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -23,7 +22,7 @@ const EditCreate = props => {
   const [passwordError, setPasswordError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [pending, setPending] = useState(false);
-  //   const { role, firstname, lastname, email, password, status } = props.data;
+
   const validation = async () => {
     if (temporaryData.role.length === 0) {
       setRoleError(true);
@@ -79,7 +78,7 @@ const EditCreate = props => {
       };
     }
     setPending(true);
-    let a = await createAgentSourcer({ ...temporaryData }, props.actionType);
+    //let a = await createAgentSourcer({ ...temporaryData }, props.actionType);
     props.update();
     props.snackbar(true);
     closePage();

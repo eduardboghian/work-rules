@@ -38,3 +38,18 @@ a {
   left: 50%;
   transform: translateX(-50%);
 }
+
+#root {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.wallpaper {
+  width: 400px;
+  opacity: .15;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}

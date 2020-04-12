@@ -14,6 +14,18 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
     const [weekEnding, setWeekEnding] = useState('')
 
     useEffect(() => {
+        
+        addDataToState()
+
+        let date = moment().day(0)
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+        let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
+
+        setWeekEnding(weekE)
+
+    }, [])
+
+    const addDataToState = () => {
         axios.get('/worker/get')
         .then(res=> {
             let workers = res.data.filter(item => item.status === 'active')
@@ -29,15 +41,7 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
             dispatch( addSites(res.data) )
         })
         .catch(error=>console.error(error))
-
-
-        let date = moment().day(0)
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-        let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
-
-        setWeekEnding(weekE)
-
-    }, [])
+    }
 
     const storeWeekEnding = () => {
         axios.post('/weekly/add', {

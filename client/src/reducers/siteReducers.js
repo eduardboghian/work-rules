@@ -10,7 +10,7 @@ const sitesReducer = (state= stateInit, action) => {
         case siteTypes.UPDATE_SITES: 
             let sites = [...state.sites]
             
-            let site = site.find(item => item._id === action.payload._id)
+            let site = sites.find(item => item._id === action.payload._id)
             let index = state.sites.indexOf(site)
 
             sites[index] = action.payload.sites

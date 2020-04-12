@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import Select from '@material-ui/core/Select';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -24,10 +23,14 @@ export default function AddWorker({formClass, siteId}) {
     })
 
     useEffect(() => {
+        getWorkersFromDB()
+    }, [])
+
+    const getWorkersFromDB = () => {
         axios.get('/worker/get')
         .then(res => setWorkers(res.data))
         .catch(error => console.error(error))
-    }, [])
+    } 
 
     const inputHadnler = (value, field) => {
         setRates({ ...rates, [field] : value })

@@ -58,11 +58,11 @@ const Client = props => {
   const classes = useStyles();
 
   useEffect(() => {
-    getClientData().then(res => setClientData(res.data));
+      loadClientData()
+      console.log(workersData)
   }, []);
 
   // FILTERS
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
       let filteredData = [...clientData];
       if (!archived) {
@@ -78,8 +78,13 @@ const Client = props => {
   useEffect(() => {
     let sortedData = multiSort(filteredData, sort);
     setFilteredData(sortedData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort]);
+
+  const loadClientData = () => {
+    getClientData()
+    .then(res => setClientData(res.data))
+    .catch(err => console.error(err))
+  }
 
   const openDialog = data => {
     setEditData(data);
@@ -159,7 +164,7 @@ const Client = props => {
               </TableHead>
               <TableBody>
                 {filteredData.map((item, index) => (
-                  <ClientRow even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  <ClientRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
                 ))}
               </TableBody>
             </Table>

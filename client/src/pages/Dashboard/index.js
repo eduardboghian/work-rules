@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
-import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import AgentSourcer from '../../components/AgentSourcer/';
-import Client from '../../components/Client/';
-import Worker from '../../components/Worker/';
 import { Drawer, Button, Divider } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -152,7 +148,7 @@ class Dashboard extends React.Component {
         </Drawer>
         <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '100px'}}>
         </Grid>
-
+        <img src='https://workrules.co.uk/meida/Asset%201@1.5x.png' alt='' className='wallpaper' ></img>
       </>
     );
   }

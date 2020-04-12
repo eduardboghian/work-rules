@@ -196,7 +196,7 @@ const Worker = props => {
               </TableHead>
               <TableBody>
                 {filteredData.map((item, index) => (
-                  <WorkerRow even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  <WorkerRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
                 ))}
               </TableBody>
             </Table>

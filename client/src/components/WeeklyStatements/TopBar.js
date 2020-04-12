@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react'
 import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
-import Dashboard from '../../pages/Dashboard/index.js'
 
 const TopBar = ({site, workers}) => {
-    const [workersList, setWorkers] = useState([])
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
 
     useEffect(() => {
-        setWorkers(workers)
         setWrC(site.companyName)
     }, [site])
 
@@ -23,37 +20,38 @@ const TopBar = ({site, workers}) => {
         })
         .then(res=> {
             res.data.map(data=> {
-            function arrayBufferToBase64(buffer) {
-              let binary = '';
-              let bytes = new Uint8Array(buffer);
-              let len = bytes.byteLength;
-              for (let i = 0; i < len; i++) {
-                  binary += String.fromCharCode(bytes[i]);
-              }
-              return window.btoa(binary);
-            }
-            let b64 = arrayBufferToBase64(data.data)
+                function arrayBufferToBase64(buffer) {
+                let binary = '';
+                let bytes = new Uint8Array(buffer);
+                let len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return window.btoa(binary);
+                }
+                let b64 = arrayBufferToBase64(data.data)
 
 
-            // Embed the PDF into the HTML page and show it to the user
-            let obj = document.createElement('object');
-            obj.style.width = '70%';
-            obj.style.height = '842pt';
-            obj.style.float = 'right'
-            obj.type = 'application/pdf';
-            obj.data = 'data:application/pdf;base64,' + b64;
-            document.body.appendChild(obj);
+                // Embed the PDF into the HTML page and show it to the user
+                let obj = document.createElement('object');
+                obj.style.width = '70%';
+                obj.style.height = '842pt';
+                obj.style.float = 'right'
+                obj.type = 'application/pdf';
+                obj.data = 'data:application/pdf;base64,' + b64;
+                document.body.appendChild(obj);
 
-            // Insert a link that allows the user to download the PDF file
-            let link = document.createElement('a');
-            link.innerHTML = 'Download PDF file';
-            link.download = 'file.pdf';
-            link.href = 'data:application/octet-stream;base64,' + b64;
-            document.body.appendChild(link);
+                // Insert a link that allows the user to download the PDF file
+                let link = document.createElement('a');
+                link.innerHTML = 'Download PDF file';
+                link.download = 'file.pdf';
+                link.href = 'data:application/octet-stream;base64,' + b64;
+                document.body.appendChild(link);
+
+                return true
+            })
 
         })
-
-    })
         .catch(err => console.log(err))
     }
 
@@ -87,7 +85,9 @@ const TopBar = ({site, workers}) => {
 			  generatePDF(worker)
               console.log(err)
             })
+            return true
         })
+        
     }
 
     // MAKE PAYMETN
@@ -105,7 +105,7 @@ const TopBar = ({site, workers}) => {
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
-                <div onClick={ e => generateInvoice(workersList, site) }>Generate Invoice for Site</div>
+                <div onClick={ e => generateInvoice(workers, site) }>Generate Invoice for Site</div>
                 <div onClick={ e=> generateInvoice(workersForCompany) }>Generate Invoice for Client</div>
                 <div onClick={ e => generatePayslip(site) }>Generate Payslip for Site</div>
                 <div onClick={ e => makePayment(site) } >Make Payment</div>

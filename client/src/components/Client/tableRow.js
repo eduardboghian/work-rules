@@ -41,6 +41,7 @@ const ClientRow = props => {
     sites: item.sites,
     status: item.status
   };
+
   return (
     <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
       <TableCell classes={{ root: classes.cell }}>
@@ -68,8 +69,8 @@ const ClientRow = props => {
             classes={{ tooltip: classes.tooltip }}
             title={
               <Grid container direction="column">
-                {item.sites.map(site => (
-                  <Typography>{site.siteName}</Typography>
+                {item.sites.map((site, index) => (
+                  <Typography key={index}>{site.siteName}</Typography>
                 ))}
               </Grid>
             }

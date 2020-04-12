@@ -14,7 +14,6 @@ function Worker({dispatch, worker, site}) {
         setHours(worker.worker.hours)
         setOT(worker.worker.hoursOT)
         setData(worker.rates)
-        console.log(worker)
     }, [worker])
 
     useEffect(() => {

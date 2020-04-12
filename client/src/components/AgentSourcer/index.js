@@ -38,17 +38,15 @@ const AgentSourcer = props => {
   const [snackbarState, setSnackbarState] = useState(false);
   const [sort, setSort] = useState({});
   const classes = useStyles();
-  useEffect(() => {
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+
+  useEffect(() => { getData() }, []);
   useEffect(() => agSoFilter(), [data, archived, searchedData]);
   useEffect(() => {
     let sortedData = multiSort(filteredData, sort);
     setFilteredData(sortedData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort]);
+  
   const getData = async () => {
     let data = await getAgentsSourcersData();
     setData(data.data);

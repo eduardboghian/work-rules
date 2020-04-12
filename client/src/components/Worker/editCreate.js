@@ -10,52 +10,25 @@ import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
 
-import { getClientData, createWorker } from '../../utils/api';
+import { createWorker } from '../../utils/api';
 
 import { editCreateStyles } from '../../utils/styles';
 const useStyles = makeStyles(editCreateStyles);
 
 const EditCreate = props => {
   const [temporaryData, setData] = useState({ ...props.data });
-  const [clients, setClientsData] = useState([]);
-  const [currentCompany, setCurrentCompany] = useState([]);
-  const [sites, setSites] = useState([]);
   const [pending, setPending] = useState(false);
   const [companyNameError, setCompanyNameError] = useState(false);
   const [peerError, setPeerError] = useState(false);
   const [firstnameError, setFirstnameError] = useState(false);
   const [lastnameError, setLastnameError] = useState(false);
-  const [firstPostError, setFirstPostError] = useState(false);
   const [utrError, setUtrError] = useState(false);
   const [vatError, setVatError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
-  const [crnError, setCrnError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [commChanError, setCommChanError] = useState(false);
-  const [companyError, setCompanyError] = useState(false);
-  const [siteError, setSiteError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
-  const [statusError, setStatusError] = useState(false);
 
-  // LOAD CLIENTS
-  useEffect(() => { getClients() }, []);
-  const getClients = async () => {
-    let a = await getClientData();
-    setClientsData(a.data);
-    
-    console.log('temp data',temporaryData)
-    
-  };
-
-  // LOAD SITES
-  useEffect(() => { getCurrentSites() }, [currentCompany]);
-  const getCurrentSites = async () => {
-    let company = clients.find(client => client.companyName === currentCompany);
-    if (!!company) {
-      setSites(company.sites);
-    }
-  };
 
   useEffect(() => {
     let sum = +temporaryData.gotClient - +temporaryData.paidWorker;
@@ -207,7 +180,6 @@ const EditCreate = props => {
 
   // INPUT HANDLER
   const inputHadnler = (data, fieldName) => {
-    let checked;
     switch (fieldName) {
       case 'type':
         if (data) {
@@ -418,8 +390,8 @@ const EditCreate = props => {
             <Typography>Postal adress 1</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip open={firstPostError} title='Please provide Postal adress' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={firstPostError}>
+            <Tooltip title='Please provide Postal adress' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl fullWidth >
                 <Input
                   value={temporaryData.firstPost}
                   placeholder='Postal adress 1'
@@ -587,8 +559,8 @@ const EditCreate = props => {
             <Typography>Preferred communication channel</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip open={commChanError} title='Please select communication channel' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} error={commChanError}>
+            <Tooltip  title='Please select communication channel' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl fullWidth classes={{ root: classes.inputContainer }} >
                 <Select
                   placeholder='Choose preferred communication channel'
                   value={temporaryData.communicationChannel}
@@ -707,8 +679,8 @@ const EditCreate = props => {
             <Typography>Status</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip open={statusError} title='Please select status' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} error={statusError}>
+            <Tooltip  title='Please select status' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl fullWidth classes={{ root: classes.inputContainer }} >
                 <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
                   <MenuItem value={'active'}>Active</MenuItem>
                   <MenuItem value={'archived'}>Not Active</MenuItem>

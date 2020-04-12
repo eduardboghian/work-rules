@@ -1,32 +1,29 @@
-import React, { useState, useEffect } from "react";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
-// import { FormattedMessage } from 'react-intl';
+import React, { useState, useEffect } from 'react';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { connect } from 'react-redux';
 
-import axios from "axios";
+import axios from 'axios';
 
 
-import { login, loginFail } from "../../actions/usersActions";
-import { loginRequest } from "../../utils/api";
+import { login, loginFail } from '../../actions/usersActions';
 
 const useStyles = makeStyles({
   container: {
-    marginTop: "30vh"
+    marginTop: '30vh'
   },
   header: {
-    textAlign: "center"
+    textAlign: 'center'
   },
   input: {
-    margin: "10px 0"
+    margin: '10px 0'
   },
   submitBtn: {
-    marginLeft: "40%"
+    marginLeft: '40%'
   }
 });
 
@@ -35,7 +32,6 @@ const SignIn = props => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false)
   const classes = useStyles();
-  let history = useHistory();
 
   useEffect(() => {
     if (props.loginError) {
@@ -61,7 +57,7 @@ const SignIn = props => {
   };
 
   const handleKeyPress = async (event) => {
-    if(event.key == 'Enter'){
+    if(event.key === 'Enter'){
       event.preventDefault();
       event.stopPropagation();
       submitLogin();
@@ -70,15 +66,15 @@ const SignIn = props => {
 
   return (
     <Container maxWidth='xs' classes={{ root: classes.container }}>
-      <Tooltip title='Wrong username or login' open={props.loginError} placement="top">
-        <Typography component="h1" variant="h5" classes={{ root: classes.header }}>
+      <Tooltip title='Wrong username or login' open={props.loginError} placement='top'>
+        <Typography component='h1' variant='h5' classes={{ root: classes.header }}>
           Sign In
         </Typography>
       </Tooltip>
       <TextField
-        variant="outlined"
+        variant='outlined'
         autoFocus
-        label="Usename"
+        label='Usename'
         required
         fullWidth
         value={username}
@@ -87,9 +83,9 @@ const SignIn = props => {
         classes={{ root: classes.input }}
       />
       <TextField
-        variant="outlined"
-        label="Password"
-        type="password"
+        variant='outlined'
+        label='Password'
+        type='password'
         required
         fullWidth
         error={props.loginError}
@@ -98,7 +94,7 @@ const SignIn = props => {
         classes={{ root: classes.input }}
         onKeyPress={e => handleKeyPress(e)}
       />
-      <Button variant="contained" color="primary" onClick={submitLogin} classes={{ root: classes.submitBtn }}>
+      <Button variant='contained' color='primary' onClick={submitLogin} classes={{ root: classes.submitBtn }}>
         Submit
       </Button>
       <div className={ loginError ? 'error-div' : 'none' }>Username or Password incorect!</div>
