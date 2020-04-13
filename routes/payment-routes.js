@@ -54,9 +54,10 @@ router.post('/make-payment', async (req, res)=> {
       const rate = item.rates.ratePaid
       const otRate = item.rates.otPaid
       let ot = otRate ? otRate*item.worker.hoursOT : 0
+      let others = parseFloat(item.worker.others) ? parseFloat(item.worker.others) : 0
       
-      let payableAmount = (parseFloat(rate*item.worker.hours + ot)*0.8 ).toFixed(2)
-      
+      let payableAmount = (parseFloat(rate*item.worker.hours + ot)*0.8 + others ).toFixed(2)
+
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {
 			
           let sortCode 
@@ -64,7 +65,7 @@ router.post('/make-payment', async (req, res)=> {
           let paymentResponse 
 
 		      // CHECKING THE ACCOUNT AND THE SORT CODE
-          if(data.accounts[0].account_no == item.worker.account &&  data.accounts[0].sort_code==sortCode){
+          if(data.accounts[0].account_no == item.worker.account &&  data.accounts[0].sort_code==sortCode && item.worker.paymentStatus !== 'Yes' ){
             const requestId = uuid()
             console.log('3 ok', payableAmount, 'hrs...' ,item.worker.others)
 
@@ -97,6 +98,7 @@ router.post('/make-payment', async (req, res)=> {
                 })
             })
           }
+
           return await paymentResponse
       }))
 

@@ -18,11 +18,9 @@ const useStyles = makeStyles({
 const WorkerRow = props => {
   const { item, openDialog, setActionType, even } = props;
   const classes = useStyles();
-  
-  console.log(item)
 
   return (
-    <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
+    <TableRow style={even ? { backgroundColor: "#ecececb0" } : {}}>
       <TableCell
         classes={{ root: classes.cell }}
         onClick={() => {
@@ -39,13 +37,7 @@ const WorkerRow = props => {
         <Typography>{item.communicationChannel}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.utr}</Typography>
-      </TableCell>
-      <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.nino}</Typography>
-      </TableCell>
-      <TableCell classes={{ root: classes.cell }}>
-        <Typography>{`${item.cis}`}</Typography>
+        <Typography>{`${item.category}`}</Typography>
       </TableCell>
     </TableRow>
   );

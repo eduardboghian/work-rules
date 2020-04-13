@@ -31,7 +31,10 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
             let workers = res.data.filter(item => item.status === 'active')
             dispatch( addWorkers(workers) )
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err)
+            window.location.reload(true)
+        })
 
         axios.get('/site/get',{headers: {
             authorization: 'Bearer ' + localStorage.getItem('token')
@@ -76,7 +79,6 @@ const WeeklyStatemnt = ({dispatch, sites}) => {
 
 const mapStateToProps = state => {
     return {
-        workers: state.workersReducer.workers,
         sites: state.siteReducers.sites
     }
 }

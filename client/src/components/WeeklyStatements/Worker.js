@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { updateWorkers } from '../../actions/workerActions'
+import { updateSites, updateHours, updateRates } from '../../actions/siteActions'
 import { connect } from 'react-redux'
 import './css/index.css'
 import axios from 'axios'
 
 function Worker({dispatch, worker, site}) {
-    const [ratesData, setData] = useState({})
+    const [ratesData, setData] = useState({
+      rateGot: 0,
+      
+    })
     const [hours, setHours] = useState(0)
     const [hoursOT, setOT] = useState(0)
     const [others, setOthers] = useState(0)
@@ -59,8 +63,7 @@ function Worker({dispatch, worker, site}) {
 
     const updateOthers = (value, worker) => {
         setOthers(value)
-        worker.others = value
-        dispatch( updateWorkers(worker._id, worker) )
+        dispatch( updateSites(site._id, worker.worker._id, value) )
     }
 
     const updateRates = async (value, worker, field) => {
@@ -69,14 +72,14 @@ function Worker({dispatch, worker, site}) {
 					setHours(value)
 					console.log(await hours)
           worker[field] = value
-          dispatch( updateWorkers(worker._id, worker) )					
+          dispatch( updateHours(site._id, worker.worker._id, value, hoursOT) )					
 					break
          
         case 'hoursOT':  
 					setOT(value)
 					console.log(await hoursOT)
           worker[field] = value
-          dispatch( updateWorkers(worker._id, worker) )
+          dispatch( updateHours(site._id, worker.worker._id, hours, value) )
 		  		break 
 				default:
 					break  
@@ -104,13 +107,13 @@ function Worker({dispatch, worker, site}) {
                 <div><li>{ ratesData.otGot ? parseFloat(ratesData.otGot).toFixed(1) : null }</li></div>
                 <div><li>{ ratesData.otPaid ? parseFloat(ratesData.otPaid).toFixed(1) : null }</li></div>
                 <div><li>{ ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0 }</li></div> 
-                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker.worker, 'hoursOT')  }  /></li></div>
+                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
                 <div><li>{ worker ? getMargin() : null }</li></div>
                 <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
-				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker.worker) }  /></li></div>
+				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
 								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
                 <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
             </ul>
@@ -118,10 +121,5 @@ function Worker({dispatch, worker, site}) {
     )
 }
 
-const mapStateToProps = state => {
-  return {
-      workers: state.workersReducer.workers
-  }
-}
 
-export default connect( mapStateToProps )(Worker)
+export default connect()(Worker)

@@ -63,35 +63,49 @@ const Worker = props => {
   const [sort, setSort] = useState({});
 
   const classes = useStyles();
-  useEffect(() => updateClientData(), []);
   useEffect(() => {
+    const updateClientData = async () => {
+      let data = await getWorkers();
+      setWorkersData(data.data);
+    };
+
+    updateClientData()
+  }, []);
+
+
+  useEffect(() => {
+    const workersFilter = () => {
+      let data = [...workersData];
+      if (!archived) {
+        data = data.filter(item => item.status === "active");
+      }
+      if (!noCis) {
+        data = data.filter(item => item.cis === true);
+      }
+      if (noUtr) {
+        data = data.filter(item => item.utr.length === 0);
+      }
+      if (noNino) {
+        data = data.filter(item => item.nino.length === 0);
+      }
+      if (!!searchedData) {
+        data = data.filter(item => !!searchedData.find(data => data._id === item._id));
+      }
+      setFilteredData(data);
+    };
+
     workersFilter();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workersData, searchedData, archived, noCis, noUtr, noNino]);
+
+
   useEffect(() => {
     let sortedData = multiSort(filteredData, sort);
     setFilteredData(sortedData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort]);
-  const workersFilter = () => {
-    let data = [...workersData];
-    if (!archived) {
-      data = data.filter(item => item.status === "active");
-    }
-    if (!noCis) {
-      data = data.filter(item => item.cis === true);
-    }
-    if (noUtr) {
-      data = data.filter(item => item.utr.length === 0);
-    }
-    if (noNino) {
-      data = data.filter(item => item.nino.length === 0);
-    }
-    if (!!searchedData) {
-      data = data.filter(item => !!searchedData.find(data => data._id === item._id));
-    }
-    setFilteredData(data);
-  };
+  
   const openDialog = data => {
     setEditData(data);
     isDialogOpened(true);
@@ -102,11 +116,12 @@ const Worker = props => {
     }
     setSnackbarState(false);
   };
+
   const updateClientData = async () => {
     let data = await getWorkers();
-    console.log('data from db...', data.data)
     setWorkersData(data.data);
   };
+  
   const sortHandler = (name, dir) => {
     if (dir === "desc") {
       setSort({ [name]: "asc" });
@@ -185,13 +200,7 @@ const Worker = props => {
                       Preferred Communication Channel {sort.communicationChannel === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
                     </Grid>
                   </TableCell>
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("utr", sort.utr)}>
-                    <Grid container>UTR {sort.utr === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("nino", sort.nino)}>
-                    <Grid container>NINO {sort.nino === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
-                  <TableCell classes={{ root: classes.cellHeader }}>CIS</TableCell>
+                  <TableCell classes={{ root: classes.cellHeader }}>Trade</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

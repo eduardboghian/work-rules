@@ -116,7 +116,7 @@ const TopBar = ({site, workers}) => {
                 <div><li>Site</li></div>
                 <div><li>Worker Name</li></div>
                 <div><li>CIS</li></div>
-                <div><li>Category</li></div>
+                <div><li>Trade</li></div>
                 <div><li>Checked</li></div>
                 <div><li>Rate Got</li></div>
                 <div><li>Rate paid</li></div>
@@ -129,7 +129,7 @@ const TopBar = ({site, workers}) => {
                 <div><li>Invoiced</li></div>
                 <div><li>Margin</li></div>
                 <div><li>Worker</li></div>
-                <div><li>Others</li></div>
+                <div><li>Avans</li></div>
                 <div><li>Paid</li></div>
                 <div><li>Payslip via</li></div>
             </ul>

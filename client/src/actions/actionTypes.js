@@ -11,5 +11,7 @@ export const workersTypes = {
 
 export const siteTypes = {
   ADD_SITES: 'ADD_SITES',
-  UPDATE_SITES: 'UPDATE_SITES'
+  UPDATE_AVANS: 'UPDATE_AVANS',
+  UPDATE_RATES: 'UPDATE_RATES',
+  UPDATE_HOURS: 'UPDATE_HOURS'
 }

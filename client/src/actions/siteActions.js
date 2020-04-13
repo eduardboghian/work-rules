@@ -7,12 +7,36 @@ export const addSites = (sites) => {
     }
 }
 
-export const updateSites = (id, sites) => {
+export const updateSites = (siteId, workerId, value) => {
     return {
-        type: siteTypes.UPDATE_SITES,
+        type: siteTypes.UPDATE_AVANS,
         payload: {
-            _id: id,
-            sites
+            siteId,
+            workerId,
+            value
+        }
+    }
+}
+
+export const updateRates = (siteId, workerId, rates) => {
+    return {
+        type: siteTypes.UPDATE_RATES,
+        payload: {
+            siteId,
+            workerId,
+            rates
+        }
+    }
+}
+
+export const updateHours = (siteId, workerId, hours, hoursOT) => {
+    return {
+        type: siteTypes.UPDATE_HOURS,
+        payload: {
+            siteId,
+            workerId,
+            hours,
+            hoursOT
         }
     }
 }

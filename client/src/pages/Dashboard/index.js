@@ -19,9 +19,6 @@ class Dashboard extends React.Component {
       drawer: false
     };
   }
-  // const [offsetData, setOffsetData] = useState();
-  // const [currentPage, setCurrentPage] = useState(null);
-  // const [drawer, isDrawerOpened] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   scrollHandler = () => {
@@ -31,35 +28,26 @@ class Dashboard extends React.Component {
     const visible = offsetTop > currentOffsetTop;
     this.setState({ offsetData: { offsetTop: currentOffsetTop, visible: visible } });
   };
-  changePage = page => {
-    this.setState({ currentPage: page, drawer: false });
+
+  changePage = () => {
+    let pageName = window.location.pathname.replace(/\//g, "")
+    pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1)
+    this.setState({ currentPage: pageName, drawer: false });
   };
+  
   componentDidMount() {
     let token = localStorage.getItem('token');
     let role = localStorage.getItem('role');
     if (!!token === false || !!role === false) {
       this.props.history.push('/');
     }
+    this.changePage()
     window.addEventListener('scroll', this.scrollHandler);
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler);
   }
-  // useEffect(() => {
-  //   let token = localStorage.getItem('token');
-  //   let role = localStorage.getItem('role');
-  //   if (!!token === false || !!role === false) {
-  //     props.history.push('/');
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-  // useEffect(() => {
-  //   window.addEventListener('scroll', scrollHandler);
-  //   return () => {
-  //     window.removeEventListener('scroll', scrollHandler);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  
   render() {
     const styles = {
       navbarButtons: {
@@ -67,8 +55,9 @@ class Dashboard extends React.Component {
         margin: 10
       },
       currentPage: {
-        marginLeft: '20px',
-        fontWeight: 500
+        margin: '0 auto',
+        fontWeight: 500,
+        fontSize: '22px'
       }
     };
     return (

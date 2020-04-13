@@ -42,11 +42,7 @@ export const createSite = data => {
 };
 
 
-// export const addWorkerToSite = id => {
-//   return instance.post('/site/add-worker', id, headers);
-// };
 export const getWorkers = () => {
-  instance.get('/worker/get', headers).then(res=> console.log('loaded from db', res.data))
   return instance.get('/worker/get', headers);
 };
 export const createWorker = (data, action) => {
