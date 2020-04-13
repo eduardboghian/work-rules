@@ -20,13 +20,13 @@ const Worker = new Schema({
     phone: { type: String },
     email: { type: String },
     communicationChannel: { type: String },
-   
+
     taxPercentage: { type: String },
     category: { type: String },
     hours: { type: Number },
     hoursOT: { type: Number },
     sortCode: { type: String },
-    account: { type: Number }, 
+    account: { type: Number },
     paymentStatus: {
         type: String,
         default: 'No'

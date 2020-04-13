@@ -109,8 +109,26 @@ router.put('/add-hours', async (req, res) => {
     worker.worker.hoursOT = req.body.hoursOT
 
     newWorkers[index] = worker
-    
+
     let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
+
+    res.send(response)
+})
+
+router.put('/update-rates', async (req, res) => {
+    let site = await Sites.find({ _id: req.body.siteId })
+    if(!site) return res.send('nope')
+    let newWorkers = site[0].workers
+
+    let worker = site[0].workers.find(item => item.worker._id === req.body.id)
+    let index = site[0].workers.indexOf(worker)
+    worker.rates = req.body.ratesData
+
+    console.log(req.body.ratesData, worker);
+
+    newWorkers[index] = worker
+
+    let response = await Sites.findOneAndUpdate({_id: req.body.siteId}, {workers: newWorkers}, {new: true})
 
     res.send(response)
 })
@@ -125,7 +143,7 @@ router.put('/payment-status', async (req, res) => {
     worker.worker.paymentStatus = 'Yes'
 
     newWorkers[index] = worker
-    
+
     let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
 
     res.send(response)
