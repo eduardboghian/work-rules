@@ -15,3 +15,7 @@ export const siteTypes = {
   UPDATE_RATES: 'UPDATE_RATES',
   UPDATE_HOURS: 'UPDATE_HOURS'
 }
+
+export const weekEnding = {
+  SET_WEEK_ENDING: 'SET_WEEK_ENDING'
+}

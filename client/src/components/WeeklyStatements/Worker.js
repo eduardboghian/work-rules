@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { updateWorkers } from '../../actions/workerActions'
-import { updateSites, updateHours, updateRates } from '../../actions/siteActions'
+import { updateSites, updateHours, updateRatesAction } from '../../actions/siteActions'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
 
-function Worker({dispatch, worker, site}) {
+function Worker({dispatch, worker, site, weekEnding}) {
     const [ratesData, setData] = useState({
       rateGot: 0,
       
@@ -37,13 +37,25 @@ function Worker({dispatch, worker, site}) {
     }, [hours, hoursOT])
 
     useEffect(() => {
-      axios.put('/site/update-rates', {
-        siteId: site._id,
-        id: worker.worker._id,
-        ratesData
-      })
-      .then(res=> {})
-      .catch(err=> console.log(err))
+      let date = moment().day(0)
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+      let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
+
+      console.log('test ',weekEnding, weekE)
+      if( weekEnding === weekE ) {
+        console.log(weekEnding)
+        if(ratesData.rateGot !== 0 && ratesData.ratePaid ) {
+          axios.put('/site/update-rates', {
+            siteId: site._id,
+            id: worker.worker._id,
+            ratesData
+          })
+          .then(res=> {
+            console.log(res)}
+          )
+          .catch(err=> console.log(err))
+        }
+      }
     },[ratesData])
 
     const makeFloat = (nr) => {
@@ -88,9 +100,17 @@ function Worker({dispatch, worker, site}) {
         case 'hoursOT':
 					setOT(value)
 					console.log(await hoursOT)
-          worker[field] = value
+          
           dispatch( updateHours(site._id, worker.worker._id, hours, value) )
-		  		break 
+          break 
+          
+        case 'rateGot':
+        case 'ratePaid':
+        case 'otGot':
+        case 'otPaid':
+          setData({ ...ratesData, [field]: value }) 
+          dispatch( updateRatesAction(site._id, worker.worker._id, {...ratesData, [field] : value }) )
+          break
 				default:
 					break
       }
@@ -109,15 +129,15 @@ function Worker({dispatch, worker, site}) {
                 <div><li className='small-text'>upload timesheet</li></div>
 
                 {/* RATES */}
-                <div><li><input value={makeFloat(ratesData.rateGot)} onChange={ e => updateRates(e.target.value, worker, 'rateGot') } /></li></div>
-                <div><li><input value={makeFloat(ratesData.ratePaid)} onChange={ e => updateRates(e.target.value, worker, 'ratePaid') } /></li></div>
+                <div><li><input value={ratesData.rateGot} onChange={ e => updateRates(e.target.value, worker, 'rateGot') } /></li></div>
+                <div><li><input value={ratesData.ratePaid} onChange={ e => updateRates(e.target.value, worker, 'ratePaid') } /></li></div>
                 <div><li>{ ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null }</li></div>
-                <div><li><input value={makeFloat(hours)} onChange={ e => updateRates(e.target.value, worker, 'hours') } /></li></div>
+                <div><li><input value={hours} onChange={ e => updateRates(e.target.value, worker, 'hours') } /></li></div>
 
-                <div><li><input value={makeFloat(ratesData.otGot)} onChange={ e => updateRates(e.target.value, worker, 'otGot') } /></li></div>
-                <div><li><input value={makeFloat(ratesData.otPaid)} onChange={ e => updateRates(e.target.value, worker, 'otPaid') } /></li></div>
+                <div><li><input value={ratesData.otGot} onChange={ e => updateRates(e.target.value, worker, 'otGot') } /></li></div>
+                <div><li><input value={ratesData.otPaid} onChange={ e => updateRates(e.target.value, worker, 'otPaid') } /></li></div>
                 <div><li>{ ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0 }</li></div>
-                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker.worker, 'hoursOT')  }  /></li></div>
+                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
@@ -131,5 +151,11 @@ function Worker({dispatch, worker, site}) {
     )
 }
 
+const mapStateToProps = state => {
+  console.log(state, state.weekEndingReducers.weekEnding)
+  return {
+      weekEnding: state.weekEndingReducers.weekEnding
+  }
+}
 
-export default connect()(Worker)
+export default connect( mapStateToProps )(Worker)

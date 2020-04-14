@@ -53,16 +53,7 @@ router.post('/add', async (req, res) => {
                 case 'create':
                     const item = new Workers(req.body.data);
                     item.save()
-                        .then(async result => {
-                            const site = await Sites.findOne({ _id: result.site._id }).exec();
-                            site.workers = [...site.workers, result];
-                            Sites.findByIdAndUpdate({ _id: site._id }, { workers: site.workers });
-                            return res.status(200).send('new worker created...');
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            res.status(400).send('no bene')
-                        });
+                    res.send(item)
                     break;
                 default:
                     break;

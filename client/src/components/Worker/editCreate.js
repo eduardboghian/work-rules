@@ -277,6 +277,7 @@ const EditCreate = props => {
           Back
         </Button>
       </Grid>
+
       <Grid container direction='column' classes={{ root: classes.editContainer }}>
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
@@ -292,6 +293,7 @@ const EditCreate = props => {
             <Typography>Company</Typography>
           </Grid>
         </Grid>
+
         {temporaryData.type === 'company' ? (
           <>
             <Grid container direction='row' classes={{ root: classes.inputContainer }}>
@@ -318,6 +320,7 @@ const EditCreate = props => {
                 </Tooltip>
               </Grid>
             </Grid>
+            
             <Grid container direction='row' classes={{ root: classes.inputContainer }}>
               <Grid item xs={3}>
                 <Typography>Peer</Typography>
@@ -361,6 +364,7 @@ const EditCreate = props => {
                 </Tooltip>
               </Grid>
             </Grid>
+
             <Grid container direction='row' classes={{ root: classes.inputContainer }}>
               <Grid item xs={3}>
                 <Typography>Lastname</Typography>
@@ -385,12 +389,12 @@ const EditCreate = props => {
             </Grid>
           </>
         )}
+
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>Postal adress 1</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip title='Please provide Postal adress' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl fullWidth >
                 <Input
                   value={temporaryData.firstPost}
@@ -399,9 +403,9 @@ const EditCreate = props => {
                   onChange={e => setData({ ...temporaryData, firstPost: e.target.value })}
                 />
               </FormControl>
-            </Tooltip>
           </Grid>
         </Grid>
+        
         <Grid container direction='row' classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>Postal adress 2</Typography>
@@ -559,7 +563,6 @@ const EditCreate = props => {
             <Typography>Preferred communication channel</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip  title='Please select communication channel' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl fullWidth classes={{ root: classes.inputContainer }} >
                 <Select
                   placeholder='Choose preferred communication channel'
@@ -572,7 +575,6 @@ const EditCreate = props => {
                   <MenuItem value={'email'}>Email</MenuItem>
                 </Select>
               </FormControl>
-            </Tooltip>
           </Grid>
         </Grid>
         
@@ -679,14 +681,12 @@ const EditCreate = props => {
             <Typography>Status</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip  title='Please select status' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl fullWidth classes={{ root: classes.inputContainer }} >
                 <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
                   <MenuItem value={'active'}>Active</MenuItem>
                   <MenuItem value={'archived'}>Not Active</MenuItem>
                 </Select>
               </FormControl>
-            </Tooltip>
           </Grid>
         </Grid>
         <Grid container justify='space-around'>

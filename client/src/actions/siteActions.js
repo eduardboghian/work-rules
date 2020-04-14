@@ -18,7 +18,7 @@ export const updateSites = (siteId, workerId, value) => {
     }
 }
 
-export const updateRates = (siteId, workerId, rates) => {
+export const updateRatesAction = (siteId, workerId, rates) => {
     return {
         type: siteTypes.UPDATE_RATES,
         payload: {

@@ -65,9 +65,7 @@ class Dashboard extends React.Component {
         <AppBar
           // classes={{ root: classes.navbar }}
           style={
-            this.state.offsetData.visible
-              ? { transition: '0.5s', backgroundColor: 'orange' }
-              : { transform: 'translateY(-110%)', transition: '0.5s', backgroundColor: 'orange' }
+               { transition: '0.5s', backgroundColor: 'orange', position: 'fixed', top: 0 }
           }
         >
           <Toolbar>
@@ -112,7 +110,6 @@ class Dashboard extends React.Component {
               </>
             ) : null}
             <Divider />
-            <Divider />
             {localStorage.getItem('role') === 'superuser' ||
             localStorage.getItem('role') === 'agent' ||
             localStorage.getItem('role') === 'sourcer' ? (
@@ -135,7 +132,7 @@ class Dashboard extends React.Component {
             <Divider />
           </Grid>
         </Drawer>
-        <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '100px'}}>
+        <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '70px'}}>
         </Grid>
         <img src='https://workrules.co.uk/meida/Asset%201@1.5x.png' alt='' className='wallpaper' ></img>
       </>

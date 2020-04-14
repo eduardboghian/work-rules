@@ -124,8 +124,6 @@ router.put('/update-rates', async (req, res) => {
     let index = site[0].workers.indexOf(worker)
     worker.rates = req.body.ratesData
 
-    console.log(req.body.ratesData, worker);
-
     newWorkers[index] = worker
 
     let response = await Sites.findOneAndUpdate({_id: req.body.siteId}, {workers: newWorkers}, {new: true})
