@@ -14,7 +14,7 @@ router.get('/get', (req, res) => {
 });
 
 router.post('/add', async (req, res) => {
-    //console.log(req.body)
+    
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', async (err, authData) => {
         if (err) {
@@ -24,31 +24,8 @@ router.post('/add', async (req, res) => {
             switch (req.body.action) {
                 case 'edit':
                     // HERE WE'LL HAVE THE UPDATED USER
-
-                    const oldWorker = await Workers.findOne({ _id: req.body.data._id }).exec();
-
-                    const oldSite = await Sites.findOne({ _id: oldWorker.site._id }).exec();
-
-                    oldSite.workers = oldSite.workers.filter(worker => worker._id !== oldWorker._id.toString());
-
-                    await Sites.findOneAndUpdate({ _id: oldSite._id }, { workers: oldSite.workers }).exec();
-
-                    const newSite = await Sites.findOne({ _id: req.body.data.site._id }).exec();
-
-                    newSite.workers = [...newSite.workers, req.body.data];
-
-                    Sites.findOneAndUpdate({ _id: newSite._id }, { workers: newSite.workers }).exec();
-
-                    let newData = req.body.data
-                    delete newData._id
-                    console.log(newData)
-
-                    await Workers.findOneAndUpdate({ email: req.body.data.email }, newData)
-                        .then(result => res.status(200).send(result))
-                        .catch(err => {
-                            console.log(err)
-                            res.status(400).send('aici e ceva naspa')});
-                    res.status(200);
+                    let response = await Workers.findOneAndUpdate({ _id: req.body.data._id }, req.body.data, { new:true })
+                    res.status(200).send(response);
                     break;
                 case 'create':
                     const item = new Workers(req.body.data);
