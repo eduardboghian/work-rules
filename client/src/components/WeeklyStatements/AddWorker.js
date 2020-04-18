@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import { editCreateStyles } from '../../utils/styles';
+import SearchIcon from '@material-ui/icons/Search';
+import Input from '@material-ui/core/Input';
 import axios from 'axios'
 import './css/index.css'
 
@@ -13,15 +15,35 @@ export default function AddWorker({formClass, close, siteId}) {
     const useStyles = makeStyles(editCreateStyles);
     const classes = useStyles();
     const [workers, setWorkers] = useState([])
-    const [newWorker, setNewWorker] = useState({})
+    const [newWorker, setNewWorker] = useState({
+        firstname: 'andrei',
+        lastname: 'el'
+    })
+
+    const [searchedData, setSearchedData] = useState('');
 
     useEffect(() => {
         getWorkersFromDB()
     }, [])
 
+    useEffect(() => {
+        let data = [...workers];
+        
+        if (!!searchedData) {
+            data = data.filter(item => item['firstname'].toLowerCase().includes(searchedData) || item['lastname'].toLowerCase().includes(searchedData));
+            if(data[0]!== undefined) {
+                setWorkers(data)
+                setNewWorker(data[0])
+            }
+        }
+    }, [searchedData])
+
     const getWorkersFromDB = () => {
         axios.get('/worker/get')
-        .then(res => setWorkers(res.data))
+        .then(res => {
+            setWorkers(res.data)
+            setNewWorker(res.data[0])
+        })
         .catch(error => console.error(error))
     } 
     
@@ -41,20 +63,42 @@ export default function AddWorker({formClass, close, siteId}) {
         } )
         .catch( error => console.log( error) )   
     }
-    
+
     return (
         <div className={`${formClass} addworker-wr`}>
             <p className='title-add-worker'>Add Worker</p>
             <div className="close-btn" onClick={ e => close()}>X</div>
+
+
+            <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
+              <Typography style={{ paddingRight: "10px" }}>Worker</Typography>
+              <SearchIcon style={{ color: '#777' }} />
+              <Grid item xs={9}>
+                <FormControl fullWidth>
+                <Input
+                    value={searchedData}
+                    placeholder='John Smith'
+                    className='input-worker'
+                    onChange={e => setSearchedData( e.target.value.toLowerCase() )}
+                />
+                </FormControl>
+             </Grid>
+            </Grid>
+
+
             <Grid className='select-wr' container direction='row' classes={{ root: classes.inputContainer }}>
                 <Grid item xs={3}>
                     <Typography>Chose Worker</Typography>
                 </Grid>
                 <Grid item xs={9}>
                     <FormControl fullWidth classes={{ root: classes.inputContainer }}>
+                    {console.log(newWorker)}
                         <Select
-                            placeholder='workers'
-                            value={newWorker ? newWorker.firstname : '' }
+                            style={{ width: '80%' }}
+                            renderValue={ () => {
+                                 return newWorker.firstname+' '+newWorker.lastname
+                            }}
+                            defaultValue={'John'}
                             onChange={e => {
                                 let worker = workers.find(worker => worker._id === e.target.value);
                                 setNewWorker(worker)

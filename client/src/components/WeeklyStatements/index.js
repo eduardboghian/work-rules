@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 
 import './css/index.css'
 import axios from 'axios'
-import { addWorkers } from '../../actions/workerActions'
 import { addSites } from '../../actions/siteActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'

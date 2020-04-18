@@ -24,7 +24,7 @@
 }
 .topbar-wr ul, .worker-wr ul  {
     display: grid;
-    grid-template-columns: 7% 7% 11% 3% 9% 5% 4% 4% 4% 4% 4% 4% 4% 4% 5% 4.5% 5% 4.5% 2.5% 4.5%;
+    grid-template-columns: 7% 7% 11% 3% 8% 5% 4% 4% 4% 4% 4% 4% 4% 4% 5% 4.5% 5% 3.5% 2.5% 4.5% 2%;
 }
 .topbar-wr li, .worker-wr li {
     text-align: center !important;
@@ -76,9 +76,9 @@
 
 .paid li {
     background-color: rgb(64, 221, 50);
-    width: 105%;
+    width: 103%;
     color: #fff;
-    padding: 6px 0;
+    padding: 6.5px 0;
     position: relative;
     top: -5px;
     left: -1px;
@@ -87,7 +87,7 @@
     background-color: rgb(245, 21, 21);
     width: 103%;
     color: #fff;
-    padding: 6px 0;
+    padding: 6.5px 0;
     position: relative;
     top: -5px;
     left: -1px;
@@ -152,4 +152,72 @@
     text-align: center;
     float: right;
     cursor: pointer;
+}
+
+.remove-btn {
+    width: 25px !important;
+    height: 25px !important;
+    background-color:  rgb(245, 21, 21) !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+    line-height: 25px !important;
+    text-align: center !important;
+    float: right !important;
+    cursor: pointer !important;
+    border: none !important;
+    position: absolute;
+    left: 5px;
+    top: 2px
+}
+
+.remove-btn-wr {
+    border: none !important;
+    position: relative;
+}
+
+.pop-out {
+    position: absolute;
+    text-align: center;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px 1px #7d7d7d;
+    width: 200px;
+    height: 90px;
+    padding: 10px;
+    right: 40px;
+    margin-top: -62px;
+    border-radius: 5px;
+    line-height: 25px;
+}
+.pop-out button {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    cursor: pointer;
+    border: none;
+    background: inherit;
+    font-size: 14px;
+    width: 50%;
+    text-align: center;
+    border-top: 2px solid #777;
+}
+.ok {
+    left: 0;
+    border-right: 2px solid #777 !important;
+    border-bottom-left-radius: 10px;
+}
+.cancel {
+    right: 0px;
+    border-bottom-right-radius: 10px;
+}
+
+
+.input-worker {
+    width: 80%;
+    border-radius: 5px;
+    margin-left: 30px;
+    margin-top: -3px;
+}
+
+.input-worker:active {
+    border: none !important;
 }

@@ -15,6 +15,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
     const [hours, setHours] = useState(0)
     const [hoursOT, setOT] = useState(0)
     const [others, setOthers] = useState(0)
+    const [popStyle, setPopStyle] = useState('none')
 
     useEffect(() => {
         setHours(worker.worker.hours)
@@ -118,6 +119,16 @@ function Worker({dispatch, worker, site, weekEnding}) {
       }
     }
 
+    const removeWorkerFromSite = (siteId, uid) => {
+        axios.post('/site/remove-worker', {
+            siteId,
+            uid
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+        window.location.reload(true)
+    } 
+
     return (
         <div className='worker-wr'>
             <ul className='test'>
@@ -148,6 +159,12 @@ function Worker({dispatch, worker, site, weekEnding}) {
 				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
 								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
                 <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
+                <div className='remove-btn-wr'> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
+                <section className={`${popStyle} pop-out`}>
+                    Do you want DELETE<br /> {worker ? worker.worker.firstname+' '+ worker.worker.lastname : null}
+                    <button className="ok" onClick={ e=> removeWorkerFromSite(site._id, worker.worker._id) }>OK</button>
+                    <button className="cancel" onClick={ e=> setPopStyle('none') }>Cancel</button>
+                </section>
             </ul>
         </div>
     )

@@ -147,4 +147,18 @@ router.put('/payment-status', async (req, res) => {
     res.send(response)
 })
 
+router.post('/remove-worker', async (req, res) => {
+    const site = await Sites.find({_id: req.body.siteId})
+    if(!site)return res.status(500).send('Somthing went wrong! Please try again!')
+
+    let worker = site[0].workers.find( item => item.worker._id === req.body.uid )
+    let index = site[0].workers.indexOf(worker)
+
+    site[0].workers.splice(index, 1)
+
+    await Sites.findByIdAndUpdate({ _id: req.body.siteId },site[0] ,{ new: true })
+
+    res.send('Removed Successfully!')
+})
+
 module.exports = router;
