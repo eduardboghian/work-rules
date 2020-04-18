@@ -20,7 +20,7 @@ router.post('/generate-invoice', async (req, res) => {
     let totalNetAmount = 0;
     let totalTaxAmount = 0;
     let dueDate;
-    let weekEnding = process.env.WEEK_ENDING;
+    let weekEnding = req.body.weekEnding;
     const invoiceStatus = [];
   
     site.workers.map((item, i) => {

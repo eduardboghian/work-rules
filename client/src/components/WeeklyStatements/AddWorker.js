@@ -9,7 +9,7 @@ import { editCreateStyles } from '../../utils/styles';
 import axios from 'axios'
 import './css/index.css'
 
-export default function AddWorker({formClass, siteId}) {
+export default function AddWorker({formClass, close, siteId}) {
     const useStyles = makeStyles(editCreateStyles);
     const classes = useStyles();
     const [workers, setWorkers] = useState([])
@@ -36,13 +36,16 @@ export default function AddWorker({formClass, siteId}) {
                 otPaid: 0
             }
         })
-        .then(res => window.location.reload(true) )
+        .then(res => {
+            window.location.reload(true)
+        } )
         .catch( error => console.log( error) )   
     }
     
     return (
         <div className={`${formClass} addworker-wr`}>
             <p className='title-add-worker'>Add Worker</p>
+            <div className="close-btn" onClick={ e => close()}>X</div>
             <Grid className='select-wr' container direction='row' classes={{ root: classes.inputContainer }}>
                 <Grid item xs={3}>
                     <Typography>Chose Worker</Typography>

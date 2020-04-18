@@ -14,8 +14,6 @@ router.post('/generate-payslip', async (req, res) => {
     let ot = isNaN(otRate) ? 0 : otRate*data.worker.hoursOT
     let amount = rate*data.worker.hours + ot
 
-    console.log('loaded data...', data.rates, rate, ot);
-
     data.Amount = amount.toFixed(2);
     data.B = amount * 0.2;
     data.B = data.B.toFixed(2);
@@ -23,7 +21,7 @@ router.post('/generate-payslip', async (req, res) => {
     data.AB = data.AB.toFixed(2);
     data.Name = data.worker.firstname+' '+data.worker.lastname
     data.UTR = data.worker.utr
-    data.Date = process.env.WEEK_ENDING
+    data.Date = data.weekEnding.weekEnding
 
     const responsePDF = [];
     responsePDF.push(data);

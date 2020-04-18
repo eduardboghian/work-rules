@@ -122,7 +122,9 @@
 }
 .title-add-worker {
     font-size: 22px;
-    color: #000 !important
+    color: #000 !important;
+    float: left;
+    margin-bottom: 20px;
 }
 .select-wr {
     margin: 10px 0;
@@ -138,4 +140,16 @@
     line-height: 20px;
     height: 30px !important;
     padding-left: 30px;
+}
+
+.close-btn {
+    width: 25px;
+    height: 25px;
+    background-color: rgb(245, 80, 80);
+    color: #fff;
+    border-radius: 4px;
+    line-height: 25px;
+    text-align: center;
+    float: right;
+    cursor: pointer;
 }

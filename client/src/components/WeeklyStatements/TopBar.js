@@ -3,7 +3,7 @@ import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
 
-const TopBar = ({site, workers}) => {
+const TopBar = ({site, weekEnding, sites}) => {
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
 
@@ -13,10 +13,16 @@ const TopBar = ({site, workers}) => {
 
     // GENERATE INVOICE FOR SITE FUNCTION
 
-    const generateInvoice = (workersList, site) => {
+    const generateInvoice = (site) => {
+        // sites.filter(site => site.companyName === workersForCompany)
+        // for (let index = 0; index < sites.length; index++) {
+        //     const element = sites[index];
+            
+        // }
+
         axios.post('/api/generate-invoice', {
-            workersList,
-            site
+            site,
+            weekEnding: weekEnding.weekEnding
         })
         .then(res=> {
             res.data.map(data=> {
@@ -59,6 +65,7 @@ const TopBar = ({site, workers}) => {
 
     const generatePayslip = (site) => {
         site.workers.map(worker => {
+            worker.weekEnding = weekEnding
             axios.post('/api/generate-payslip', { worker })
             .then(async res=> {
                 console.log(res)
@@ -102,11 +109,15 @@ const TopBar = ({site, workers}) => {
         setClass('')
     }
 
+    const closeAddWorker = () => {
+        setClass('none')
+    }
+
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
-                <div onClick={ e => generateInvoice(workers, site) }>Generate Invoice for Site</div>
-                <div onClick={ e=> generateInvoice(workersForCompany) }>Generate Invoice for Client</div>
+                <div onClick={ e => generateInvoice(site) }>Generate Invoice for Site</div>
+                <div onClick={ e => generateInvoice(sites) }>Generate Invoice for Client</div>
                 <div onClick={ e => generatePayslip(site) }>Generate Payslip for Site</div>
                 <div onClick={ e => makePayment(site) } >Make Payment</div>
                 <div onClick={ e => addWorkerToSite() }>Add Worker</div>
@@ -133,21 +144,21 @@ const TopBar = ({site, workers}) => {
                 <div><li>Paid</li></div>
                 <div><li>Payslip via</li></div>
             </ul>
-            <AddWorker formClass={formClass} siteId={site._id} />
+            <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} />
         </div>
     )
 }
 
 const mapStateToProps = state => {
     return {
-        workers: state.workersReducer.workers
+        weekEnding: state.weekEndingReducers,
+        sites: state.siteReducers.sites
     }
 }
 
 export default connect (mapStateToProps)(TopBar)
 
 const generatePDF = (data) => {
-    console.log(data)
     axios({
     method: 'POST',
     url: `/api/generate-payslip`,
