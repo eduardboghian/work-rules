@@ -92,7 +92,6 @@ export default function AddWorker({formClass, close, siteId}) {
                 </Grid>
                 <Grid item xs={9}>
                     <FormControl fullWidth classes={{ root: classes.inputContainer }}>
-                    {console.log(newWorker)}
                         <Select
                             style={{ width: '80%' }}
                             renderValue={ () => {

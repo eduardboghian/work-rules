@@ -13,12 +13,22 @@ const TopBar = ({site, weekEnding, sites}) => {
 
     // GENERATE INVOICE FOR SITE FUNCTION
 
-    const generateInvoice = (site) => {
-        // sites.filter(site => site.companyName === workersForCompany)
-        // for (let index = 0; index < sites.length; index++) {
-        //     const element = sites[index];
+    const generateInvoice = (sites, type) => {
+        let site
+        if(type === 'site') {
+            site = sites
+        } else {
+            let sitesOfClient = sites.filter(site => site.companyName === workersForCompany)
+        
+            for (let index = 1; index < sitesOfClient.length; index++) {
+                const element = sitesOfClient[index];
+                let data = sitesOfClient[0].workers.concat(element.workers)
+                sitesOfClient[0].workers = data
+            }
             
-        // }
+            
+            site = sitesOfClient[0]
+        }
 
         axios.post('/api/generate-invoice', {
             site,
@@ -39,13 +49,13 @@ const TopBar = ({site, weekEnding, sites}) => {
 
 
                 // Embed the PDF into the HTML page and show it to the user
-                let obj = document.createElement('object');
-                obj.style.width = '70%';
-                obj.style.height = '842pt';
-                obj.style.float = 'right'
-                obj.type = 'application/pdf';
-                obj.data = 'data:application/pdf;base64,' + b64;
-                document.body.appendChild(obj);
+                // let obj = document.createElement('object');
+                // obj.style.width = '70%';
+                // obj.style.height = '842pt';
+                // obj.style.float = 'right'
+                // obj.type = 'application/pdf';
+                // obj.data = 'data:application/pdf;base64,' + b64;
+                // document.body.appendChild(obj);
 
                 // Insert a link that allows the user to download the PDF file
                 let link = document.createElement('a');
@@ -53,6 +63,8 @@ const TopBar = ({site, weekEnding, sites}) => {
                 link.download = 'file.pdf';
                 link.href = 'data:application/octet-stream;base64,' + b64;
                 document.body.appendChild(link);
+                link.click()
+                link.remove()
 
                 return true
             })
@@ -116,8 +128,8 @@ const TopBar = ({site, weekEnding, sites}) => {
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
-                <div onClick={ e => generateInvoice(site) }>Generate Invoice for Site</div>
-                <div onClick={ e => generateInvoice(sites) }>Generate Invoice for Client</div>
+                <div onClick={ e => generateInvoice(site, 'site') }>Generate Invoice for Site</div>
+                <div onClick={ e => generateInvoice(sites, 'client') }>Generate Invoice for Client</div>
                 <div onClick={ e => generatePayslip(site) }>Generate Payslip for Site</div>
                 <div onClick={ e => makePayment(site) } >Make Payment</div>
                 <div onClick={ e => addWorkerToSite() }>Add Worker</div>
