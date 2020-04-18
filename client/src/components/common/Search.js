@@ -14,17 +14,19 @@ const Search = props => {
       setAnchorEl(null);
     }
   };
+
   const changeHandler = data => {
     if (data.length === 0) {
       return props.setSearchedData(null);
     }
     let filteredData = [...props.data];
     filteredData = filteredData.filter(item => {
-      let isExist = props.keys.find(key => item[key].toLowerCase().includes(data.toLowerCase()));
-      if (typeof isExist !== "undefined") {
-        return true;
-      }
-      return false;
+        let isExist = props.keys.find(key => item[key].toLowerCase().includes(data.toLowerCase()));
+        if (typeof isExist !== "undefined") {
+          return true;
+        }
+        return false
+
     });
     props.setSearchedData(filteredData);
   };

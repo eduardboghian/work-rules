@@ -127,3 +127,15 @@
 .select-wr {
     margin: 10px 0;
 }
+
+
+.site-name {
+    border: 1.5px solid #aaa;
+    border-left: none;
+    border-top: none;
+    padding: 5px 1px;
+    font-size: 14px;
+    line-height: 20px;
+    height: 30px !important;
+    padding-left: 30px;
+}

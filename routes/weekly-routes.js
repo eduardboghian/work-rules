@@ -9,6 +9,7 @@ router.get('/get/:id', async (req, res)=> {
 
 router.get('/get-all', async (req, res)=> {
     let data = await WeeklyStatements.find()
+    data = data.slice().sort((a, b) => b.date - a.date)
 
     res.send(data)
 })

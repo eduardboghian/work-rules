@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const cluster = require('cluster');
 
+
 const app = express();
 const apiPort = process.env.PORT || 3001;
 
@@ -19,6 +20,9 @@ const generatePayslip = require('./routes/payslip-routes')
 const makePayment = require('./routes/payment-routes')
 const weekly = require('./routes/weekly-routes')
 
+const restartWeekEnding = require('./helpers/resetWeekEnding')
+
+restartWeekEnding()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
@@ -37,6 +41,8 @@ app.use('/api', generateInvoice)
 app.use('/api', generatePayslip)
 app.use('/api', makePayment)
 app.use('/weekly', weekly)
+
+
 
 // BUILD THE CLIENT SIDE
 

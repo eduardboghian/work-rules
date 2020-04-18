@@ -8,7 +8,9 @@ import axios from 'axios'
 function Worker({dispatch, worker, site, weekEnding}) {
     const [ratesData, setData] = useState({
       rateGot: 0,
-      
+      ratePaid: 0,
+      otGot: 0,
+      otPaid: 0
     })
     const [hours, setHours] = useState(0)
     const [hoursOT, setOT] = useState(0)
@@ -21,38 +23,35 @@ function Worker({dispatch, worker, site, weekEnding}) {
     }, [worker])
 
     useEffect(() => {
-      if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
-          if(hours!==0 || hoursOT !==0) {
-						axios.put('/site/add-hours', {
-              siteId: site._id,
-							id: worker.worker._id,
-							hours,
-							hoursOT
-						})
-						.then(res=> {})
-						.catch(err=> console.log(err))
-					}
+      let date = moment().day(0).format('YYYY MMMM DD')
 
+      if( weekEnding === date ) {
+        if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
+            if(hours!==0 || hoursOT !==0) {
+              axios.put('/site/add-hours', {
+                siteId: site._id,
+                id: worker.worker._id,
+                hours,
+                hoursOT
+              })
+              .then(res=> {})
+              .catch(err=> console.log(err))
+            }
+        }
       }
     }, [hours, hoursOT])
 
     useEffect(() => {
-      let date = moment().day(0)
-      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-      let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
+      let date = moment().day(0).format('YYYY MMMM DD')
 
-      console.log('test ',weekEnding, weekE)
-      if( weekEnding === weekE ) {
-        console.log(weekEnding)
+      if( weekEnding === date ) {
         if(ratesData.rateGot !== 0 && ratesData.ratePaid ) {
           axios.put('/site/update-rates', {
             siteId: site._id,
             id: worker.worker._id,
             ratesData
           })
-          .then(res=> {
-            console.log(res)}
-          )
+          .then(res=> {})
           .catch(err=> console.log(err))
         }
       }
@@ -91,6 +90,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
     const updateRates = async (value, worker, field) => {
       switch(field) {
 				case 'hours':
+          if( value === undefined ) value = 0
 					setHours(value)
 					console.log(await hours)
           worker[field] = value
@@ -98,6 +98,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
 					break
 
         case 'hoursOT':
+          if( value === undefined ) value = 0
 					setOT(value)
 					console.log(await hoursOT)
           
@@ -108,6 +109,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
         case 'ratePaid':
         case 'otGot':
         case 'otPaid':
+          if( value === undefined ) value = 0
           setData({ ...ratesData, [field]: value }) 
           dispatch( updateRatesAction(site._id, worker.worker._id, {...ratesData, [field] : value }) )
           break
@@ -132,12 +134,12 @@ function Worker({dispatch, worker, site, weekEnding}) {
                 <div><li><input value={ratesData.rateGot} onChange={ e => updateRates(e.target.value, worker, 'rateGot') } /></li></div>
                 <div><li><input value={ratesData.ratePaid} onChange={ e => updateRates(e.target.value, worker, 'ratePaid') } /></li></div>
                 <div><li>{ ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null }</li></div>
-                <div><li><input value={hours} onChange={ e => updateRates(e.target.value, worker, 'hours') } /></li></div>
+                <div><li><input value={hours ? hours : 0 } onChange={ e => updateRates(e.target.value, worker, 'hours') } /></li></div>
 
                 <div><li><input value={ratesData.otGot} onChange={ e => updateRates(e.target.value, worker, 'otGot') } /></li></div>
                 <div><li><input value={ratesData.otPaid} onChange={ e => updateRates(e.target.value, worker, 'otPaid') } /></li></div>
                 <div><li>{ ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0 }</li></div>
-                <div><li><input value={hoursOT} onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
+                <div><li><input value={hoursOT ? hoursOT : 0} onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
@@ -152,7 +154,6 @@ function Worker({dispatch, worker, site, weekEnding}) {
 }
 
 const mapStateToProps = state => {
-  console.log(state, state.weekEndingReducers.weekEnding)
   return {
       weekEnding: state.weekEndingReducers.weekEnding
   }

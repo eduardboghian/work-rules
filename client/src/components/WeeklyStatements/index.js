@@ -22,16 +22,6 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
     useEffect(() => {
         const addDataToState = () => {
-            axios.get('/worker/get')
-            .then(res=> {
-                let workers = res.data.filter(item => item.status === 'active')
-                dispatch( addWorkers(workers) )
-            })
-            .catch(err => {
-                console.log(err)
-                window.location.reload(true)
-            })
-    
             let sitesRes = new Promise((resolve, reject) => {
                 axios.get('/site/get',{headers: {
                     authorization: 'Bearer ' + localStorage.getItem('token')
@@ -40,17 +30,18 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     dispatch( addSites(res.data) )
                     resolve(res.data)
                 })
-                .catch(error=> reject(error))
+                .catch(error=> {
+                    reject(error)
+                    window.location.reload(true)
+                })
             })
 
             axios.get('/weekly/get-all')
             .then(async res => {
-                let date = moment().day(0)
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-                let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
-                
+                let date = moment().day(0).format('YYYY MMMM DD')
+
                 let currentWE =  {
-                    weekEnding: weekE,
+                    weekEnding: date,
                     data: await sitesRes
                 }
                 
@@ -62,21 +53,10 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
         
         addDataToState()
 
-        let date = moment().day(0)
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-        let weekE = new Date(date).getFullYear()+' '+monthNames[new Date(date).getMonth()] +' '+new Date(date).getDate()
+        let date = moment().day(0).format('YYYY MMMM DD')
 
-         dispatch( setWeekEnding(weekE) )
-    }, [])    
-
-    const storeWeekEnding = () => {
-        axios.post('/weekly/add', {
-            weekEnding,
-            data: sites
-        })
-        .then(res => {})
-        .catch(err => console.error(err))
-    }
+         dispatch( setWeekEnding(date) )
+    }, [])  
 
     return (
       <div>
@@ -89,7 +69,7 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                 <Grid item xs={9}>
                     <FormControl fullWidth>
                         <Select
-                            value={ we ? we.weekEnding : '' }
+                            value={ weekEnding }
                             onChange={e => {
                                 let currentWE = we.find(item => item.weekEnding === e.target.value);
                                 dispatch( setWeekEnding(currentWE.weekEnding) )
@@ -108,8 +88,9 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
             {sites.map((site, i) => {
                 return <div key={i}>
                     <TopBar site={site} />
+                    {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div>: null} 
                     {site.workers.map((worker,i) => {
-                        return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined
+                        return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined 
                     })}
                 </div>
             })}

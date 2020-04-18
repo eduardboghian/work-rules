@@ -57,9 +57,9 @@ export default function AddWorker({formClass, siteId}) {
                                 setNewWorker(worker)
                             }}
                         >
-                        {workers.map((worker, i) => (
-                            <MenuItem key={i} value={worker._id}>{worker.firstname+' '+worker.lastname}</MenuItem>
-                        ))}
+                            {workers.map((worker, i) => (
+                                <MenuItem key={i} value={worker._id}>{worker.firstname+' '+worker.lastname}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
