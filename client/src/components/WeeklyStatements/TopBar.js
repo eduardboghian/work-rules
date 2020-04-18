@@ -147,6 +147,7 @@ const mapStateToProps = state => {
 export default connect (mapStateToProps)(TopBar)
 
 const generatePDF = (data) => {
+    console.log(data)
     axios({
     method: 'POST',
     url: `/api/generate-payslip`,
