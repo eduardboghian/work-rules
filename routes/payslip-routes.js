@@ -7,7 +7,7 @@ const moment = require('moment');
 
 router.post('/generate-payslip', async (req, res) => {
     // [ ] STORE BUFFER TO DB
-
+    console.log(req.body.worker)
     const data = req.body.worker;
     const rate = data.rates.ratePaid
     const otRate = data.rates.otPaid
