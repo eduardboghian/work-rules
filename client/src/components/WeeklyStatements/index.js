@@ -37,7 +37,7 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
             axios.get('/weekly/get-all')
             .then(async res => {
-                let date = moment().day(0).format('YYYY MMMM DD')
+                let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
 
                 let currentWE =  {
                     weekEnding: date,
@@ -51,10 +51,17 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
         }
         
         addDataToState()
+        
+        if(new Date().getDay() === 0) {
+            let date = moment().day(-7).format('YYYY MMMM DD')
 
-        let date = moment().day(0).format('YYYY MMMM DD')
+            dispatch( setWeekEnding(date) )
+        }else {
+            let date = moment().day(0).format('YYYY MMMM DD')
 
-         dispatch( setWeekEnding(date) )
+            dispatch( setWeekEnding(date) )
+        }
+        
     }, [])  
 
     return (
