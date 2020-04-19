@@ -145,7 +145,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
     }
 
     const removeWorkerFromSite = (siteId, uid) => {
-      let date = moment().day(0).format('YYYY MMMM DD')
+      let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
 
       if( weekEnding === date ) {
         axios.post('/site/remove-worker', {
