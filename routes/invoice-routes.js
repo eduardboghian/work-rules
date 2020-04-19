@@ -45,7 +45,17 @@ router.post('/generate-invoice', async (req, res) => {
     let issueDate = new Date(issueDateCode).getFullYear()+' '+monthNames[new Date(issueDateCode).getMonth()] +' '+new Date(issueDateCode).getDate()
     
     dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
-  
+    
+    if(req.body.type === 'site') {
+        console.log(req.body.type, site)
+        data[0].siteAddress = {
+            add1: site.address1,
+            add2: site.address2,
+            city: site.city,
+            zipCode: site.zipCode
+        }
+    } 
+
     data[0].Company = site.companyName
     data[0].Address1 = client.firstPost ? client.firstPost : null ,
     data[0].Address2 = client.secondPost ? client.secondPost : null,

@@ -32,7 +32,8 @@ const TopBar = ({site, weekEnding, sites}) => {
 
         axios.post('/api/generate-invoice', {
             site,
-            weekEnding: weekEnding.weekEnding
+            weekEnding: weekEnding.weekEnding,
+            type
         })
         .then(res=> {
             res.data.map(data=> {

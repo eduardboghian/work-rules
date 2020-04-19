@@ -5,6 +5,7 @@ const { exec } = require('child_process')
 const uuid = require('uuid-v4')
 const fs = require('fs')
 const { Payments } = require('../models/payments')
+const WeeklyStatements = require('../models/weeklyStatement')
 const Sites = require('../models/sites')
 const moment = require('moment')
 const axios = require('axios')
@@ -68,9 +69,10 @@ router.post('/make-payment', async (req, res)=> {
 		      // CHECKING THE ACCOUNT AND THE SORT CODE
           if(data.accounts[0].account_no == item.worker.account &&  data.accounts[0].sort_code==sortCode && item.worker.paymentStatus !== 'Yes' ){
             const requestId = uuid()
-            console.log('3 ok', payableAmount, 'hrs...' ,item.worker.others)
 
-            paymentResponse = await new Promise((resolve, reject)=> {
+            const fallBackFunction = async () => {
+              const requestId = uuid()
+              paymentResponse = new Promise((resolve, reject)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
                 -H "Authorization: ${accessToken}2" \
                 --data @- << EOF
@@ -84,7 +86,7 @@ router.post('/make-payment', async (req, res)=> {
                   },
                   "amount": ${payableAmount},
                   "currency": "GBP",
-                  "reference": "Week Ending ${req.body.weekEnding}"
+                  "reference": "Week Ending ${req.body.weekEnding.weekEnding}"
                 }
                 
                 EOF`, async (error, stdout, stderr)=> {
@@ -93,50 +95,53 @@ router.post('/make-payment', async (req, res)=> {
                       reject(error)
                   }
                   
+                  console.log('stdout2: ', stdout)
+                  console.log('sterr2: ',stderr)
+                  resolve(stdout)    
+                })
+              })
+
+              return await paymentResponse
+            }
+
+            paymentResponse = new Promise((resolve, reject)=> {
+                exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
+                -H "Authorization: ${accessToken}2" \
+                --data @- << EOF
+                
+                {
+                  "request_id": "${requestId}",
+                  "account_id": "${account}",
+                  "receiver": {
+                    "counterparty_id": "${data.id}",
+                    "account_id": "${data.accounts[0].id}"
+                  },
+                  "amount": ${payableAmount},
+                  "currency": "GBP",
+                  "reference": "Week Ending ${req.body.weekEnding.weekEnding}"
+                }
+                
+                EOF`, async (error, stdout, stderr)=> {
+                  if(error) {
+                      console.log('error thrown by revolut:', error)
+                      reject(error)
+                  }
+
                   console.log('stdout: ', stdout)
                   console.log('sterr: ',stderr)
+                  console.log('it got here now 2')
+                  if( stdout.state !== 'completed' ||   stdout.state !== 'created' ||  stdout.state !== 'pending') {
+                      console.log('it got here now')
+                      resolve( await fallBackFunction() )
+                  }
+                  
                   resolve(stdout)    
                 })
             })
           }
 
-          if(paymentResponse.state !== 'completed' || paymentResponse.state !== 'created' || paymentResponse.state !== 'pending') {
-            paymentResponse = await new Promise((resolve, reject)=> {
-              exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
-              -H "Authorization: ${accessToken}2" \
-              --data @- << EOF
-              
-              {
-                "request_id": "${requestId}",
-                "account_id": "${account}",
-                "receiver": {
-                  "counterparty_id": "${data.id}",
-                  "account_id": "${data.accounts[0].id}"
-                },
-                "amount": ${payableAmount},
-                "currency": "GBP",
-                "reference": "Week Ending ${req.body.weekEnding}"
-              }
-              
-              EOF`, async (error, stdout, stderr)=> {
-                if(error) {
-                    console.log('error thrown by revolut:', error)
-                    reject(error)
-                }
-                
-                console.log('stdout: ', stdout)
-                console.log('sterr: ',stderr)
-                resolve(stdout)    
-              })
-            })
-          }
-
           return await paymentResponse
       }))
-
-        // GMT+0000 (Coordinated Universal Time)
-      let date = moment().formaat('YYYY MMMM DD')
-
 
       try{
         paymentResponse =  paymentResponse.filter(el => el !== undefined)
@@ -145,34 +150,55 @@ router.post('/make-payment', async (req, res)=> {
 	    }
 
       let clientRes
+      let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
 
       if(paymentResponse.state == 'completed' || paymentResponse.state == 'created' || paymentResponse.state == 'pending') {
           // UPDATE PAYMENT STATUS
+          
+          
+          if( req.body.weekEnding.weekEnding === date ) {
+            let site = req.body.data
+            if(!site) console.log('no site with this id was found', site)
+            let newWorkers = site.workers
+  
+            let worker = site.workers.find( wr => wr.worker._id === item.worker._id )
+            let index = site.workers.indexOf(worker)
+            worker.worker.paymentStatus = 'Yes'
+  
+            newWorkers[index] = worker                  
+            await Sites.findOneAndUpdate({ _id: site._id }, { workers: newWorkers }, { new: true })
+          }else  {
+            let we = await WeeklyStatements.find({ weekEnding: req.body.weekEnding.weekEnding  })
+            console.log('asta', we)
+            if(!we) return console.log('no site with this id was found')
+            let site = we[0].data.find(item => item._id == req.body.data._id)
+            let siteIndex = we[0].data.indexOf(site)
 
-          let site = req.body.data
-          if(!site) console.log('no site with this id was found', site)
-          let newWorkers = site.workers
+            let worker = site.workers.find( item => item.worker._id === item.worker._id )
+            let index = site.workers.indexOf(worker)
+            worker.worker.paymentStatus = 'Yes'
 
-          let worker = site.workers.find( wr => wr.worker._id === item.worker._id )
-          let index = site.workers.indexOf(worker)
-          worker.worker.paymentStatus = 'Yes'
+            site.workers[index] = worker
 
-          newWorkers[index] = worker                  
-          await Sites.findOneAndUpdate({ _id: site._id }, { workers: newWorkers }, { new: true })
+            we[0].data[siteIndex] = site
+            let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding.weekEnding }, we[0], { new: true })
+            console.log(response)
+          }
 
           clientRes = {
             '_id': item.worker._id,
-            'date': date,
+            'date': moment().format('YYYY MMMM DD, h:mm:ss a'),
             'name': item.worker.firstname+' '+item.worker.lastname,
             'amount': payableAmount,
             'status': 'OK' 
           }
           oks +=1
       } else {
+            
 
           clientRes = {
             '_id': item.worker._id,
-            'date': date,
+            'date': moment().format('YYYY MMMM DD, h:mm:ss a'),
             'name': item.worker.firstname+' '+item.worker.lastname,
             'amount': payableAmount,
             'status': 'NOTOK' 
@@ -180,8 +206,8 @@ router.post('/make-payment', async (req, res)=> {
           notoks +=1
       }
 
-    //   let payDB = new Payments(clientRes)
-    //   payDB = await payDB.save()
+      // let payDB = new Payments(clientRes)
+      // payDB = await payDB.save()
 
       console.log('result after pyament attempt: ', item.worker.firstname+' '+item.worker.lastname, paymentResponse )
       return clientRes

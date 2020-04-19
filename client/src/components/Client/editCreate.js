@@ -231,21 +231,6 @@ const EditCreate = props => {
     .catch( err => console.log(err))
   };
   const classes = useStyles();
-  
-  // const createId = () => {
-  //   const consonants = /[BbCcDdFfGgHhJjKkLlMmNnPpQqRrSsTtVvXxZzWwYy]/g;
-  //   // const vowels = /[AaEeIiOoUu]/g;
-  //   let consName = temporaryData.companyName.match(consonants);
-  //   if (!!consName && consName.length < 6) {
-  //     let vowName = temporaryData.companyName.match(/[A-Za-z]/g).join("");
-  //     return setData({ ...temporaryData, id: vowName.toUpperCase() });
-  //   }
-  //   if (!!consName) {
-  //     consName = consName.join("");
-  //     consName = consName.slice(0, 6);
-  //     setData({ ...temporaryData, id: consName.toUpperCase() });
-  //   }
-  // };
 
   return (
     <>
@@ -330,6 +315,7 @@ const EditCreate = props => {
             </FormControl>
           </Grid>
         </Grid>
+
         <Grid container direction="row" classes={{ root: classes.inputContainer }}>
           <Grid item xs={3}>
             <Typography>Postal adress 1</Typography>
@@ -502,7 +488,10 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
+
+                  {/* =========SITE FORM=========== */}
+
+        <Grid container direction="row" classes={{ root: classes.inputContainer }}  style={{ margin: '20px 0 5px' }}>
           <Grid item xs={3}>
             <Typography>Sites</Typography>
           </Grid>
@@ -513,20 +502,107 @@ const EditCreate = props => {
               </FormControl>
             </Tooltip>
           </Grid>
+          
           <Grid item xs={1}>
             <Button
               onClick={async (e) => {
                 e.preventDefault()
-                let a = await createSite({ siteName: newSiteName, companyName: temporaryData.companyName });
-                setData({ ...temporaryData, sites: [...temporaryData.sites, { _id: a.data._id, siteName: a.data.siteName }] });
+                let a = await createSite({ 
+                  siteName: newSiteName, 
+                  companyName: temporaryData.companyName ,
+                  address1: temporaryData.siteAddress1,
+                  address2: temporaryData.siteAddress2,
+                  city: temporaryData.siteCity,
+                  zipCode: temporaryData.siteZipCode
+                
+                });
+                setData({ ...temporaryData, sites: [...temporaryData.sites, { 
+                    _id: a.data._id, 
+                    siteName: a.data.siteName,
+                    address1:  a.data.address2,
+                    address2:  a.data.address1,
+                    city:  a.data.city,
+                    zipCode:  a.data.zipCode
+                }] });
                 setSites([...sites, a.data]);
               }}
             >
               Create
             </Button>
           </Grid>
+
+          <Grid container direction="row" classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Postal adress 1</Typography>
+          </Grid>
+          <Grid item xs={9}>
+              <FormControl fullWidth>
+                <Input
+                  value={temporaryData.siteAddress1}
+                  placeholder="Postal adress 1"
+                  classes={{ input: classes.input }}
+                  onChange={e => {
+                    setFirstPostError(false);
+                    setData({ ...temporaryData, siteAddress1: e.target.value });
+                  }}
+                />
+              </FormControl>
+          </Grid>
         </Grid>
-        <Grid container>
+        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Postal adress 2</Typography>
+          </Grid>
+          <Grid item xs={9}>
+              <FormControl fullWidth >
+                <Input
+                  value={temporaryData.siteAddress2}
+                  placeholder="Postal adress 2"
+                  classes={{ input: classes.input }}
+                  onChange={e => {
+                    setSecondPostError(false);
+                    setData({ ...temporaryData, siteAddress2: e.target.value });
+                  }}
+                />
+              </FormControl>
+          </Grid>
+        </Grid>
+
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>City</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.siteCity}
+                placeholder='City'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, siteCity: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
+          <Grid item xs={3}>
+            <Typography>Zip Code</Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <FormControl fullWidth>
+              <Input
+                value={temporaryData.siteZipCode}
+                placeholder='Zip Code'
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...temporaryData, siteZipCode: e.target.value })}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        </Grid>
+
+
+        <Grid container style={{ margin: '20px 0' }}>
           <Grid item xs={3} />
           <Grid item xs={9}>
             <SitesTable sites={temporaryData.sites} deleteSite={deleteSite} />
