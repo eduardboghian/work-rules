@@ -6,6 +6,7 @@ const uuid = require('uuid-v4')
 const fs = require('fs')
 const { Payments } = require('../models/payments')
 const Sites = require('../models/sites')
+const moment = require('moment')
 const axios = require('axios')
 
 // JWT 
@@ -69,7 +70,7 @@ router.post('/make-payment', async (req, res)=> {
             const requestId = uuid()
             console.log('3 ok', payableAmount, 'hrs...' ,item.worker.others)
 
-            paymentResponse = new Promise((resolve, reject)=> {
+            paymentResponse = await new Promise((resolve, reject)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
                 -H "Authorization: ${accessToken}2" \
                 --data @- << EOF
@@ -83,7 +84,7 @@ router.post('/make-payment', async (req, res)=> {
                   },
                   "amount": ${payableAmount},
                   "currency": "GBP",
-                  "reference": "Week Ending ${process.env.WEEK_ENDING}"
+                  "reference": "Week Ending ${req.body.weekEnding}"
                 }
                 
                 EOF`, async (error, stdout, stderr)=> {
@@ -99,21 +100,49 @@ router.post('/make-payment', async (req, res)=> {
             })
           }
 
+          if(paymentResponse.state !== 'completed' || paymentResponse.state !== 'created' || paymentResponse.state !== 'pending') {
+            paymentResponse = await new Promise((resolve, reject)=> {
+              exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
+              -H "Authorization: ${accessToken}2" \
+              --data @- << EOF
+              
+              {
+                "request_id": "${requestId}",
+                "account_id": "${account}",
+                "receiver": {
+                  "counterparty_id": "${data.id}",
+                  "account_id": "${data.accounts[0].id}"
+                },
+                "amount": ${payableAmount},
+                "currency": "GBP",
+                "reference": "Week Ending ${req.body.weekEnding}"
+              }
+              
+              EOF`, async (error, stdout, stderr)=> {
+                if(error) {
+                    console.log('error thrown by revolut:', error)
+                    reject(error)
+                }
+                
+                console.log('stdout: ', stdout)
+                console.log('sterr: ',stderr)
+                resolve(stdout)    
+              })
+            })
+          }
+
           return await paymentResponse
       }))
 
         // GMT+0000 (Coordinated Universal Time)
-      let date = new Date().getFullYear().toString()
-      date = `${date  }-${ new Date().toLocaleString()[0]}`
-      date = `${date  }-${ new Date().getDate().toString()}`
-      date = `${date  }_${ new Date().toTimeString().replace(/GMT\+0000 \(Coordinated Universal Time\)/, '')}`
+      let date = moment().formaat('YYYY MMMM DD')
 
 
       try{
         paymentResponse =  paymentResponse.filter(el => el !== undefined)
       }catch(error ) {
           console.log(error)
-	  }
+	    }
 
       let clientRes
 

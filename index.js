@@ -42,8 +42,6 @@ app.use('/api', generatePayslip)
 app.use('/api', makePayment)
 app.use('/weekly', weekly)
 
-
-
 // BUILD THE CLIENT SIDE
 
 if (process.env.NODE_ENV === 'production') {
