@@ -28,7 +28,7 @@ export default function AddWorker({formClass, close, siteId}) {
 
     useEffect(() => {
         let data = [...workers];
-        
+
         if (!!searchedData) {
             data = data.filter(item => item['firstname'].toLowerCase().includes(searchedData) || item['lastname'].toLowerCase().includes(searchedData));
             if(data[0]!== undefined) {
@@ -45,8 +45,8 @@ export default function AddWorker({formClass, close, siteId}) {
             setNewWorker(res.data[0])
         })
         .catch(error => console.error(error))
-    } 
-    
+    }
+
     const addWorker = () => {
         axios.put('/site/add-worker', {
             siteId,
@@ -59,9 +59,13 @@ export default function AddWorker({formClass, close, siteId}) {
             }
         })
         .then(res => {
+          if (res.data !== 'worker already on this site'){
             window.location.reload(true)
+          }else {
+            alert('The worker already on this site!')
+          }
         } )
-        .catch( error => console.log( error) )   
+        .catch( error => console.log( error) )
     }
 
     return (

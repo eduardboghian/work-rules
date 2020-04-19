@@ -67,12 +67,18 @@ router.put('/add-worker', async (req, res)=> {
     const site = await Sites.findById({_id: req.body.siteId})
     if(!site)return res.status(500).send('Somthing went wrong! Please try again!')
 
-    let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId },{ '$push': { 'workers': {
-        worker: req.body.newWorker,
-        rates: req.body.rates
-    } } },{ new: true })
+    let worker = site.workers.find( item => item.worker._id === req.body.newWorker._id )
+    console.log(worker)
+    if (!worker) {
+      let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId },{ '$push': { 'workers': {
+          worker: req.body.newWorker,
+          rates: req.body.rates
+      } } },{ new: true })
 
-    res.send(response)
+      res.send(response)
+    }else {
+      res.send('worker already on this site')
+    }
 })
 
 router.delete('/deletes', async (req, res) => {
