@@ -24,7 +24,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
     }, [worker])
 
     useEffect(() => {
-      let date = moment().day(0).format('YYYY MMMM DD')
+      let date =  new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
 
       if( weekEnding === date ) {
         if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
@@ -39,11 +39,25 @@ function Worker({dispatch, worker, site, weekEnding}) {
               .catch(err=> console.log(err))
             }
         }
+      }else {
+        if(worker.hours !== hours || worker.hoursOT !== hoursOT) {
+          if(hours!==0 || hoursOT !==0) {
+            axios.put('/weekly/add-hours', {
+              siteId: site._id,
+              id: worker.worker._id,
+              hours,
+              hoursOT,
+              weekEnding
+            })
+            .then(res=> {})
+            .catch(err=> console.log(err))
+          }
+        }
       }
     }, [hours, hoursOT])
 
     useEffect(() => {
-      let date = moment().day(0).format('YYYY MMMM DD')
+      let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
 
       if( weekEnding === date ) {
         if(ratesData.rateGot !== 0 && ratesData.ratePaid ) {
@@ -51,6 +65,17 @@ function Worker({dispatch, worker, site, weekEnding}) {
             siteId: site._id,
             id: worker.worker._id,
             ratesData
+          })
+          .then(res=> {})
+          .catch(err=> console.log(err))
+        }
+      }else {
+        if(ratesData.rateGot !== 0 && ratesData.ratePaid ) {
+          axios.put('/weekly/update-rates', {
+            siteId: site._id,
+            id: worker.worker._id,
+            ratesData,
+            weekEnding
           })
           .then(res=> {})
           .catch(err=> console.log(err))
