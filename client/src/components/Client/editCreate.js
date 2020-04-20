@@ -149,16 +149,6 @@ const EditCreate = props => {
       };
     }
 
-
-    if (temporaryData.communicationChannel.length === 0) {}
-    else {
-      setCommChannelError(true);
-      let timer = setTimeout(() => setCommChannelError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
     if (temporaryData.sites.length === 0) {
       setSitesError(true);
       let timer = setTimeout(() => setSitesError(false), 3000);
@@ -472,8 +462,7 @@ const EditCreate = props => {
             <Typography>Preferred communication channel</Typography>
           </Grid>
           <Grid item xs={9}>
-            <Tooltip open={commChannelError} title="Please select communication channel" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} error={commChannelError}>
+             <FormControl fullWidth classes={{ root: classes.inputContainer }} error={commChannelError}>
                 <Select
                   placeholder="Choose preferred communication channel"
                   value={temporaryData.communicationChannel}
@@ -485,7 +474,6 @@ const EditCreate = props => {
                   <MenuItem value={"email"}>Email</MenuItem>
                 </Select>
               </FormControl>
-            </Tooltip>
           </Grid>
         </Grid>
 
