@@ -217,7 +217,7 @@ const EditCreate = props => {
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-    axios.delete('http://localhost:3001/site/delete', { 
+    axios.delete('/site/delete', { 
       headers: {
         authorization: "Bearer " + localStorage.getItem("token")
       },

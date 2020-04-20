@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,8 +8,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Tooltip } from '@material-ui/core';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   cellHeader: {
@@ -31,6 +35,20 @@ const useStyles = makeStyles({
 const SitesTable = props => {
   const classes = useStyles();
   const { sites } = props;
+  
+  const updateStatusDB = (value, site) => {
+    axios.put('site/update-status', {
+      id: site._id,
+      value
+    })
+    .then(res => {})
+    .catch(err => console.error(err))
+
+  }
+
+  useEffect(() => {
+    console.log(sites)
+  }, [props])
 
   return (
     <TableContainer>
@@ -76,10 +94,28 @@ const SitesTable = props => {
                     </Typography>
                   </Tooltip>
                 ) : null : null}
-                {/* <Typography>{!!site.workers && site.workers.length}</Typography> */}
+                <Typography>{!!site.workers && site.workers.length}</Typography>
               </TableCell>
               <TableCell classes={{ root: classes.cell }}>
                 <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
+              </TableCell>
+              <TableCell style={{ width: '150px' }} classes={{ root: classes.cell }}>
+                <FormControl style={{ width: '150px' }} fullWidth classes={{ root: classes.inputContainer }}>
+                  <Select
+                    style={{ width: '150px' }}
+                    renderValue={()=> {
+                        return site.status
+                    }}
+                    defaultValue={'John'}
+                    onChange={e => {
+                        updateStatusDB(e.target.value, site)
+                        site.status = e.target.value
+                    }}
+                  >
+                    <MenuItem value={'Active'}>Active</MenuItem>
+                    <MenuItem value={'Not Active'}>Not Active</MenuItem>
+                  </Select>
+                </FormControl>
               </TableCell>
             </TableRow>
           ))}

@@ -81,7 +81,7 @@ router.put('/add-worker', async (req, res)=> {
     }
 })
 
-router.delete('/deletes', async (req, res) => {
+router.delete('/delete', async (req, res) => {
     console.log('delete site attempt', req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', async (err, authData) => {
@@ -165,6 +165,14 @@ router.post('/remove-worker', async (req, res) => {
     await Sites.findByIdAndUpdate({ _id: req.body.siteId },site[0] ,{ new: true })
 
     res.send('Removed Successfully!')
+})
+
+router.put('/update-status', async (req, res) => {
+    let newStatus = req.body.value
+
+    let site = await Sites.findOneAndUpdate({ _id: req.body.id }, { status: newStatus }, { new: true })
+
+    res.send(site)
 })
 
 module.exports = router;

@@ -89,14 +89,14 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
     const invoiced = (worker) => {
         let ot = ratesData.otGot*hoursOT ? ratesData.otGot*hoursOT : 0
-        let res = (ratesData.rateGot*hours + ot ) * (worker.cis ?  0.8 : 0.7)
+        let res = (ratesData.rateGot*hours + ot ) *  0.8 
         res = isNaN( res ) ? 0 : res.toFixed(1)
         return res
     }
     const workerAmount = (worker) => {
         let ot = ratesData.otPaid*hoursOT ? ratesData.otPaid*hoursOT : 0
 
-        let res = (ratesData.ratePaid*hours + ot) * (worker.cis ?  0.8 : 0.7)
+        let res = (ratesData.ratePaid*hours + ot) * 0.8 
         res = isNaN(res) ? 0 : res.toFixed(1)
         return res
     }

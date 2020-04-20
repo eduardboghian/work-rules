@@ -10,6 +10,10 @@ const Site = new Schema({
     city: { type: String },
     zipCode: { type: String },
     workers: { type: Array },
+    status: {
+        type: String,
+        default: 'Active'
+    }
 });
 
 module.exports = mongoose.model('sites', Site, 'sites');

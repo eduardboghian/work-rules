@@ -678,6 +678,7 @@ const EditCreate = props => {
                   <MenuItem value={'Slinger Banksman'}>Slinger Banksman</MenuItem>
                   <MenuItem value={'Crane Supervisor'}>Crane Supervisor</MenuItem>
                   <MenuItem value={'Crane Opertor'}>Crane Opertor</MenuItem>
+                  <MenuItem value={'Cleaner'}>Cleaner</MenuItem>
                 </Select>
               </FormControl>
             </Tooltip>
