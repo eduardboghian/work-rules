@@ -61,5 +61,4 @@ router.put('/update-rates', async (req, res) => {
     res.send(response)
 })
 
-
 module.exports = router

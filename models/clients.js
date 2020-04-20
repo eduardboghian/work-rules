@@ -17,7 +17,14 @@ const Client = new Schema({
     phone: { type: String },
     email: { type: String },
     communicationChannel: { type: String },
-    sites: [{ id: String, siteName: String }],
+    sites: [{ 
+        id: String,
+        siteName: String,
+        status: {
+            type: String,
+            default: 'Active'
+        }
+    }],
     status: { type: String },
 });
 

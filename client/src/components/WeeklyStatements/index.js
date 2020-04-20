@@ -25,9 +25,10 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                 axios.get('/site/get',{headers: {
                     authorization: 'Bearer ' + localStorage.getItem('token')
                   }})
-                .then(res => {
-                    dispatch( addSites(res.data) )
-                    resolve(res.data)
+                .then(async res => {
+                    let activeSites = await res.data.filter(item => item.status === 'Active')
+                    dispatch( addSites(activeSites) )
+                    resolve(activeSites)
                 })
                 .catch(error=> {
                     reject(error)
