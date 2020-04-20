@@ -72,6 +72,13 @@ const EditCreate = props => {
 
   // VALIDATION FUNCTION
   const validation = async () => {
+    setPending(true);
+    await createWorker({ ...temporaryData }, props.actionType);
+    await props.update();
+    closePage();
+
+  }
+  const validation2 = async () => {
     if (temporaryData.type === 'physical') {
       if (temporaryData.firstname.length < 3) {
         setFirstnameError(true);

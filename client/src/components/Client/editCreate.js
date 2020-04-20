@@ -64,7 +64,15 @@ const EditCreate = props => {
       status: ""
     });
   };
+
   const validation = async () => {
+    setPending(true);
+    await createClient({ ...temporaryData }, props.actionType);
+    props.update();
+    closePage();
+  }
+
+  const validation2 = async () => {
     if (temporaryData.companyName.length < 6) {
       setCompanyNameError(true);
       let timer = setTimeout(() => setCompanyNameError(false), 3000);
