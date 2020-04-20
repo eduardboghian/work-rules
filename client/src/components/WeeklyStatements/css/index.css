@@ -222,3 +222,30 @@
 .input-worker:active {
     border: none !important;
 }
+
+.add-site-btn {
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(56, 241, 112);
+    color: #000;
+    border-radius: 5px;
+    float: left;
+    margin: 0 20px;
+}
+.add-site-wr {
+    margin: 20px;
+}
+.ok-btn {
+    margin-left: -50px;
+    border: none; 
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(56, 241, 112);
+    color: #000;
+    border-radius: 5px;
+
+}

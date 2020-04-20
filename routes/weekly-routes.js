@@ -61,4 +61,46 @@ router.put('/update-rates', async (req, res) => {
     res.send(response)
 })
 
+router.put('/add-worker', async (req, res) => {
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
+    if(!we) return res.send('no site with this id was found')
+    let site = we[0].data.find(item => item._id == req.body.siteId)
+    let siteIndex = we[0].data.indexOf(site)
+
+    site.workers.push({
+        worker: req.body.newWorker,
+        rates: req.body.rates
+    })
+
+    we[0].data[siteIndex] = site
+
+    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
+    res.send(response)
+})
+
+router.put('/add-site', async (req, res) => {
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
+    if(!we) return res.send('no site with this id was found')
+     we[0].data.push(req.body.newSite)
+
+    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
+    res.send(response)
+})
+
+router.put('/remove-worker', async (req, res) => {
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
+    if(!we) return res.send('no site with this id was found')
+    let site = we[0].data.find(item => item._id == req.body.siteId)
+    let siteIndex = we[0].data.indexOf(site)
+
+    let worker = site.workers.find( item => item.worker._id === req.body.uid )
+    let index = site.workers.indexOf(worker)
+    site.workers.splice(index, 1)
+
+    we[0].data[siteIndex] = site
+
+    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
+    res.send('Removed Successfully!')
+})
+
 module.exports = router

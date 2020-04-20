@@ -147,7 +147,7 @@ const TopBar = ({site, weekEnding, sites}) => {
                 <div><li>Paid</li></div>
                 <div><li>Payslip via</li></div>
             </ul>
-            <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} />
+            <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} weekEnding={weekEnding} />
         </div>
     )
 }
