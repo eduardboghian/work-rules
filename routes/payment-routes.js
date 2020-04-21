@@ -58,6 +58,8 @@ router.post('/make-payment', async (req, res)=> {
       let ot = otRate ? otRate*item.worker.hoursOT : 0
       let others = parseFloat(item.worker.others) ? parseFloat(item.worker.others) : 0
       
+      console.log('avans amount', others, item.worker.others, req.body)
+
       let payableAmount = (parseFloat(rate*item.worker.hours + ot)*0.8 + others ).toFixed(2)
 
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {

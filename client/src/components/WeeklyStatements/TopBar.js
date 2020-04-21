@@ -103,8 +103,9 @@ const TopBar = ({site, weekEnding, sites}) => {
     // MAKE PAYMETN
 
     const makePayment = (site) => {
+        console.log(site)
         axios.post('/api/make-payment', { data: site, weekEnding })
-        .then(res => window.location.reload(true))
+        .then(res => 'window.location.reload(true)')
         .catch(err=> console.error(err))
     }
 
