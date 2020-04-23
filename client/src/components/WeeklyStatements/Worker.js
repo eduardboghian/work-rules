@@ -16,6 +16,12 @@ function Worker({dispatch, worker, site, weekEnding}) {
     const [hoursOT, setOT] = useState(0)
     const [others, setOthers] = useState(0)
     const [popStyle, setPopStyle] = useState('none')
+    const [checker, setChecker] = useState('true')
+    const [showChecker, setShowChecker] = useState('none')
+
+    useEffect(() => {
+      console.log(checker)
+    }, [checker])
 
     useEffect(() => {
         setHours(worker.worker.hours)
@@ -197,6 +203,14 @@ function Worker({dispatch, worker, site, weekEnding}) {
 				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
 								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
                 <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
+
+                <section className={`${showChecker}`} >
+                  <label className="container">
+                    <input type="checkbox" defaultChecked value={checker} onChange={ e => setChecker(!checker)   } />
+                    <span className="checkmark"></span>
+                  </label>
+                </section>
+
                 <div className='remove-btn-wr'> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
                 <section className={`${popStyle} pop-out`}>
                     Do you want DELETE<br /> {worker ? worker.worker.firstname+' '+ worker.worker.lastname : null}
