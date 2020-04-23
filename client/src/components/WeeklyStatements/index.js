@@ -43,15 +43,15 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     weekEnding: date,
                     data: await sitesRes
                 }
-                
+
                 res.data.unshift(currentWE)
                 setWEs(res.data)
             })
             .catch(err => console.log(err))
         }
-        
+
         addDataToState()
-        
+
         if(new Date().getDay() === 0) {
             let date = moment().day(-7).format('YYYY MMMM DD')
 
@@ -61,8 +61,8 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
             dispatch( setWeekEnding(date) )
         }
-        
-    }, [])  
+
+    }, [])
 
     return (
       <div>
@@ -79,10 +79,10 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                             onChange={e => {
                                 let currentWE = we.find(item => item.weekEnding === e.target.value);
                                 dispatch( setWeekEnding(currentWE.weekEnding) )
-                                dispatch( addSites(currentWE.data) )  
+                                dispatch( addSites(currentWE.data) )
                             }}
                         >
-                        
+
                         {we.map((we, i) => {
                             return <MenuItem key={i} value={we.weekEnding}>{we.weekEnding}</MenuItem>
                         })}
@@ -94,9 +94,9 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
             {sites.map((site, i) => {
                 return <div key={i}>
                     <TopBar site={site} />
-                    {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div>: null} 
+                    {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div>: null}
                     {site.workers.map((worker,i) => {
-                        return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined 
+                        return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined
                     })}
                 </div>
             })}

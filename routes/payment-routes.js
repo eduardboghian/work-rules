@@ -10,7 +10,7 @@ const Sites = require('../models/sites')
 const moment = require('moment')
 const axios = require('axios')
 
-// JWT 
+// JWT
 
 const getJwt = () => {
     const issuer = 'github.com' // Issuer for JWT, should be derived from your redirect URL
@@ -28,7 +28,7 @@ const getJwt = () => {
 }
 
 const getJwtToken = getJwt()
-let accessToken 
+let accessToken
 let account
 const counterparties = []
 let currency
@@ -50,21 +50,21 @@ router.post('/make-payment', async (req, res)=> {
     let paymentlist = []
     let oks = 0
 	  let notoks = 0
-	
+
     paymentlist = await Promise.all( data.workers.map(async item=>{
       //console.log('reallllly imp', data)+parseFloat(item.worker.others)
       const rate = item.rates.ratePaid
       const otRate = item.rates.otPaid
       let ot = otRate ? otRate*item.worker.hoursOT : 0
       let others = parseFloat(item.worker.others) ? parseFloat(item.worker.others) : 0
-      
+
       let payableAmount = (parseFloat(rate*item.worker.hours + ot)*0.8 + others ).toFixed(2)
 
       let paymentResponse =  await Promise.all( counterparties.map(async (data)=> {
-			
-          let sortCode 
+
+          let sortCode
           item.worker.sortCode ? sortCode = item.worker.sortCode.replace(/-/g, '') : null
-          let paymentResponse 
+          let paymentResponse
 
 		      // CHECKING THE ACCOUNT AND THE SORT CODE
           if(data.accounts[0].account_no == item.worker.account &&  data.accounts[0].sort_code==sortCode && item.worker.paymentStatus !== 'Yes' ){
@@ -76,7 +76,7 @@ router.post('/make-payment', async (req, res)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
                 -H "Authorization: ${accessToken}2" \
                 --data @- << EOF
-                
+
                 {
                   "request_id": "${requestId}",
                   "account_id": "${account}",
@@ -88,16 +88,16 @@ router.post('/make-payment', async (req, res)=> {
                   "currency": "GBP",
                   "reference": "Week Ending ${req.body.weekEnding.weekEnding}"
                 }
-                
+
                 EOF`, async (error, stdout, stderr)=> {
                   if(error) {
                       console.log('error thrown by revolut:', error)
                       reject(error)
                   }
-                  
+
                   console.log('stdout2: ', stdout)
                   console.log('sterr2: ',stderr)
-                  resolve(stdout)    
+                  resolve(stdout)
                 })
               })
 
@@ -108,7 +108,7 @@ router.post('/make-payment', async (req, res)=> {
                 exec(`curl -X POST https://b2b.revolut.com/api/1.0/pay \
                 -H "Authorization: ${accessToken}2" \
                 --data @- << EOF
-                
+
                 {
                   "request_id": "${requestId}",
                   "account_id": "${account}",
@@ -120,7 +120,7 @@ router.post('/make-payment', async (req, res)=> {
                   "currency": "GBP",
                   "reference": "Week Ending ${req.body.weekEnding.weekEnding}"
                 }
-                
+
                 EOF`, async (error, stdout, stderr)=> {
                   if(error) {
                       console.log('error thrown by revolut:', error)
@@ -134,8 +134,8 @@ router.post('/make-payment', async (req, res)=> {
                       console.log('it got here now')
                       resolve( await fallBackFunction() )
                   }
-                  
-                  resolve(stdout)    
+
+                  resolve(stdout)
                 })
             })
           }
@@ -154,18 +154,18 @@ router.post('/make-payment', async (req, res)=> {
 
       if(paymentResponse.state == 'completed' || paymentResponse.state == 'created' || paymentResponse.state == 'pending') {
           // UPDATE PAYMENT STATUS
-          
-          
+
+
           if( req.body.weekEnding.weekEnding === date ) {
             let site = req.body.data
             if(!site) console.log('no site with this id was found', site)
             let newWorkers = site.workers
-  
+
             let worker = site.workers.find( wr => wr.worker._id === item.worker._id )
             let index = site.workers.indexOf(worker)
             worker.worker.paymentStatus = 'Yes'
-  
-            newWorkers[index] = worker                  
+
+            newWorkers[index] = worker
             await Sites.findOneAndUpdate({ _id: site._id }, { workers: newWorkers }, { new: true })
           }else  {
             let we = await WeeklyStatements.find({ weekEnding: req.body.weekEnding.weekEnding  })
@@ -190,32 +190,31 @@ router.post('/make-payment', async (req, res)=> {
             'date': moment().format('YYYY MMMM DD, h:mm:ss a'),
             'name': item.worker.firstname+' '+item.worker.lastname,
             'amount': payableAmount,
-            'status': 'OK' 
+            'status': 'OK'
           }
           oks +=1
       } else {
-            
-
+          //console.log(JSON.parse(paymentResponse))
           clientRes = {
             '_id': item.worker._id,
             'date': moment().format('YYYY MMMM DD, h:mm:ss a'),
             'name': item.worker.firstname+' '+item.worker.lastname,
             'amount': payableAmount,
-            'status': 'NOTOK' 
+            'status': 'NOTOK',
+            'msg': paymentResponse
           }
           notoks +=1
+
       }
 
       // let payDB = new Payments(clientRes)
       // payDB = await payDB.save()
 
-      console.log('result after pyament attempt: ', item.worker.firstname+' '+item.worker.lastname, paymentResponse )
       return clientRes
     }))
 
     paymentlist.push({ 'oks': oks, 'notoks': notoks })
     console.log(paymentlist)
-
     res.send(paymentlist)
 })
 
@@ -226,7 +225,7 @@ const loadData = () => {
 	function getResult(result) {
 		accessToken = `Bearer ${result}`
 	}
-	  
+
 	return new Promise((resolve, reject) => {
 		if(getJwtToken && counterparties.length === 0) {
 			exec(`curl https://b2b.revolut.com/api/1.0/auth/token \
@@ -239,12 +238,12 @@ const loadData = () => {
 				if(error) {
 					console.log('error recieved after curl request', error)
 				}
-	  
+
 				response = JSON.parse(stdout)
 				getResult(response.access_token)
-	  
+
 				// LOAD DATA FROM REVOLUT
-	  
+
 				axios({
 				  method: 'GET',
 				  url: 'https://b2b.revolut.com/api/1.0/accounts',
@@ -260,7 +259,7 @@ const loadData = () => {
 					console.log('account, currency loaded...', account, currency)
 				}))
 				.catch( error => console.log(error) )
-	  
+
 				axios({
 				  method: 'GET',
 				  url: 'https://b2b.revolut.com/api/1.0/counterparties',
@@ -284,7 +283,3 @@ const loadData = () => {
 	  }
 	})
 }
-
-
-
-

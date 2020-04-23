@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
+import PaymentResults from './PaymentResults'
 
 const TopBar = ({site, weekEnding, sites}) => {
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
+    const [paymentRes, setPaymetRes] = useState([])
+    const [styleRes, setStyleRes] = useState('none')
 
     useEffect(() => {
         setWrC(site.companyName)
@@ -19,14 +22,14 @@ const TopBar = ({site, weekEnding, sites}) => {
             site = sites
         } else {
             let sitesOfClient = sites.filter(site => site.companyName === workersForCompany)
-        
+
             for (let index = 1; index < sitesOfClient.length; index++) {
                 const element = sitesOfClient[index];
                 let data = sitesOfClient[0].workers.concat(element.workers)
                 sitesOfClient[0].workers = data
             }
-            
-            
+
+
             site = sitesOfClient[0]
         }
 
@@ -97,15 +100,23 @@ const TopBar = ({site, weekEnding, sites}) => {
             })
             return true
         })
-        
+
     }
 
     // MAKE PAYMETN
 
     const makePayment = (site) => {
         axios.post('/api/make-payment', { data: site, weekEnding })
-        .then(res => window.location.reload(true))
+        .then(res => {
+          //window.location.reload(true)
+          setPaymetRes(res.data)
+          setStyleRes('')
+        })
         .catch(err=> console.error(err))
+    }
+
+    const closePaymentResults = () => {
+      setStyleRes('none')
     }
 
     const addWorkerToSite = () => {
@@ -118,6 +129,7 @@ const TopBar = ({site, weekEnding, sites}) => {
 
     return (
         <div className='topbar-wr'>
+          <PaymentResults data={paymentRes} styleRes={styleRes} close={closePaymentResults}/>
             <div className='topbar-btns'>
                 <div onClick={ e => generateInvoice(site, 'site') }>Generate Invoice for Site</div>
                 <div onClick={ e => generateInvoice(sites, 'client') }>Generate Invoice for Client</div>
