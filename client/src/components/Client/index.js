@@ -68,7 +68,7 @@ const Client = props => {
   useEffect(() => {
       let filteredData = [...clientData];
       if (!archived) {
-        filteredData = filteredData.filter(item => item.status !== 'archived');
+        filteredData = filteredData.filter(item => item.status !== 'active');
       }
       if (!!searchedData) {
         filteredData = filteredData.filter(item => !!searchedData.find(data => data._id === item._id));
