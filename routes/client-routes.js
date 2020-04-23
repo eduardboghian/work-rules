@@ -49,13 +49,17 @@ router.post('/add', async (req, res) => {
     });
 });
 
-router.put('site-status', async (req, res) => {
-    // let client = await Clients.find({ _id: req.body.id })
-    // let site = client.sites.find(item => item._id === req.body.siteId)
-    // let index = client.sites
+router.put('/site-status', async (req, res) => {
+    let client = await Clients.find({ _id: req.body.clientId })
+    client = client[0]
+    
+    let site = client.sites.find(item => item._id == req.body.siteId)
+    let index = client.sites
+    
+    site.status = req.body.value
+    client.sites[index] = site
 
-    // site.status = req.body.value
-    // await Clients.findOneAndUpdate({ _id: req.body.id }, { sies }, { new: true })
+    await Clients.findOneAndUpdate({ _id: req.body.id }, client, { new: true })
 
     res.send('Successfully Updated!')
 })

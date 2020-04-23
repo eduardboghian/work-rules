@@ -71,6 +71,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
         }
       }else {
         if(ratesData.rateGot !== 0 && ratesData.ratePaid ) {
+
           axios.put('/weekly/update-rates', {
             siteId: site._id,
             id: worker.worker._id,
@@ -155,9 +156,17 @@ function Worker({dispatch, worker, site, weekEnding}) {
         .then(res => console.log(res))
         .catch(err => console.log(err))
         window.location.reload(true)
-      } 
+      } else {
+        axios.put('/weekly/remove-worker', {
+          siteId,
+          uid,
+          weekEnding
+        })
+        .then(res => window.location.reload(true))
+        .catch(err => console.log(err))
+      }
+  
     } 
-
     return (
         <div className='worker-wr'>
             <ul className='test'>

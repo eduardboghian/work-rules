@@ -35,20 +35,29 @@ const useStyles = makeStyles({
 const SitesTable = props => {
   const classes = useStyles();
   const { sites } = props;
+  const [clientId, setCliId] = useState('')
+
+  useEffect(() => {
+    setCliId( props.clinetId )
+  }, [props])
   
   const updateStatusDB = (value, site) => {
-    axios.put('site/update-status', {
+    axios.put('/site/update-status', {
       id: site._id,
       value
     })
     .then(res => {})
     .catch(err => console.error(err))
 
-  }
 
-  useEffect(() => {
-    console.log(sites)
-  }, [props])
+    axios.put('/client/site-status', {
+      clientId: clientId,
+      siteId: site._id,
+      value
+    })
+    .then(res => {})
+    .catch(err => console.error(err))
+  }
 
   return (
     <TableContainer>
@@ -68,8 +77,8 @@ const SitesTable = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sites.map(site => (
-            <TableRow>
+          {sites.map((site,i) => (
+            <TableRow key={i}>
               <TableCell classes={{ root: classes.cell }}>
                 <Typography>{site.siteName}</Typography>
               </TableCell>

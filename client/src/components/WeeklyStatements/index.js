@@ -18,6 +18,9 @@ import Dashboard from '../../pages/Dashboard'
 
 const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
     const [we, setWEs] = useState([])
+    const [sitesMenu, setMenu] = useState([])
+    const [newSite, setNewSite] = useState({})
+    const [styleStatus, setStyle] = useState('none')
 
     useEffect(() => {
         const addDataToState = () => {
@@ -25,9 +28,12 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                 axios.get('/site/get',{headers: {
                     authorization: 'Bearer ' + localStorage.getItem('token')
                   }})
-                .then(res => {
-                    dispatch( addSites(res.data) )
-                    resolve(res.data)
+                .then(async res => {
+                    setNewSite(res.data[0])
+                    setMenu(res.data)
+                    let activeSites = await res.data.filter(item => item.status === 'Active')
+                    dispatch( addSites(activeSites) )
+                    resolve(activeSites)
                 })
                 .catch(error=> {
                     reject(error)
@@ -61,8 +67,23 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
             dispatch( setWeekEnding(date) )
         }
+<<<<<<< HEAD
 
     }, [])
+=======
+        
+    }, []) 
+    
+    const selectSite = () => {
+        newSite.workers = []
+        axios.put('/weekly/add-site', {
+            weekEnding: weekEnding,
+            newSite
+        })
+        .then(res => window.location.reload(true))
+        .catch(err =>console.error(err))
+    }
+>>>>>>> 11ad0d0192680b9ccd25a41d41f4da61fd9b26de
 
     return (
       <div>
@@ -100,6 +121,35 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     })}
                 </div>
             })}
+
+            <div className="add-site-wr">
+                { weekEnding !== moment().day(0).format('YYYY MMMM DD')  ? <div className='add-site-btn' onClick={ e => setStyle('') }>Add Site</div> : null }
+                <div className={`${styleStatus}`}>
+                    <Grid container direction='row' style={{ width: '450px' }}>
+                        <Grid item xs={9}>
+                            <FormControl fullWidth >
+                                <Select
+                                    style={{ width: '80%' }}
+                                    renderValue={ () => {
+                                        return newSite.companyName+' '+newSite.siteName
+                                    }}
+                                    defaultValue={'John'}
+                                    onChange={e => {
+                                        let site = sitesMenu.find(site => site._id === e.target.value);
+                                        setNewSite(site)
+                                    }}
+                                >
+                                    {sitesMenu.map((site, i) => (
+                                        <MenuItem key={i} value={site._id}>{site.companyName+' '+site.siteName}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <button className="ok-btn" onClick={ e => selectSite() }>OK</button>
+                    </Grid>
+                </div>
+            </div>
+            
 
         </div>
       </div>

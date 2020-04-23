@@ -8,10 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import { editCreateStyles } from '../../utils/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
+import moment from 'moment'
 import axios from 'axios'
 import './css/index.css'
 
-export default function AddWorker({formClass, close, siteId}) {
+export default function AddWorker({formClass, close, siteId, weekEnding}) {
     const useStyles = makeStyles(editCreateStyles);
     const classes = useStyles();
     const [workers, setWorkers] = useState([])
@@ -48,24 +49,49 @@ export default function AddWorker({formClass, close, siteId}) {
     }
 
     const addWorker = () => {
-        axios.put('/site/add-worker', {
-            siteId,
-            newWorker,
-            rates: {
-                rateGot: 0,
-                ratePaid: 0,
-                otGot: 0,
-                otPaid: 0
-            }
-        })
-        .then(res => {
-          if (res.data !== 'worker already on this site'){
-            window.location.reload(true)
-          }else {
-            alert('The worker already on this site!')
-          }
-        } )
-        .catch( error => console.log( error) )
+        let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
+
+        if( weekEnding === date ) {
+            axios.put('/site/add-worker', {
+                siteId,
+                newWorker,
+                rates: {
+                    rateGot: 0,
+                    ratePaid: 0,
+                    otGot: 0,
+                    otPaid: 0
+                }
+            })
+            .then(res => {
+              if (res.data !== 'worker already on this site'){
+                window.location.reload(true)
+              }else {
+                alert('The worker is already on this site!')
+              }
+            } )
+            .catch( error => console.log( error) )
+        }else {
+            axios.put('/weekly/add-worker', {
+                weekEnding: weekEnding.weekEnding,
+                siteId,
+                newWorker,
+                rates: {
+                    rateGot: 0,
+                    ratePaid: 0,
+                    otGot: 0,
+                    otPaid: 0
+                }
+            })
+            .then(res => {
+              if (res.data !== 'worker already on this site'){
+                window.location.reload(true)
+              }else {
+                alert('The worker is already on this site!')
+              }
+            } )
+            .catch( error => console.log( error) )
+        }
+        
     }
 
     return (

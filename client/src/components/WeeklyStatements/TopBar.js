@@ -106,6 +106,7 @@ const TopBar = ({site, weekEnding, sites}) => {
     // MAKE PAYMETN
 
     const makePayment = (site) => {
+        console.log(site)
         axios.post('/api/make-payment', { data: site, weekEnding })
         .then(res => {
           //window.location.reload(true)
@@ -159,7 +160,7 @@ const TopBar = ({site, weekEnding, sites}) => {
                 <div><li>Paid</li></div>
                 <div><li>Payslip via</li></div>
             </ul>
-            <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} />
+            <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} weekEnding={weekEnding} />
         </div>
     )
 }

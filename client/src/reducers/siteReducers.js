@@ -9,7 +9,7 @@ const sitesReducer = (state= stateInit, action) => {
         case siteTypes.ADD_SITES:
             return { ...state, sites: action.payload }
 
-        case siteTypes.UPDATE_SITES: 
+        case siteTypes.UPDATE_AVANS: 
             sites = [...state.sites];
             
             site = state.sites.find(item => item._id === action.payload.siteId);

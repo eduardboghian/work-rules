@@ -28,6 +28,7 @@ import Dashboard from '../../pages/Dashboard'
 const useStyles = makeStyles(pageStyles);
 
 const Client = props => {
+  const [companyId, setCompanyId] = useState('')
   const [dialog, isDialogOpened] = useState(false);
   const [snackbarState, setSnackbarState] = useState(false);
   const [workersData, setWorkersData] = useState([]);
@@ -35,6 +36,7 @@ const Client = props => {
   const [filteredData, setFilteredData] = useState([]);
   const [searchedData, setSearchedData] = useState(null);
   const [editData, setEditData] = useState({
+    _id: '',
     companyName: '',
     peer: '',
     id: '',
@@ -59,8 +61,8 @@ const Client = props => {
 
   useEffect(() => {
       loadClientData()
-      console.log(workersData)
   }, []);
+
 
   // FILTERS
   useEffect(() => {
@@ -82,7 +84,10 @@ const Client = props => {
 
   const loadClientData = () => {
     getClientData()
-    .then(res => setClientData(res.data))
+    .then(res => {
+      setCompanyId(res.data[0]._id)
+      setClientData(res.data)
+    })
     .catch(err => console.error(err))
   }
 
@@ -115,7 +120,7 @@ const Client = props => {
     <Grid>
       <Dashboard/>
       {dialog ? (
-        <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
+        <EditCreate isDialogOpened={isDialogOpened} data={editData} companyId={companyId} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (
         <>
           <Grid container justify='space-between' classes={{ root: classes.pageHeader }}>
@@ -164,7 +169,7 @@ const Client = props => {
               </TableHead>
               <TableBody>
                 {filteredData.map((item, index) => (
-                  <ClientRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  <ClientRow key={index} even={index % 2 !== 0} item={item}  openDialog={openDialog} setActionType={setActionType} />
                 ))}
               </TableBody>
             </Table>

@@ -7,12 +7,12 @@ const moment = require('moment');
 
 router.post('/generate-payslip', async (req, res) => {
     // [ ] STORE BUFFER TO DB
-    console.log(req.body.worker)
+    //console.log(req.body.worker)
     const data = req.body.worker.rates ? req.body.worker : req.body;
     const rate = data.rates.ratePaid
     const otRate = data.rates.otPaid
-    let ot = isNaN(otRate) ? 0 : otRate*data.worker.hoursOT
-    let amount = rate*data.worker.hours + ot
+    let ot = typeof otRate !== String ? 0 : parseFloat( otRate )* parseFloat( data.worker.hoursOT )
+    let amount =  parseFloat(rate)* parseFloat(data.worker.hours) + ot
 
     data.Amount = amount.toFixed(2);
     data.B = amount * 0.2;

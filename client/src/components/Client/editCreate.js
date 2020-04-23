@@ -35,10 +35,15 @@ const EditCreate = props => {
   const [sitesError, setSitesError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [pending, setPending] = useState(false);
+  const [clientId, setCliId] = useState('')
 
   useEffect(() => {
     findSites();
   }, [props]);
+
+  useEffect(() => {
+    setCliId( props.companyId )
+  }, [props])
 
   const findSites = async () => {
     setSites(props.data.sites);
@@ -601,7 +606,7 @@ const EditCreate = props => {
         <Grid container style={{ margin: '20px 0' }}>
           <Grid item xs={3} />
           <Grid item xs={9}>
-            <SitesTable sites={temporaryData.sites} deleteSite={deleteSite} />
+            <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} />
           </Grid>
         </Grid>
         <Grid container justify="space-around">
