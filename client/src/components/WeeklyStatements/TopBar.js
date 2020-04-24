@@ -3,12 +3,15 @@ import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
 import PaymentResults from './PaymentResults'
+import{ loadWorkers } from '../../actions/payslipActions'
 
-const TopBar = ({site, weekEnding, sites}) => {
+const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
     const [paymentRes, setPaymetRes] = useState([])
     const [styleRes, setStyleRes] = useState('none')
+    const [confirmButton, setButton] = useState('none')
+    const [payslipButton, setPayslipButton] = useState('')
 
     useEffect(() => {
         setWrC(site.companyName)
@@ -68,8 +71,14 @@ const TopBar = ({site, weekEnding, sites}) => {
     }
 
     // GENERATE PAYSLIPS
+    const selectWorker = (siteData) => {
+        setButton('green')
+        setPayslipButton('none')
+        dispatch( loadWorkers(siteData.workers) )
+    }
 
-    const generatePayslip = (site) => {
+    const generatePayslip = (site, workersList) => {
+        site.workers = workersList
         site.workers.map(worker => {
             worker.weekEnding = weekEnding
             axios.post('/api/generate-payslip', { worker })
@@ -134,8 +143,9 @@ const TopBar = ({site, weekEnding, sites}) => {
             <div className='topbar-btns'>
                 <div onClick={ e => generateInvoice(site, 'site') }>Generate Invoice for Site</div>
                 <div onClick={ e => generateInvoice(sites, 'client') }>Generate Invoice for Client</div>
-                <div onClick={ e => generatePayslip(site) }>Generate Payslip for Site</div>
-                <div onClick={ e => makePayment(site) } >Make Payment</div>
+                <div onClick={ e => selectWorker(site) } className={`${payslipButton}`} > Generate Payslip for Site </div>
+                <div onClick={ e => generatePayslip(site, workersList) } className={`${confirmButton}`}> Confirm Workers! </div>
+                <div onClick={ e => makePayment(site) }>Make Payment</div>
                 <div onClick={ e => addWorkerToSite() }>Add Worker</div>
             </div>
             <ul>
@@ -168,7 +178,8 @@ const TopBar = ({site, weekEnding, sites}) => {
 const mapStateToProps = state => {
     return {
         weekEnding: state.weekEndingReducers,
-        sites: state.siteReducers.sites
+        sites: state.siteReducers.sites,
+        workersList: state.payslipReducers.workersList
     }
 }
 

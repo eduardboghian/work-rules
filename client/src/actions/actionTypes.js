@@ -19,3 +19,9 @@ export const siteTypes = {
 export const weekEnding = {
   SET_WEEK_ENDING: 'SET_WEEK_ENDING'
 }
+
+export const payslipTypes = {
+  LOAD_WORKERS: 'LOAD_WORKERS',
+  ADD_WORKER: 'ADD_WORKER',
+  REMOVE_WORKER: 'REMOVE_WORKER'
+}

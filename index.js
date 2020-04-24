@@ -42,6 +42,15 @@ app.use('/api', generatePayslip)
 app.use('/api', makePayment)
 app.use('/weekly', weekly)
 
+// PINGER
+
+app.get('/', (req, res)=> {
+    res.send('pinged')
+})
+
+const pinger = require('./helpers/pinger')
+pinger()
+
 // BUILD THE CLIENT SIDE
 
 if (process.env.NODE_ENV === 'production') {

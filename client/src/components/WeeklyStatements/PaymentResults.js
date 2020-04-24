@@ -3,9 +3,6 @@ import './css/PaymentResults.css'
 
 
 const PaymentResults = ({data, styleRes, close}) => {
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   return(
     <div className={`${styleRes} pay-res`}>

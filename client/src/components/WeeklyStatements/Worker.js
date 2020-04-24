@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
+import { removeWorker, addWorker } from '../../actions/payslipActions'
 
-function Worker({dispatch, worker, site, weekEnding}) {
+function Worker({dispatch, worker, site, weekEnding, list}) {
     const [ratesData, setData] = useState({
       rateGot: 0,
       ratePaid: 0,
@@ -18,16 +19,20 @@ function Worker({dispatch, worker, site, weekEnding}) {
     const [popStyle, setPopStyle] = useState('none')
     const [checker, setChecker] = useState('true')
     const [showChecker, setShowChecker] = useState('none')
-
-    // useEffect(() => {
-    //   console.log(checker)
-    // }, [checker])
+    const [hideX, hide] = useState('')
 
     useEffect(() => {
         setHours(worker.worker.hours)
         setOT(worker.worker.hoursOT)
         setData(worker.rates)
     }, [worker])
+
+    useEffect(() => {
+      if(list.length>0) {
+        hide('none')
+        setShowChecker('')
+      }
+    }, [list])
 
     useEffect(() => {
       let date =  new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
@@ -172,7 +177,19 @@ function Worker({dispatch, worker, site, weekEnding}) {
         .catch(err => console.log(err))
       }
   
-    } 
+    }
+    
+    const selectWorker = (worker) => {
+      if(checker===false) {
+        dispatch( addWorker(worker) )
+      } else {
+        console.log(worker.worker._id)
+        dispatch( removeWorker(worker.worker._id) )
+      }
+
+      setChecker(!checker)
+    }
+
     return (
         <div className='worker-wr'>
             <ul className='test'>
@@ -205,17 +222,17 @@ function Worker({dispatch, worker, site, weekEnding}) {
                 <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
 
                 <section className={`${showChecker}`} >
-                  <label className="container">
-                    <input type="checkbox" defaultChecked value={checker} onChange={ e => setChecker(!checker)   } />
-                    <span className="checkmark"></span>
+                  <label className='container'>
+                    <input type='checkbox' defaultChecked value={checker} onChange={ e => selectWorker(worker) } />
+                    <span className='checkmark'></span>
                   </label>
                 </section>
 
-                <div className='remove-btn-wr'> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
+                <div className={`${hideX} remove-btn-wr`}> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
                 <section className={`${popStyle} pop-out`}>
                     Do you want DELETE<br /> {worker ? worker.worker.firstname+' '+ worker.worker.lastname : null}
-                    <button className="ok" onClick={ e=> removeWorkerFromSite(site._id, worker.worker._id) }>OK</button>
-                    <button className="cancel" onClick={ e=> setPopStyle('none') }>Cancel</button>
+                    <button className='ok' onClick={ e=> removeWorkerFromSite(site._id, worker.worker._id) }>OK</button>
+                    <button className='cancel' onClick={ e=> setPopStyle('none') }>Cancel</button>
                 </section>
             </ul>
         </div>
@@ -224,7 +241,8 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
 const mapStateToProps = state => {
   return {
-      weekEnding: state.weekEndingReducers.weekEnding
+      weekEnding: state.weekEndingReducers.weekEnding,
+      list: state.payslipReducers.workersList
   }
 }
 

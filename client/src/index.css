@@ -19,7 +19,7 @@ a {
 }
 
 .none {
-  display: none;
+  display: none !important;
 }
 .noneO {
   opacity: 0;
