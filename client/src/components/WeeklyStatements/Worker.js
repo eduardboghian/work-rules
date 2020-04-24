@@ -19,9 +19,9 @@ function Worker({dispatch, worker, site, weekEnding}) {
     const [checker, setChecker] = useState('true')
     const [showChecker, setShowChecker] = useState('none')
 
-    useEffect(() => {
-      console.log(checker)
-    }, [checker])
+    // useEffect(() => {
+    //   console.log(checker)
+    // }, [checker])
 
     useEffect(() => {
         setHours(worker.worker.hours)

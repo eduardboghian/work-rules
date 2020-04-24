@@ -3,19 +3,21 @@ import './css/PaymentResults.css'
 
 
 const PaymentResults = ({data, styleRes, close}) => {
-
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   return(
     <div className={`${styleRes} pay-res`}>
       {data.map((response, i)=> {
         return <div key={i}>
-          <div>
+          <div className='message-wr'>
             { response.msg ? `${response.name}: ` : null }
-            { response.msg ? JSON.parse(response.msg[0]).message ? JSON.parse(response.msg[0]).message : JSON.parse(response.msg[0]).state : null }
+            { response.msg ? response.msg.length > 0 ? JSON.parse(response.msg[0]).message ? JSON.parse(response.msg[0]).message : JSON.parse(response.msg[0]).state : null : <div> OKS: {response.oks}/ NOTOKS: {response.notoks} </div> }
           </div>
         </div>
       })}
-      <button className='' onClick={ e => close() }>OK</button>
+      <button className='ok-btn' onClick={ e => close() }>OK</button>
     </div>
   )
 }
