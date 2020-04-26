@@ -3,8 +3,8 @@ var http = require('http'); //importing http
 function startKeepAlive() {
     setInterval(function() {
         var options = {
-            host: 'notificationsserver.herokuapp.com',
-            port: 80,
+            host: 'work-rules.herokuapp.com',
+            port: 3001||process.env.PORT,
             path: '/'
         };
         http.get(options, function(res) {
