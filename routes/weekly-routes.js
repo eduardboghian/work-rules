@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const fs = require('fs')
 const WeeklyStatements = require('../models/weeklyStatement')
 
 router.get('/get/:id', async (req, res)=> {
