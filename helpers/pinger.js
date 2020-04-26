@@ -4,8 +4,8 @@ function startKeepAlive() {
     setInterval(function() {
         var options = {
             host: 'work-rules.herokuapp.com',
-            port: 3001||process.env.PORT,
-            path: '/'
+            port: 80,
+            path: '/api'
         };
         http.get(options, function(res) {
             res.on('data', function(chunk) {
