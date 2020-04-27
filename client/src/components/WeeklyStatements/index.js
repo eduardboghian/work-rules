@@ -18,6 +18,9 @@ import Dashboard from '../../pages/Dashboard'
 
 const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
     const [we, setWEs] = useState([])
+    const [sitesMenu, setMenu] = useState([])
+    const [newSite, setNewSite] = useState({})
+    const [styleStatus, setStyle] = useState('none')
     console.log(weekEnding)
 
     useEffect(() => {
@@ -27,6 +30,8 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     authorization: 'Bearer ' + localStorage.getItem('token')
                   }})
                 .then(res => {
+                    setNewSite(res.data[0])
+                    setMenu(res.data)
                     dispatch( addSites(res.data) )
                     resolve(res.data)
                 })
@@ -65,6 +70,16 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
     }, [])
 
+    const selectSite = () => {
+        newSite.workers = []
+        axios.put('/weekly/add-site', {
+            weekEnding: weekEnding,
+            newSite
+        })
+        .then(res => window.location.reload(true))
+        .catch(err =>console.error(err))
+    }
+
     return (
       <div>
         <Dashboard/>
@@ -101,6 +116,34 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     })}
                 </div>
             })}
+
+            <div className="add-site-wr">
+                { weekEnding !== moment().day(0).format('YYYY MMMM DD')  ? <div className='add-site-btn' onClick={ e => setStyle('') }>Add Site</div> : null }
+                <div className={`${styleStatus}`}>
+                    <Grid container direction='row' style={{ width: '450px' }}>
+                        <Grid item xs={9}>
+                            <FormControl fullWidth >
+                                <Select
+                                    style={{ width: '80%' }}
+                                    renderValue={ () => {
+                                        return newSite.companyName+' '+newSite.siteName
+                                    }}
+                                    defaultValue={'John'}
+                                    onChange={e => {
+                                        let site = sitesMenu.find(site => site._id === e.target.value);
+                                        setNewSite(site)
+                                    }}
+                                >
+                                    {sitesMenu.map((site, i) => (
+                                        <MenuItem key={i} value={site._id}>{site.companyName+' '+site.siteName}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <button className="ok-btn" onClick={ e => selectSite() }>OK</button>
+                    </Grid>
+                </div>
+            </div>
 
         </div>
       </div>

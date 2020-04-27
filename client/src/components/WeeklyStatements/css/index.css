@@ -233,9 +233,11 @@
     border-radius: 5px;
     float: left;
     margin: 0 20px;
+    cursor: pointer;
 }
 .add-site-wr {
     margin: 20px;
+    padding-bottom: 30px;
 }
 .ok-btn {
     margin-left: -50px;
@@ -247,7 +249,9 @@
     background-color: rgb(56, 241, 112);
     color: #000;
     border-radius: 5px;
-
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
 }
 
 .green {
