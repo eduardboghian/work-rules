@@ -4,12 +4,13 @@ const Sites = require('../models/sites')
 const WeeklyStatements = require('../models/weeklyStatement')
 
 const restatWeekEnding = () => {
-    let job = new CronJob('50 59 23 * * *', async function() {
+    let job = new CronJob('50 * * * * *', async function() {
         let date = new Date()
 
         if(date.getDay() == 7) {
             let weekEnding = moment().day(-7).format('YYYY MMMM DD')
             console.log(weekEnding)
+            console.log(date.getDay(), date)
             let sites = await Sites.find()
 
             let check = await WeeklyStatements.find({ weekEnding: weekEnding })
