@@ -25,6 +25,7 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
         setHours(worker.worker.hours)
         setOT(worker.worker.hoursOT)
         setData(worker.rates)
+        console.log(new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD'))
     }, [worker])
 
     useEffect(() => {
@@ -158,7 +159,7 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
 
     const removeWorkerFromSite = (siteId, uid) => {
       let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
-
+    
       if( weekEnding === date ) {
         axios.post('/site/remove-worker', {
             siteId,

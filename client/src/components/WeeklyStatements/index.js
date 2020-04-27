@@ -18,6 +18,7 @@ import Dashboard from '../../pages/Dashboard'
 
 const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
     const [we, setWEs] = useState([])
+    console.log(weekEnding)
 
     useEffect(() => {
         const addDataToState = () => {
