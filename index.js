@@ -22,7 +22,6 @@ const weekly = require('./routes/weekly-routes')
 
 const restartWeekEnding = require('./helpers/resetWeekEnding')
 
-restartWeekEnding()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
@@ -62,6 +61,7 @@ if (process.env.NODE_ENV === 'production') {
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
+    restartWeekEnding()
 
     for (let i = 0; i < 2; i++) {
         cluster.fork();

@@ -4,8 +4,9 @@ const Sites = require('../models/sites')
 const WeeklyStatements = require('../models/weeklyStatement')
 
 const restatWeekEnding = () => {
-    let job = new CronJob('50 59 23 * * *', async function() {
+    let job = new CronJob('59 59 15 * * *', async function() {
         let date = new Date()
+        console.log(date)
 
         if(date.getDay() == 7) {
             let weekEnding = moment().day(-7).format('YYYY MMMM DD')
@@ -36,10 +37,9 @@ const restatWeekEnding = () => {
             }
             
         } 
-        
-        //console.log(sites)        
+               
 
-    }, null, true, 'America/Los_Angeles');
+    }, null, true, 'Europe/Bucharest');
     job.start();
 
 }

@@ -1,4 +1,4 @@
-var http = require('http'); //importing http
+var http = require('http');
 
 function startKeepAlive() {
     setInterval(function() {
@@ -11,7 +11,6 @@ function startKeepAlive() {
             res.on('data', function(chunk) {
                 try {
                     // optional logging... disable after it's working
-                    console.log("HEROKU RESPONSE: ");
                 } catch (err) {
                     console.log(err.message);
                 }
@@ -19,7 +18,7 @@ function startKeepAlive() {
         }).on('error', function(err) {
             console.log("Error: " + err.message);
         });
-    }, 10 * 60 * 1000); // load every 20 minutes
+    }, 25 * 60 * 1000); // load every 25 minutes
 }
 
-module.exports = startKeepAlive
+module.exports = startKeepAlive;
