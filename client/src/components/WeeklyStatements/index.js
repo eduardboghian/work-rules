@@ -37,7 +37,7 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                 })
                 .catch(error=> {
                     reject(error)
-                    window.location.reload(true)
+                    // window.location.reload(true)
                 })
             })
 

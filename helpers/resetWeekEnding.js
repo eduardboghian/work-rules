@@ -17,14 +17,13 @@ const restatWeekEnding = () => {
             console.log(check, check.length)
             if(check.length > 0) {
                 return console.log('Already Stored!')
-            } 
+            }
 
             let newWeekly = new WeeklyStatements({
                 weekEnding: weekEnding,
                 data: sites
             })
             newWeekly = await newWeekly.save()
-            
             
             for (let index = 0; index < sites.length; index++) {
                 let site = sites[index];

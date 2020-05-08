@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react'
 import  { connect } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
-import PaymentResults from './PaymentResults'
-import{ loadWorkers } from '../../actions/payslipActions'
 
-const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
+const TopBar = ({dispatch, site, weekEnding, sites}) => {
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
     const [paymentRes, setPaymetRes] = useState([])
@@ -70,64 +68,6 @@ const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
         .catch(err => console.log(err))
     }
 
-    // GENERATE PAYSLIPS
-    const selectWorker = (siteData) => {
-        setButton('green')
-        setPayslipButton('none')
-        dispatch( loadWorkers(siteData.workers) )
-    }
-
-    const generatePayslip = (site, workersList) => {
-        site.workers = workersList
-        site.workers.map(worker => {
-            worker.weekEnding = weekEnding
-            axios.post('/api/generate-payslip', { worker })
-            .then(async res=> {
-                console.log(res)
-                function arrayBufferToBase64(buffer) {
-                  let binary = '';
-                  let bytes = new Uint8Array(buffer);
-                  let len = bytes.byteLength;
-                  for (let i = 0; i < len; i++) {
-                      binary += String.fromCharCode(bytes[i]);
-                  }
-                  return window.btoa(binary);
-                }
-                let b64 = arrayBufferToBase64( await res.data[1].data)
-
-                let link = document.createElement('a');
-                link.innerHTML = `${res.data[0].Name}`;
-                link.download = `Payslip-week-ending-${res.data[0].Date}-${res.data[0].Name}.pdf`;
-                link.href = 'data:application/octet-stream;base64,' + b64;
-                document.body.appendChild(link);
-                link.click()
-                link.remove()
-            })
-            .catch(err=> {
-			  generatePDF(worker)
-              console.log(err)
-            })
-            return true
-        })
-
-    }
-
-    // MAKE PAYMETN
-
-    const makePayment = (site) => {
-        console.log(site)
-        axios.post('/api/make-payment', { data: site, weekEnding })
-        .then(res => {
-          //window.location.reload(true)
-          setPaymetRes(res.data)
-          setStyleRes('')
-        })
-        .catch(err=> console.error(err))
-    }
-
-    const closePaymentResults = () => {
-      setStyleRes('none')
-    }
 
     const addWorkerToSite = () => {
         setClass('')
@@ -139,20 +79,15 @@ const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
 
     return (
         <div className='topbar-wr'>
-          <PaymentResults data={paymentRes} styleRes={styleRes} close={closePaymentResults}/>
             <div className='topbar-btns'>
                 <div onClick={ e => generateInvoice(site, 'site') }>Generate Invoice for Site</div>
                 <div onClick={ e => generateInvoice(sites, 'client') }>Generate Invoice for Client</div>
-                <div onClick={ e => selectWorker(site) } className={`${payslipButton}`} > Generate Payslip for Site </div>
-                <div onClick={ e => generatePayslip(site, workersList) } className={`${confirmButton}`}> Confirm Workers! </div>
-                <div onClick={ e => makePayment(site) }>Make Payment</div>
                 <div onClick={ e => addWorkerToSite() }>Add Worker</div>
             </div>
             <ul>
                 <div><li>Client</li></div>
                 <div><li>Site</li></div>
                 <div><li>Worker Name</li></div>
-                <div><li>CIS</li></div>
                 <div><li>Trade</li></div>
                 <div><li>Checked</li></div>
                 <div><li>Rate Got</li></div>
@@ -166,9 +101,9 @@ const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
                 <div><li>Invoiced</li></div>
                 <div><li>Margin</li></div>
                 <div><li>Worker</li></div>
-                <div><li>Avans</li></div>
+                {/* <div><li>Avans</li></div>
                 <div><li>Paid</li></div>
-                <div><li>Payslip via</li></div>
+                <div><li>Payslip via</li></div> */}
             </ul>
             <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} weekEnding={weekEnding} />
         </div>
@@ -178,43 +113,9 @@ const TopBar = ({dispatch, site, weekEnding, sites, workersList}) => {
 const mapStateToProps = state => {
     return {
         weekEnding: state.weekEndingReducers,
-        sites: state.siteReducers.sites,
-        workersList: state.payslipReducers.workersList
+        sites: state.siteReducers.sites
     }
 }
 
 export default connect (mapStateToProps)(TopBar)
 
-const generatePDF = (data) => {
-    axios({
-    method: 'POST',
-    url: `/api/generate-payslip`,
-    data: data,
-    responseType: 'stream'
-    })
-    .then(async res=> {
-        console.log(res)
-        function arrayBufferToBase64(buffer) {
-            let binary = '';
-            let bytes = new Uint8Array(buffer);
-            let len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return window.btoa(binary);
-        }
-        let b64 = arrayBufferToBase64( await res.data[1].data)
-
-        let link = document.createElement('a');
-        link.innerHTML = `${res.data[0].Name}`;
-        link.download = `Payslip-week-ending-${res.data[0].Date}-${res.data[0].Name}.pdf`;
-        link.href = 'data:application/octet-stream;base64,' + b64;
-        document.body.appendChild(link);
-        link.click()
-        link.remove()
-    })
-    .catch(err=> {
-        generatePDF(data)
-        console.log(err)
-    })
-}

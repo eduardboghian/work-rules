@@ -4,9 +4,8 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
-import { removeWorker, addWorker } from '../../actions/payslipActions'
 
-function Worker({dispatch, worker, site, weekEnding, list}) {
+function Worker({dispatch, worker, site, weekEnding}) {
     const [ratesData, setData] = useState({
       rateGot: 0,
       ratePaid: 0,
@@ -17,8 +16,6 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
     const [hoursOT, setOT] = useState(0)
     const [others, setOthers] = useState(0)
     const [popStyle, setPopStyle] = useState('none')
-    const [checker, setChecker] = useState('true')
-    const [showChecker, setShowChecker] = useState('none')
     const [hideX, hide] = useState('')
 
     useEffect(() => {
@@ -28,12 +25,12 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
         console.log(new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD'))
     }, [worker])
 
-    useEffect(() => {
-      if(list.length>0) {
-        hide('none')
-        setShowChecker('')
-      }
-    }, [list])
+    // useEffect(() => {
+    //   if(list.length>0) {
+    //     hide('none')
+    //     setShowChecker('')
+    //   }
+    // }, [list])
 
     useEffect(() => {
       let date =  new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
@@ -179,17 +176,6 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
       }
   
     }
-    
-    const selectWorker = (worker) => {
-      if(checker===false) {
-        dispatch( addWorker(worker) )
-      } else {
-        console.log(worker.worker._id)
-        dispatch( removeWorker(worker.worker._id) )
-      }
-
-      setChecker(!checker)
-    }
 
     return (
         <div className='worker-wr'>
@@ -199,7 +185,6 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
                 <div><li>{ site ? site.companyName ? site.companyName: null : null }</li></div>
                 <div><li>{ site ? site.siteName ? site.siteName: null : null }</li></div>
                 <div><li>{ worker ? worker.worker.firstname+' '+ worker.worker.lastname : null }</li></div>
-                <div><li>{ worker ? worker.worker.cis===false ? 'PAYE' : 'CIS' : null }</li></div>
                 <div><li>{ worker ? worker.worker.category : null }</li></div>
                 <div><li className='small-text'>upload timesheet</li></div>
 
@@ -218,16 +203,9 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
                 <div><li>{ worker ? getMargin() : null }</li></div>
                 <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
-				        <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
+				        {/* <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
 								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
-                <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div>
-
-                <section className={`${showChecker}`} >
-                  <label className='container'>
-                    <input type='checkbox' defaultChecked value={checker} onChange={ e => selectWorker(worker) } />
-                    <span className='checkmark'></span>
-                  </label>
-                </section>
+                <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div> */}
 
                 <div className={`${hideX} remove-btn-wr`}> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
                 <section className={`${popStyle} pop-out`}>
@@ -242,8 +220,7 @@ function Worker({dispatch, worker, site, weekEnding, list}) {
 
 const mapStateToProps = state => {
   return {
-      weekEnding: state.weekEndingReducers.weekEnding,
-      list: state.payslipReducers.workersList
+      weekEnding: state.weekEndingReducers.weekEnding
   }
 }
 
