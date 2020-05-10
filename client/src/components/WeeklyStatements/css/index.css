@@ -4,7 +4,7 @@
     margin-top: 10px;
     background-color: #fff;
     position: absolute;
-    left: 1px;
+    left: 10px;
 }
 
 .topbar-btns div{
@@ -24,7 +24,7 @@
 }
 .topbar-wr ul, .worker-wr ul  {
     display: grid;
-    grid-template-columns: 7% 7% 11% 3% 8% 5% 4% 4% 4% 4% 4% 4% 4% 4% 5% 4.5% 5% 3.5% 2.5% 4.5% 2%;
+    grid-template-columns: 18% 15% 8% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 4.5% 5% 3.5% 2.5% 4.5% 2%;
 }
 .topbar-wr li, .worker-wr li {
     text-align: center !important;
@@ -32,7 +32,6 @@
 }
 .topbar-wr ul div, .worker-wr ul div {
     border: 1.5px solid #aaa;
-    border-left: none;
     text-align: center;
     padding: 5px 1px;
     font-size: 14px;
@@ -63,13 +62,12 @@
 }
 
 .weekly-wr input {
-    border: none;
-    width: 100%;
+    border: 1.5px solid #aaa;
+    width: 90%;
     background-color: inherit;
     text-align: center;
     color: #000;
     font-size: inherit;
-    outline: none;
     font-weight: 700;
 }
 
@@ -241,7 +239,7 @@
 }
 .ok-btn {
     margin-left: -50px;
-    border: none; 
+    border: none;
     width: 50px;
     height: 30px;
     line-height: 30px;
@@ -281,7 +279,7 @@
     margin-left: 3px;
     margin-top: 2px;
   }
-  
+
   /* Hide the browser's default checkbox */
   .container input {
     position: absolute;
@@ -290,7 +288,7 @@
     height: 0;
     width: 0;
   }
-  
+
   /* Create a custom checkbox */
   .checkmark {
     position: absolute;

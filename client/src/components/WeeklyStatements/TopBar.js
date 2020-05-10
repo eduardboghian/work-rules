@@ -76,13 +76,13 @@ const TopBar = ({dispatch, site, weekEnding, sites}) => {
     return (
         <div className='topbar-wr'>
             <div className='topbar-btns'>
+                <div><li>{ site ? site.companyName ? site.companyName: null : null }</li></div>
+                <div><li>{ site ? site.siteName ? site.siteName: null : null }</li></div>
                 <div onClick={ e => generateInvoice(site, 'site') }>Generate Invoice for Site</div>
                 <div onClick={ e => generateInvoice(sites, 'client') }>Generate Invoice for Client</div>
                 <div onClick={ e => addWorkerToSite() }>Add Worker</div>
             </div>
             <ul>
-                <div><li>Client</li></div>
-                <div><li>Site</li></div>
                 <div><li>Worker Name</li></div>
                 <div><li>Trade</li></div>
                 <div><li>Checked</li></div>
@@ -114,4 +114,3 @@ const mapStateToProps = state => {
 }
 
 export default connect (mapStateToProps)(TopBar)
-
