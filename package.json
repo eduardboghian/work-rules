@@ -33,6 +33,7 @@
     "mongoose": "^5.9.7",
     "nodemon": "^2.0.3",
     "puppeteer": "^2.1.1",
+    "react-bootstrap": "^1.0.1",
     "uuid": "^7.0.3",
     "uuid-v4": "^0.1.0"
   },

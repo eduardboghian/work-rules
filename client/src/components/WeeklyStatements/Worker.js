@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 function Worker({dispatch, worker, site, weekEnding}) {
     const [ratesData, setData] = useState({
@@ -99,14 +101,14 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
     const invoiced = (worker) => {
         let ot = ratesData.otGot*hoursOT ? ratesData.otGot*hoursOT : 0
-        let res = (ratesData.rateGot*hours + ot ) *  0.8 
+        let res = (ratesData.rateGot*hours + ot ) *  0.8
         res = isNaN( res ) ? 0 : res.toFixed(1)
         return res
     }
     const workerAmount = (worker) => {
         let ot = ratesData.otPaid*hoursOT ? ratesData.otPaid*hoursOT : 0
 
-        let res = (ratesData.ratePaid*hours + ot) * 0.8 
+        let res = (ratesData.ratePaid*hours + ot) * 0.8
         res = isNaN(res) ? 0 : res.toFixed(1)
         return res
     }
@@ -130,23 +132,23 @@ function Worker({dispatch, worker, site, weekEnding}) {
 					setHours(value)
 					console.log(await hours)
           worker[field] = value
-          dispatch( updateHours(site._id, worker.worker._id, value, hoursOT) )					
+          dispatch( updateHours(site._id, worker.worker._id, value, hoursOT) )
 					break
 
         case 'hoursOT':
           if( value === undefined ) value = 0
 					setOT(value)
 					console.log(await hoursOT)
-          
+
           dispatch( updateHours(site._id, worker.worker._id, hours, value) )
-          break 
-          
+          break
+
         case 'rateGot':
         case 'ratePaid':
         case 'otGot':
         case 'otPaid':
           if( value === undefined ) value = 0
-          setData({ ...ratesData, [field]: value }) 
+          setData({ ...ratesData, [field]: value })
           dispatch( updateRatesAction(site._id, worker.worker._id, {...ratesData, [field] : value }) )
           break
 				default:
@@ -156,7 +158,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
     const removeWorkerFromSite = (siteId, uid) => {
       let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
-    
+
       if( weekEnding === date ) {
         axios.post('/site/remove-worker', {
             siteId,
@@ -174,7 +176,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
         .then(res => window.location.reload(true))
         .catch(err => console.log(err))
       }
-  
+
     }
 
     return (
@@ -182,10 +184,8 @@ function Worker({dispatch, worker, site, weekEnding}) {
             <ul className='test'>
 
                 {/* GENERAL INFO */}
-                <div><li>{ site ? site.companyName ? site.companyName: null : null }</li></div>
-                <div><li>{ site ? site.siteName ? site.siteName: null : null }</li></div>
                 <div><li>{ worker ? worker.worker.firstname+' '+ worker.worker.lastname : null }</li></div>
-                <div><li>{ worker ? worker.worker.category : null }</li></div>
+                <DropdownButton id='drpdown-btn'><Dropdown.Item eventKey="1">{worker.worker.category}</Dropdown.Item></DropdownButton>
                 <div><li className='small-text'>upload timesheet</li></div>
 
                 {/* RATES */}
