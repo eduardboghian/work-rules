@@ -197,17 +197,14 @@ function Worker({dispatch, worker, site, weekEnding}) {
                 <div><li><input value={ratesData.otGot} onChange={ e => updateRates(e.target.value, worker, 'otGot') } /></li></div>
                 <div><li><input value={ratesData.otPaid} onChange={ e => updateRates(e.target.value, worker, 'otPaid') } /></li></div>
                 <div><li>{ ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0 }</li></div>
-                <div><li><input value={hoursOT ? hoursOT : 0} onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
+                <div><li><input value={hoursOT ? hoursOT : 0 } onChange={ e => updateRates(e.target.value, worker, 'hoursOT')  }  /></li></div>
 
                 {/* AMOUNTS AND OTHERS */}
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
                 <div><li>{ worker ? getMargin() : null }</li></div>
                 <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
-				        {/* <div><li><input value={others} onChange={ e => updateOthers(e.target.value, worker) }  /></li></div>
-								<div className={ worker.worker.paymentStatus==='Yes' ? 'paid' : 'not-paid'  } ><li>{ worker ? worker.worker.paymentStatus : null }</li></div>
-                <div><li>{ worker ? worker.worker.communicationChannel : null }</li></div> */}
 
-                <div className={`${hideX} remove-btn-wr`}> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
+                <div className={`remove-btn-wr`}> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
                 <section className={`${popStyle} pop-out`}>
                     Do you want DELETE<br /> {worker ? worker.worker.firstname+' '+ worker.worker.lastname : null}
                     <button className='ok' onClick={ e=> removeWorkerFromSite(site._id, worker.worker._id) }>OK</button>

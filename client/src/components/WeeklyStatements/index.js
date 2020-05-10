@@ -10,6 +10,7 @@ import axios from 'axios'
 import { addSites } from '../../actions/siteActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'
+import { generateXlsx } from '../../utils/xlsxGenerator'
 
 import TopBar from './TopBar'
 import Worker from './Worker'
@@ -21,7 +22,6 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
     const [sitesMenu, setMenu] = useState([])
     const [newSite, setNewSite] = useState({})
     const [styleStatus, setStyle] = useState('none')
-    console.log(weekEnding)
 
     useEffect(() => {
         const addDataToState = () => {
@@ -70,6 +70,10 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
     }, [])
 
+    useEffect(() => {
+        generateXlsx(sites, 'Weekly Statement')
+    }, [sites])
+
     const selectSite = () => {
         newSite.workers = []
         axios.put('/weekly/add-site', {
@@ -79,6 +83,8 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
         .then(res => window.location.reload(true))
         .catch(err =>console.error(err))
     }
+
+   
 
     return (
       <div>
@@ -106,6 +112,9 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
                     </FormControl>
                 </Grid>
             </Grid>
+
+            <div onClick={ e => generateXlsx(sites, 'Matt') }>Generate Excel for Matt</div>
+            <div onClick={ e => generateXlsx(sites, 'Rob') }>Generate Excel for Rob</div>
 
             {sites.map((site, i) => {
                 return <div key={i}>

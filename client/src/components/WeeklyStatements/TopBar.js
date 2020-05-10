@@ -6,10 +6,6 @@ import AddWorker from './AddWorker'
 const TopBar = ({dispatch, site, weekEnding, sites}) => {
     const [workersForCompany, setWrC] = useState([])
     const [formClass, setClass] = useState('none')
-    const [paymentRes, setPaymetRes] = useState([])
-    const [styleRes, setStyleRes] = useState('none')
-    const [confirmButton, setButton] = useState('none')
-    const [payslipButton, setPayslipButton] = useState('')
 
     useEffect(() => {
         setWrC(site.companyName)
@@ -42,13 +38,13 @@ const TopBar = ({dispatch, site, weekEnding, sites}) => {
         .then(res=> {
             res.data.map(data=> {
                 function arrayBufferToBase64(buffer) {
-                let binary = '';
-                let bytes = new Uint8Array(buffer);
-                let len = bytes.byteLength;
-                for (let i = 0; i < len; i++) {
-                    binary += String.fromCharCode(bytes[i]);
-                }
-                return window.btoa(binary);
+                    let binary = '';
+                    let bytes = new Uint8Array(buffer);
+                    let len = bytes.byteLength;
+                    for (let i = 0; i < len; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    return window.btoa(binary);
                 }
                 let b64 = arrayBufferToBase64(data.data)
 
