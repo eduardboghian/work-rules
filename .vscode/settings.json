@@ -3,6 +3,6 @@
         "node_modules{,/**}",
         ".vscode{,/**}"
     ],
-    "appService.defaultWebAppToDeploy": "/subscriptions/29319b2a-98f6-40ba-a79b-864dbc5b08a7/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/work-rules",
-    "appService.deploySubpath": ""
+    "appService.deploySubpath": "",
+    "appService.defaultWebAppToDeploy": "/subscriptions/29319b2a-98f6-40ba-a79b-864dbc5b08a7/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/work-rules"
 }
