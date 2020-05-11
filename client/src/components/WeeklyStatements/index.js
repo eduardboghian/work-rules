@@ -70,10 +70,6 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
 
     }, [])
 
-    useEffect(() => {
-        generateXlsx(sites, 'Weekly Statement')
-    }, [sites])
-
     const selectSite = () => {
         newSite.workers = []
         axios.put('/weekly/add-site', {
@@ -90,31 +86,33 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
       <div>
         <Dashboard/>
         <div className='weekly-wr' id='test'>
-            <Grid container direction='row' style={{ width: '400px', marginLeft: '20px' }}>
-                <Grid item xs={3}>
-                    <Typography>WeekEnding</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                    <FormControl fullWidth>
-                        <Select
-                            value={ weekEnding }
-                            onChange={e => {
-                                let currentWE = we.find(item => item.weekEnding === e.target.value);
-                                dispatch( setWeekEnding(currentWE.weekEnding) )
-                                dispatch( addSites(currentWE.data) )
-                            }}
-                        >
+            <div className='first-row' >
+                <Grid container direction='row' style={{ width: '400px', marginLeft: '20px' }}>
+                    <Grid item xs={3}>
+                        <Typography>WeekEnding</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <FormControl fullWidth>
+                            <Select
+                                value={ weekEnding }
+                                onChange={e => {
+                                    let currentWE = we.find(item => item.weekEnding === e.target.value);
+                                    dispatch( setWeekEnding(currentWE.weekEnding) )
+                                    dispatch( addSites(currentWE.data) )
+                                }}
+                            >
 
-                        {we.map((we, i) => {
-                            return <MenuItem key={i} value={we.weekEnding}>{we.weekEnding}</MenuItem>
-                        })}
-                        </Select>
-                    </FormControl>
+                            {we.map((we, i) => {
+                                return <MenuItem key={i} value={we.weekEnding}>{we.weekEnding}</MenuItem>
+                            })}
+                            </Select>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-            </Grid>
 
-            <div onClick={ e => generateXlsx(sites, 'Matt') }>Generate Excel for Matt</div>
-            <div onClick={ e => generateXlsx(sites, 'Rob') }>Generate Excel for Rob</div>
+                <div onClick={ e => generateXlsx(sites, 'Matt', weekEnding) } className='first-row-element' >Generate Excel for Matt</div>
+                <div onClick={ e => generateXlsx(sites, 'Rob', weekEnding) } className='first-row-element' >Generate Excel for Rob</div>
+            </div>
 
             {sites.map((site, i) => {
                 return <div key={i}>

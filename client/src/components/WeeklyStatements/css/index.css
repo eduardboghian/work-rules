@@ -24,7 +24,7 @@
 }
 .topbar-wr ul, .worker-wr ul  {
     display: grid;
-    grid-template-columns: 18% 15% 8% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 4.5% 5% 3.5% 2.5% 4.5% 2%;
+    grid-template-columns: 18% 12% 8% 5% 5% 5% 5% 5% 5% 5% 5% 7% 5% 6% 4%;
 }
 .topbar-wr li, .worker-wr li {
     text-align: center !important;
@@ -32,6 +32,7 @@
 }
 .topbar-wr ul div, .worker-wr ul div {
     border: 1.5px solid #aaa;
+    border-right: none ;
     text-align: center;
     padding: 5px 1px;
     font-size: 14px;
@@ -42,18 +43,24 @@
     background-color: #fafafa;
     display: grid;
 }
+.last-cell {
+    border-right: 1.5px solid #aaa !important;
+}
 
 .test div {
     border-left: none;
     border-top: none !important;
     text-align: center;
     padding: 5px 1px;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 16px;
     height: 30px !important;
     color: #000 !important;
     font-weight: 100 !important;
     background-color: #fff !important;
+}
+.test div li {
+    font-size: 15px !important;
 }
 
 .small-text {
@@ -62,7 +69,8 @@
 }
 
 .weekly-wr input {
-    border: 1.5px solid #aaa;
+    /* border: 1.5px solid #aaa; */
+    border: none !important;
     width: 90%;
     background-color: inherit;
     text-align: center;
@@ -131,14 +139,13 @@
 
 .site-name {
     border: 1.5px solid #aaa;
-    border-left: none;
     border-top: none;
     padding: 5px 1px;
     font-size: 14px;
     line-height: 20px;
     height: 30px !important;
     padding-left: 30px;
-    width: 98% !important;
+    width: 96% !important;
 }
 
 .close-btn {
@@ -332,4 +339,35 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+
+.first-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.first-row-element {
+    margin: 4px 20px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #999;
+    padding: 0 5px;
+}
+
+.select-trade {
+    margin: 0 !important;
+    padding: 0 !important ;
+    width: 100% !important;
+    border-bottom: 1.5px solild #aaa !important;
+}
+.select-trade div {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important ;
+    width: 100% !important
+}
+.test .MuiSelect-root {
+    line-height: 30px !important ;  
+    font-weight: 500 !important ; 
+    border-bottom: 1.5px solild #aaa !important;
 }

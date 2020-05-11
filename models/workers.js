@@ -20,7 +20,10 @@ const Worker = new Schema({
     phone: { type: String },
     email: { type: String },
     communicationChannel: { type: String },
-
+    date: {
+        type: Date,
+        default: new Date()
+    },
     taxPercentage: { type: String },
     category: { type: String },
     hours: { type: Number },

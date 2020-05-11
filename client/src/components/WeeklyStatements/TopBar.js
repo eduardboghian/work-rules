@@ -96,10 +96,7 @@ const TopBar = ({dispatch, site, weekEnding, sites}) => {
                 <div><li>OT Hours</li></div>
                 <div><li>Invoiced</li></div>
                 <div><li>Margin</li></div>
-                <div><li>Worker</li></div>
-                {/* <div><li>Avans</li></div>
-                <div><li>Paid</li></div>
-                <div><li>Payslip via</li></div> */}
+                <div className='last-cell'><li>Worker</li></div>
             </ul>
             <AddWorker formClass={formClass} close={closeAddWorker} siteId={site._id} weekEnding={weekEnding} />
         </div>

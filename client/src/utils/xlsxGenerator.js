@@ -1,16 +1,17 @@
  const XLSX = require('xlsx')
+ const moment = require('moment')
  
 // [x] WRAP IN A FUNCTION AND GET SITES AS PARAM
 // [ ] CHECK THE KIND OF THE REQ
 // [x] SET NAMES OF SHEETS
 
-const generateXlsx = (sites, type) => {
+const generateXlsx = (sites, type, weekEnding) => {
     let wb = XLSX.utils.book_new();
     wb.Props = {
-            Title: "WorkRules",
-            Subject: "Statement",
-            Author: "WorkRules",
-            CreatedDate: new Date(2017,12,19)
+        Title: "WorkRules",
+        Subject: "Statement",
+        Author: "WorkRules",
+        CreatedDate: moment().format('YYYY MM DD')
     };
 
     // IMPORT FIRST SHEET
@@ -22,7 +23,7 @@ const generateXlsx = (sites, type) => {
 
     //IMPORT SECOND SHEET
     wb.SheetNames.push('New Joiners')
-    ws_data = newJoiners()
+    ws_data = newJoiners(sites)
 
     ws = XLSX.utils.json_to_sheet(ws_data)
     wb.Sheets['New Joiners'] = ws
@@ -50,11 +51,11 @@ const generateXlsx = (sites, type) => {
     // Insert a link that allows the user to download the PDF file
     let link = document.createElement('a');
     link.innerHTML = 'Download PDF file';
-    link.download = 'file.xlsx';
+    link.download = fileName(type, weekEnding);
     link.href = 'data:application/octet-stream;base64,' + b64;
     document.body.appendChild(link);
-    // link.click()
-    // link.remove()
+    link.click()
+    link.remove()
 }
 
 module.exports.generateXlsx = generateXlsx
@@ -70,7 +71,7 @@ const weeklyStatement = (sites) => {
                 Rate: worker.rates.rateGot,
                 OTHours: worker.worker.hoursOT,
                 OTRate: worker.rates.otGot,
-                TotalSum: 2000
+                TotalSum: totalSum(worker)
             })
         })
     })
@@ -78,9 +79,45 @@ const weeklyStatement = (sites) => {
     return excelData
 }
 
-const newJoiners = () => {
-    return [{
-        name: 'edi',
-        data: 'el este'
-    }]
+const newJoiners = (sites) => {
+    let excelData = []
+    sites.map( (site, i) => {
+        site.workers.map( worker => {
+            let status
+            let dif = moment(worker.worker.date, "YYYYMMDD").fromNow() 
+
+            if(worker.worker.date) {
+                if( parseFloat( dif ) < 7) {
+                    status= 'New Joiner'
+                }else { status= 'Old' }
+            } else { status= 'Old' }
+
+            excelData.push({
+                "Last Name": worker.worker.lastname,
+                "First Name": worker.worker.firstname,
+                Phone: worker.worker.phone,
+                Status: status
+            })
+            return true
+        })
+    })
+
+    return excelData
+}
+
+const totalSum = (worker) => {
+    const sum = worker.rates.rateGot * worker.worker.hours
+    let ot = parseFloat( worker.rates.otGot ) * worker.worker.hoursOT 
+    ot = ot ? ot : 0
+    return ( sum + ot ) * 0.8
+}
+
+const fileName = (type, weekEnding) => {
+    let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MM DD')
+
+    if(type === 'Matt') {
+        return `WorkRules_CompuPay_WeeklyStatement-${currentTime}-weekending-${weekEnding}.xlsx`
+    } else {
+        return `WorkRules_HHC_WeeklyStatement-${currentTime}-weekending-${weekEnding}.xlsx`
+    }
 }

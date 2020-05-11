@@ -4,8 +4,12 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
+
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Typography from '@material-ui/core/Typography';
 
 function Worker({dispatch, worker, site, weekEnding}) {
     const [ratesData, setData] = useState({
@@ -16,23 +20,17 @@ function Worker({dispatch, worker, site, weekEnding}) {
     })
     const [hours, setHours] = useState(0)
     const [hoursOT, setOT] = useState(0)
-    const [others, setOthers] = useState(0)
+    const [trade, setTrade] = useState('')
     const [popStyle, setPopStyle] = useState('none')
-    const [hideX, hide] = useState('')
 
     useEffect(() => {
         setHours(worker.worker.hours)
         setOT(worker.worker.hoursOT)
         setData(worker.rates)
+        console.log(worker.worker.category)
+        setTrade('Muncitors')
         console.log(new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD'))
     }, [worker])
-
-    // useEffect(() => {
-    //   if(list.length>0) {
-    //     hide('none')
-    //     setShowChecker('')
-    //   }
-    // }, [list])
 
     useEffect(() => {
       let date =  new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
@@ -120,11 +118,6 @@ function Worker({dispatch, worker, site, weekEnding}) {
         return margin
     }
 
-    const updateOthers = (value, worker) => {
-        setOthers(value)
-        dispatch( updateSites(site._id, worker.worker._id, value) )
-    }
-
     const updateRates = async (value, worker, field) => {
       switch(field) {
 				case 'hours':
@@ -185,7 +178,47 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
                 {/* GENERAL INFO */}
                 <div><li>{ worker ? worker.worker.firstname+' '+ worker.worker.lastname : null }</li></div>
-                <DropdownButton id='drpdown-btn'><Dropdown.Item eventKey="1">{worker.worker.category}</Dropdown.Item></DropdownButton>
+                
+                    <Grid item className='select-trade'>
+                        <Select
+                          xs={9}
+                          placeholder='Choose percentage tax paid '
+                          value={trade}
+                          onChange={e => setTrade(e.target.value) }
+                        >
+                          <MenuItem value={'1st Fix Carpenter'}>1st Fix Carpenter</MenuItem>
+                          <MenuItem value={'2nd Fix Carpenter'}>2nd Fix Carpenter</MenuItem>
+                          <MenuItem value={'360 Excavator'}>360 Excavator</MenuItem>
+                          <MenuItem value={'Basic Groundworker'}>Basic Groundworker</MenuItem>
+                          <MenuItem value={'Bricklayer'}>Bricklayer</MenuItem>
+                          <MenuItem value={'CCDO Labourer'}>CCDO Labourer</MenuItem>
+                          <MenuItem value={'Cleaner'}>Cleaner</MenuItem>
+                          <MenuItem value={'Crane Opertor'}>Crane Opertor</MenuItem>
+                          <MenuItem value={'Crane Supervisor'}>Crane Supervisor</MenuItem>
+                          <MenuItem value={'Demolition Labourer'}>Demolition Labourer</MenuItem>
+                          <MenuItem value={'Dry Liner/Ceiling Fixer'}>Dry Liner/Ceiling Fixer</MenuItem>
+                          <MenuItem value={'Forklift Telehandler'}>Forklift Telehandler</MenuItem>
+                          <MenuItem value={'FTD/Forward Tipping Dumper'}>FTD/Forward Tipping Dumper</MenuItem>
+                          <MenuItem value={'General Labourer'}>General Labourer</MenuItem>
+                          <MenuItem value={'Handyman'}>Handyman</MenuItem>
+                          <MenuItem value={'Nip Hand'}>Nip Hand</MenuItem>
+                          <MenuItem value={'Painter'}>Painter</MenuItem>
+                          <MenuItem value={'Plasterer'}>Plasterer</MenuItem>
+                          <MenuItem value={'Scaffolder Adv'}>Scaffolder Adv</MenuItem>
+                          <MenuItem value={'Scaffolder Part1'}>Scaffolder Part1</MenuItem>
+                          <MenuItem value={'Scaffolder Part2'}>Scaffolder Part2</MenuItem>
+                          <MenuItem value={'Shuttering Carpenter'}>Shuttering Carpenter</MenuItem>
+                          <MenuItem value={'Skilled Groundworker'}>Skilled Groundworker</MenuItem>
+                          <MenuItem value={'Skilled Labourer'}>Skilled Labourer</MenuItem>
+                          <MenuItem value={'Slinger Banksman'}>Slinger Banksman</MenuItem>
+                          <MenuItem value={'Steel Fixer'}>Steel Fixer</MenuItem>
+                          <MenuItem value={'Striker'}>Striker</MenuItem>
+                          <MenuItem value={'Tiler'}>Tiler</MenuItem>
+                        </Select>
+                    </Grid>
+                
+                {/* TRADE DROPDOWN */}
+
                 <div><li className='small-text'>upload timesheet</li></div>
 
                 {/* RATES */}
@@ -202,7 +235,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
                 {/* AMOUNTS AND OTHERS */}
                 <div><li>{ worker ? invoiced(worker.worker)===NaN ? null : invoiced(worker.worker) :null }</li></div>
                 <div><li>{ worker ? getMargin() : null }</li></div>
-                <div><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
+                <div className='last-cell'><li>{ worker ? workerAmount(worker)===NaN ? null : workerAmount(worker.worker) : null }</li></div>
 
                 <div className={`remove-btn-wr`}> <li className='remove-btn' onClick={ e=> setPopStyle('') }>X</li> </div>
                 <section className={`${popStyle} pop-out`}>
