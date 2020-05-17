@@ -13,6 +13,8 @@ import Input from '@material-ui/core/Input';
 import { createWorker } from '../../utils/api';
 
 import { editCreateStyles } from '../../utils/styles';
+import './style.css'
+
 const useStyles = makeStyles(editCreateStyles);
 
 const EditCreate = props => {
@@ -50,21 +52,19 @@ const EditCreate = props => {
       peer: '',
       firstname: '',
       lastname: '',
-      id: '',
+      uniqueID: '',
       firstPost: '',
       secondPost: '',
       city: '',
       zipCode: '',
       utr: '',
-      vat: 'GB ',
-      cis: false,
+      vat: ' ',
       nino: '',
       phone: '+44',
       email: '',
       communicationChannel: '',
       account: '',
       sortCode: '',
-      taxPercentage: '',
       category: '',
       status: ''
     });
@@ -217,7 +217,7 @@ const EditCreate = props => {
           }
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, '');
-          setData({ ...temporaryData, vat: `GB ${checked}` });
+          setData({ ...temporaryData, vat: `${checked}` });
         }
         break;
       case 'nino':
@@ -278,11 +278,52 @@ const EditCreate = props => {
   const classes = useStyles();
   return (
     <>
-      <Grid container direction='row' justify='space-between' classes={{ root: classes.editContainer }}>
-        <Typography>{props.actionType === 'edit' ? 'Edit Worker' : 'Create Worker'}</Typography>
+      {/* ====== TOP BAR ======== */}
+
+      <Grid container justify='space-between' className='worker-topbar'>
+        <Grid style={{display: 'none'}}>
+          <Typography>Company Name</Typography>
+            <Tooltip
+              open={companyNameError}
+              title='Company name must contain at least 6 symbols'
+              classes={{ tooltip: classes.errorTooltip }}
+              placement='top'
+            >
+              <FormControl  error={companyNameError}>
+                <Input
+                  value={temporaryData.companyName}
+                  classes={{ input: classes.input }}
+                  onChange={e => {
+                    setData({ ...temporaryData, companyName: e.target.value });
+                  }}
+                />
+            </FormControl>
+          </Tooltip>
+        </Grid>
+
+        <Grid>
+          <Typography>Status</Typography>
+          <FormControl classes={{ root: classes.inputContainer }} >
+            <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
+              <MenuItem value={'active'}>Active</MenuItem>
+              <MenuItem value={'archived'}>Not Active</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <div></div> 
+
+        <Grid>
+          <Typography>Unique ID</Typography>
+          <FormControl classes={{ root: classes.inputContainer }} >
+            <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
+              <MenuItem value={'active'}>Active</MenuItem>
+              <MenuItem value={'archived'}>Not Active</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         
-        <Grid item xs={9} container direction='row'>
-            <Typography>Physical person</Typography>
+        <Grid className='switcher'>
+            <Typography>Person</Typography>
             <Switch
               classes={{ root: classes.switch }}
               checked={temporaryData.type === 'physical' ? false : true}
@@ -291,76 +332,26 @@ const EditCreate = props => {
             <Typography>Company</Typography>
           </Grid>
 
-          <Button classNamw='create-btn' onClick={closePage}>
+          <Button className='create-btn' onClick={closePage}>
             Back
           </Button>
       </Grid>
 
-      <Grid container direction='column' classes={{ root: classes.editContainer }}>
+      <Grid className='content-wr' >
 
-        {temporaryData.type === 'company' ? (
-          <>
-            <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-              <Grid item xs={3}>
-                <Typography>Company Name</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Tooltip
-                  open={companyNameError}
-                  title='Company name must contain at least 6 symbols'
-                  classes={{ tooltip: classes.errorTooltip }}
-                  placement='top'
+        <div className="content-worker">
+          <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                  <Typography>Firstname</Typography>
+                  <Tooltip
+                    open={firstnameError}
+                    title='Firstname should be at least 3 symbols length'
+                    classes={{ tooltip: classes.errorTooltip }}
+                    placement='top'
                 >
-                  <FormControl fullWidth error={companyNameError}>
-                    <Input
-                      value={temporaryData.companyName}
-                      placeholder='Torchwood'
-                      classes={{ input: classes.input }}
-                      onChange={e => {
-                        setData({ ...temporaryData, companyName: e.target.value });
-                      }}
-                    />
-                  </FormControl>
-                </Tooltip>
-              </Grid>
-            </Grid>
-            
-            <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-              <Grid item xs={3}>
-                <Typography>Peer</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Tooltip open={peerError} title='Please enter at least 3 symbols' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-                  <FormControl fullWidth error={peerError}>
-                    <Input
-                      value={temporaryData.peer}
-                      placeholder='John Smith'
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'peer')}
-                      disabled={temporaryData.type === 'physical' ? true : false}
-                    />
-                  </FormControl>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-              <Grid item xs={3}>
-                <Typography>Firstname</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Tooltip
-                  open={firstnameError}
-                  title='Firstname should be at least 3 symbols length'
-                  classes={{ tooltip: classes.errorTooltip }}
-                  placement='top'
-                >
-                  <FormControl fullWidth error={firstnameError}>
+                  <FormControl  error={firstnameError}>
                     <Input
                       value={temporaryData.firstname}
-                      placeholder='John'
                       classes={{ input: classes.input }}
                       onChange={e => inputHadnler(e.target.value, 'firstname')}
                     />
@@ -369,21 +360,18 @@ const EditCreate = props => {
               </Grid>
             </Grid>
 
-            <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-              <Grid item xs={3}>
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
                 <Typography>Lastname</Typography>
-              </Grid>
-              <Grid item xs={9}>
                 <Tooltip
                   open={lastnameError}
                   title='Lastname should be at least 3 symbols length'
                   classes={{ tooltip: classes.errorTooltip }}
                   placement='top'
                 >
-                  <FormControl fullWidth error={lastnameError}>
+                  <FormControl  error={lastnameError}>
                     <Input
                       value={temporaryData.lastname}
-                      placeholder='Smith'
                       classes={{ input: classes.input }}
                       onChange={e => inputHadnler(e.target.value, 'lastname')}
                     />
@@ -391,18 +379,62 @@ const EditCreate = props => {
                 </Tooltip>
               </Grid>
             </Grid>
-          </>
-        )}
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 1</Typography>
-          </Grid>
-          <Grid item xs={9}>
-              <FormControl fullWidth >
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+              <Typography>Phone Number</Typography>
+                <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                  <FormControl  error={phoneError}>
+                    <Input
+                      value={temporaryData.phone}
+                      classes={{ input: classes.input }}
+                      onChange={e => inputHadnler(e.target.value, 'phone')}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+              <Typography>Alternative Phone Number</Typography>
+                <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                  <FormControl  error={phoneError}>
+                    <Input
+                      value={temporaryData.phone2}
+                      classes={{ input: classes.input }}
+                      onChange={e => inputHadnler(e.target.value, 'phone2')}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+              <Typography>Preferred Communication Channel</Typography>
+                  <FormControl  classes={{ root: classes.inputContainer }} >
+                    <Select
+                      value={temporaryData.communicationChannel}
+                      onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
+                    >
+                      <MenuItem value={'whatsapp'}>WhatsApp</MenuItem>
+                      <MenuItem value={'viber'}>Viber</MenuItem>
+                      <MenuItem value={'telegram'}>Telegram</MenuItem>
+                      <MenuItem value={'email'}>Email</MenuItem>
+                    </Select>
+                  </FormControl>
+              </Grid>
+            </Grid>
+        </div>
+            
+        <div className="content-info">
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+            <Typography>Adress 1</Typography>
+              <FormControl  >
                 <Input
                   value={temporaryData.firstPost}
-                  placeholder='Postal adress 1'
                   classes={{ input: classes.input }}
                   onChange={e => setData({ ...temporaryData, firstPost: e.target.value })}
                 />
@@ -410,15 +442,12 @@ const EditCreate = props => {
           </Grid>
         </Grid>
         
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 2</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>Adress 2</Typography>
+            <FormControl >
               <Input
                 value={temporaryData.secondPost}
-                placeholder='Postal adress 2'
                 classes={{ input: classes.input }}
                 onChange={e => setData({ ...temporaryData, secondPost: e.target.value })}
               />
@@ -427,30 +456,25 @@ const EditCreate = props => {
         </Grid>
 
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>City</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>City</Typography>
+            <FormControl >
               <Input
                 value={temporaryData.city}
-                placeholder='City'
                 classes={{ input: classes.input }}
                 onChange={e => setData({ ...temporaryData, city: e.target.value })}
               />
             </FormControl>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Zip Code</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
+
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>Zip Code</Typography>
+            <FormControl >
               <Input
                 value={temporaryData.zipCode}
-                placeholder='Zip Code'
                 classes={{ input: classes.input }}
                 onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
               />
@@ -459,26 +483,13 @@ const EditCreate = props => {
         </Grid>
 
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>ID</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input disabled value={temporaryData.id} placeholder='TRCHWD' classes={{ input: classes.input }} />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>VAT Number</Typography>
-          </Grid>
-          <Grid item xs={9}>
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>VAT Number</Typography>
             <Tooltip open={vatError} title='Please provide valid VAT Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={vatError}>
+              <FormControl  error={vatError}>
                 <Input
                   value={temporaryData.vat}
-                  placeholder='GB 123456789'
                   classes={{ input: classes.input }}
                   onChange={e => inputHadnler(e.target.value, 'vat')}
                 />
@@ -486,16 +497,14 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Uniq Taxpayer Reference</Typography>
-          </Grid>
-          <Grid item xs={9}>
+
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>Uniq Taxpayer Reference</Typography>
             <Tooltip open={utrError} title='Please provide valid UTR' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={utrError}>
+              <FormControl  error={utrError}>
                 <Input
                   value={temporaryData.utr}
-                  placeholder='12345 67890'
                   classes={{ input: classes.input }}
                   onChange={e => inputHadnler(e.target.value, 'utr')}
                 />
@@ -503,24 +512,14 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>CIS</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Switch checked={temporaryData.cis} onChange={setData.bind(null, { ...temporaryData, cis: !temporaryData.cis })} />
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>NINO</Typography>
-          </Grid>
-          <Grid item xs={9}>
+
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>NINO</Typography>
             <Tooltip open={ninoError} title='Please provide valid NINO' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={ninoError}>
+              <FormControl  error={ninoError}>
                 <Input
                   value={temporaryData.nino}
-                  placeholder='QQ123456C'
                   classes={{ input: classes.input }}
                   onChange={e => inputHadnler(e.target.value, 'nino')}
                 />
@@ -528,33 +527,14 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Phone Number</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={phoneError}>
-                <Input
-                  value={temporaryData.phone}
-                  placeholder='+44'
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'phone')}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
+
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
             <Typography>Email</Typography>
-          </Grid>
-          <Grid item xs={9}>
             <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth error={emailError}>
+              <FormControl  error={emailError}>
                 <Input
                   value={temporaryData.email}
-                  placeholder='user@mail.com'
                   classes={{ input: classes.input }}
                   onChange={e => setData({ ...temporaryData, email: e.target.value })}
                 />
@@ -562,87 +542,44 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Preferred communication channel</Typography>
-          </Grid>
-          <Grid item xs={9}>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} >
-                <Select
-                  placeholder='Choose preferred communication channel'
-                  value={temporaryData.communicationChannel}
-                  onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
-                >
-                  <MenuItem value={'whatsapp'}>WhatsApp</MenuItem>
-                  <MenuItem value={'viber'}>Viber</MenuItem>
-                  <MenuItem value={'telegram'}>Telegram</MenuItem>
-                  <MenuItem value={'email'}>Email</MenuItem>
-                </Select>
-              </FormControl>
-          </Grid>
-        </Grid>
-        
-        
 
         {/* ACCOUNT INFORMATION */}
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
             <Typography>Account Number</Typography>
+              <FormControl >
+                <Input
+                  value={temporaryData.account}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'account')}
+                />
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.account}
-                placeholder='Account Number'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'account')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
             <Typography>Sort Code</Typography>
+              <FormControl >
+                <Input
+                  value={temporaryData.sortCode}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'sortCode')}
+                />
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.sortCode}
-                placeholder='Sort Code'
-                classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'sortCode')}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
+        </div>    
+
+        
 
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Tax</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth classes={{ root: classes.inputContainer }}>
-              <Select
-                placeholder='Choose percentage tax paid '
-                value={temporaryData.taxPercentage}
-                onChange={e => setData({ ...temporaryData, taxPercentage: e.target.value })}
-              >
-                <MenuItem value={'nino'}>with NINO 30%</MenuItem>
-                <MenuItem value={'utr+cis'}>(UTR+CIS) 20%</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Category</Typography>
-          </Grid>
-          <Grid item xs={9}>
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
+          <Typography>Trade</Typography>
             <Tooltip open={categoryError} title='Please select status' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }}>
+              <FormControl  classes={{ root: classes.inputContainer }}>
                 <Select
                   placeholder='Choose percentage tax paid '
                   value={temporaryData.category}
@@ -681,19 +618,7 @@ const EditCreate = props => {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Status</Typography>
-          </Grid>
-          <Grid item xs={9}>
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} >
-                <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
-                  <MenuItem value={'active'}>Active</MenuItem>
-                  <MenuItem value={'archived'}>Not Active</MenuItem>
-                </Select>
-              </FormControl>
-          </Grid>
-        </Grid>
+
         <Grid container justify='space-around'>
           <Button
             style={{ marginTop: '20px' }}

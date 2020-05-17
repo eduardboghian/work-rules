@@ -1,4 +1,5 @@
-.clients-wr .MuiTableCell-root p {
+
+.worker-wr .MuiTableCell-root p {
     color: black !important;
 }
 .create-btn {
@@ -7,4 +8,72 @@
     color: #fff !important;
     font-weight: bold !important;
     font-size: 16px !important;
+}
+
+/* Worker Form */
+
+.worker-wr .MuiSelect-root {
+    width: 300px !important;
+    height: 30px !important;
+    background-color: #eee;
+    line-height: 30px;
+    padding-left: 10px;
+}
+.worker-wr .MuiInput-underline {
+    width: 300px !important ;
+}
+.worker-wr .MuiGrid-root {
+    padding: 0 !important;
+}
+
+
+.worker-topbar {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 45% 10% auto auto auto;
+    height: 67px !important;
+    margin-bottom: 30px !important;
+}
+.worker-topbar .create-btn {
+    height: 42px !important;
+    width: 150px !important;
+    position: relative;
+    top: 25px !important;
+}
+.worker-wr .switcher {
+    display: flex;
+    flex-direction: row;
+    height: 38px !important;
+    position: relative;
+    top: 35px !important;
+}
+
+/* CONTENT WRAPER */
+
+.content-wr .MuiInputBase-root {
+    background-color: #eee !important;
+    height: 40px !important;
+}
+.content-wr .MuiInput-underline {
+    border-bottom: none !important;
+}
+.content-wr .MuiGrid-root {
+    width: 250px !important;
+}
+
+.content-worker, .content-info {
+    width: 45% !important;
+    background-color: #ccc;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding: 10px;
+}
+.content-worker {
+    float: left;
+}
+.content-info {
+    float: right;
+}
+.content-worker div {
+    align-self: center;
 }

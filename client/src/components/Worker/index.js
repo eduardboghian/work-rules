@@ -28,7 +28,7 @@ import Dashboard from '../../pages/Dashboard';
 const useStyles = makeStyles(pageStyles);
 
 const Worker = props => {
-  const [dialog, isDialogOpened] = useState(false);
+  const [dialog, isDialogOpened] = useState(true);
   const [snackbarState, setSnackbarState] = useState(false);
   const [workersData, setWorkersData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -128,7 +128,7 @@ const Worker = props => {
     }
   };
   return (
-    <Grid className='clients-wr'>
+    <Grid className='worker-wr'>
       <Dashboard/>
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
