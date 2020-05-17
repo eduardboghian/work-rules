@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import Popover from "@material-ui/core/Popover";
 import TextField from "@material-ui/core/TextField";
 import SearchIcon from "@material-ui/icons/Search";
+import './style.css'
 
 const Search = props => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(true);
 
   const clickHandler = event => {
     setAnchorEl(event.currentTarget);
@@ -35,22 +36,13 @@ const Search = props => {
 
   return (
     <>
-      <SearchIcon onClick={e => clickHandler(e)} style={{ cursor: "pointer" }} />
-      <Popover
-        open={isOpened}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center"
-        }}
-        onClose={(event, reason) => closeHandler(reason)}
-      >
-        <TextField style={{ padding: "10px" }} placeholder="Enter text..." onChange={e => changeHandler(e.target.value)} />
-      </Popover>
+      
+      
+      <div className="search-field-wr">
+        <SearchIcon onClick={e => clickHandler(e)}className='search-icon' />
+        <TextField className='search-field'  placeholder="Search in Firstname, Lastname, Company name, Phone, Trade, Tikets, Comment, eMail, ZipCode, City, UTR, NINO" onChange={e => changeHandler(e.target.value)} />
+      </div>
+      
     </>
   );
 };

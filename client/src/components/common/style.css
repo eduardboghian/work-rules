@@ -1,0 +1,28 @@
+.search-field-wr {
+    width: 1000px;
+    position: relative;
+    height: 40px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 0 5px #aaa;
+    border-radius: 5px;
+}
+.search-field-wr .MuiFormControl-root {
+    width: 92%;
+    height: 40px !important;
+    color: #555;
+    border: none !important;
+}
+.search-field-wr .MuiInput-underline::before {
+    border: none !important;
+}
+.search-field-wr .MuiInput-input {
+    margin-top: 3px !important;
+    padding: 10px 0 !important;
+}
+.search-icon {
+    color: #555;
+    cursor: pointer;
+    margin: 8px 10px 0 0 ;
+}

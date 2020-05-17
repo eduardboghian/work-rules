@@ -280,17 +280,8 @@ const EditCreate = props => {
     <>
       <Grid container direction='row' justify='space-between' classes={{ root: classes.editContainer }}>
         <Typography>{props.actionType === 'edit' ? 'Edit Worker' : 'Create Worker'}</Typography>
-        <Button classes={{ root: classes.button }} onClick={closePage}>
-          Back
-        </Button>
-      </Grid>
-
-      <Grid container direction='column' classes={{ root: classes.editContainer }}>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Type</Typography>
-          </Grid>
-          <Grid item xs={9} container direction='row' style={{ marginTop: '-7px' }}>
+        
+        <Grid item xs={9} container direction='row'>
             <Typography>Physical person</Typography>
             <Switch
               classes={{ root: classes.switch }}
@@ -299,7 +290,13 @@ const EditCreate = props => {
             />
             <Typography>Company</Typography>
           </Grid>
-        </Grid>
+
+          <Button classNamw='create-btn' onClick={closePage}>
+            Back
+          </Button>
+      </Grid>
+
+      <Grid container direction='column' classes={{ root: classes.editContainer }}>
 
         {temporaryData.type === 'company' ? (
           <>

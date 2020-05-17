@@ -118,7 +118,7 @@ class Dashboard extends React.Component {
                   style={styles.navbarButtons}
                   // classes={{ root: classes.navbarButtons }}
                 >
-                  <Link to='/worker'>Worker</Link>
+                  <Link to='/workers'>Workers</Link>
                 </Typography>
                 <Divider />
               </>

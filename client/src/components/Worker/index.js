@@ -14,6 +14,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Divider } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import './style.css'
 
 import { getWorkers } from "../../utils/api";
 import { pageStyles } from "../../utils/styles";
@@ -79,9 +80,6 @@ const Worker = props => {
       if (!archived) {
         data = data.filter(item => item.status === "active");
       }
-      if (!noCis) {
-        data = data.filter(item => item.cis === true);
-      }
       if (noUtr) {
         data = data.filter(item => item.utr.length === 0);
       }
@@ -130,15 +128,14 @@ const Worker = props => {
     }
   };
   return (
-    <Grid>
+    <Grid className='clients-wr'>
       <Dashboard/>
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (
         <>
-          <Grid container justify="space-between" classes={{ root: classes.pageHeader }}>
+          <Grid container justify="space-between" style={{ marginTop: '20px' }}>
             <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
-              <Typography style={{ paddingRight: "10px" }}>Worker</Typography>
               <Search setSearchedData={setSearchedData} data={workersData} keys={["firstname", "lastname", "communicationChannel", "utr", "nino"]} />
             </Grid>
             <Button
@@ -146,61 +143,43 @@ const Worker = props => {
                 isDialogOpened(true);
                 setActionType("create");
               }}
-              style={{ marginLeft: "80px" }}
-              classes={{ root: classes.pageHeaderButton }}
+              className='create-btn'
             >
-              Create
+              Create New Worker
             </Button>
-            <Typography>
-              Active
-              <Switch checked={archived} onChange={isArchived.bind(null, !archived)} />
-              Archived
-            </Typography>
           </Grid>
-          <Divider style={{ backgroundColor: "mistyrose" }} />
-          <Grid container justify="space-between" direction="row" style={{ flexWrap: "nowrap" }} classes={{ root: classes.pageHeader }}>
-            <Grid item container>
-              <Typography classes={{ root: classes.pageHeaderText }}>
-                CIS
-                <Switch checked={noCis} onChange={setCisState.bind(null, !noCis)} />
-                No CIS
-              </Typography>
-            </Grid>
-            <Grid item container justify="center">
-              <Typography classes={{ root: classes.pageHeaderText }}>
-                UTR
-                <Switch checked={noUtr} onChange={setUtrState.bind(null, !noUtr)} />
-                No UTR
-              </Typography>
-            </Grid>
-            <Grid item container justify="flex-end">
-              <Typography classes={{ root: classes.pageHeaderText }}>
-                NINO
-                <Switch checked={noNino} onChange={setNinoState.bind(null, !noNino)} />
-                No NINO
-              </Typography>
-            </Grid>
-          </Grid>
+          <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
+
+          
           <Divider />
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
+                  
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("firstname", sort.firstname)}>
-                    <Grid container>firstname + Lastname {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    <Grid container>Name {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
+
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
                     <Grid container>Phone Number {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
+
+                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
+                    <Grid container>Trade {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                  </TableCell>
+                
                   <TableCell
                     classes={{ root: classes.cellHeaderSortable }}
                     onClick={() => sortHandler("communicationChannel", sort.communicationChannel)}
                   >
                     <Grid container>
-                      Preferred Communication Channel {sort.communicationChannel === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+                     Tickets {sort.communicationChannel === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
                     </Grid>
                   </TableCell>
-                  <TableCell classes={{ root: classes.cellHeader }}>Trade</TableCell>
+
+                  <TableCell classes={{ root: classes.cellHeader }}>Comments</TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>

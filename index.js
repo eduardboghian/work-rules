@@ -24,8 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
 
-db.on('error', console.error.bind(console, 'MongoDB connection error:'))
-
 app.get('/api', (req, res) => {
     res.send('Hello World!')
 })
@@ -58,6 +56,7 @@ if (process.env.NODE_ENV === 'production') {
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`)
     restartWeekEnding()
+    db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
     for (let i = 0; i < 3; i++) {
         cluster.fork()

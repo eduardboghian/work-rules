@@ -3,6 +3,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Typography } from "@material-ui/core";
+import './style.css'
 
 const useStyles = makeStyles({
   cell: {
@@ -28,17 +29,21 @@ const WorkerRow = props => {
           openDialog(item);
         }}
       >
-        <Typography classes={{ root: classes.link }}>{`${item.firstname} ${item.lastname}`}</Typography>
+        <Typography classes={{ root: classes.link }} >{`${item.firstname} ${item.lastname}`}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.phone}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.communicationChannel}</Typography>
+        <Typography>{`${item.category}`}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{`${item.category}`}</Typography>
       </TableCell>
+      <TableCell classes={{ root: classes.cell }}>
+        <Typography>{`${item.category}`}</Typography>
+      </TableCell>
+
     </TableRow>
   );
 };

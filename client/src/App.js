@@ -14,7 +14,7 @@ function App() {
         <Route exact path='/' component={localStorage.getItem('token')!== null && localStorage.getItem('token')!== undefined ? Dashboard : SignIn} />
         <Route exact path='/agent-sourcer' component={AgentSourcer}/>
         <Route exact path='/client' component={Client} />
-        <Route exact path='/worker' component={Worker}/>
+        <Route exact path='/workers' component={Worker}/>
         <Route exact path='/weekly-statement' component={WeeklyStatemnt} />
     </Router>
   );
