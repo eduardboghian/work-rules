@@ -281,35 +281,37 @@ const EditCreate = props => {
       {/* ====== TOP BAR ======== */}
 
       <Grid container justify='space-between' className='worker-topbar'>
-        <Grid style={{display: 'none'}}>
-          <Typography>Company Name</Typography>
-            <Tooltip
-              open={companyNameError}
-              title='Company name must contain at least 6 symbols'
-              classes={{ tooltip: classes.errorTooltip }}
-              placement='top'
-            >
-              <FormControl  error={companyNameError}>
-                <Input
-                  value={temporaryData.companyName}
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setData({ ...temporaryData, companyName: e.target.value });
-                  }}
-                />
-            </FormControl>
-          </Tooltip>
-        </Grid>
+        <div className='status-wr'>
+          <Grid className={ temporaryData.type === 'company' ? 'company-field' : 'none' }>
+            <Typography>Company Name</Typography>
+              <Tooltip
+                open={companyNameError}
+                title='Company name must contain at least 6 symbols'
+                classes={{ tooltip: classes.errorTooltip }}
+                placement='top'
+              >
+                <FormControl error={companyNameError}>
+                  <Input
+                    value={temporaryData.companyName}
+                    onChange={e => {
+                      setData({ ...temporaryData, companyName: e.target.value });
+                    }}
+                  />
+              </FormControl>
+            </Tooltip>
+          </Grid>
 
-        <Grid>
-          <Typography>Status</Typography>
-          <FormControl classes={{ root: classes.inputContainer }} >
-            <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
-              <MenuItem value={'active'}>Active</MenuItem>
-              <MenuItem value={'archived'}>Not Active</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+          <Grid className={ temporaryData.type === 'company' ? 'right' : '' }>
+            <Typography>Status</Typography>
+            <FormControl classes={{ root: classes.inputContainer }} >
+              <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
+                <MenuItem value={'active'}>Active</MenuItem>
+                <MenuItem value={'archived'}>Not Active</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </div>
+        
         <div></div> 
 
         <Grid>
@@ -412,6 +414,21 @@ const EditCreate = props => {
 
             <Grid classes={{ root: classes.inputContainer }}>
               <Grid>
+                <Typography>Email</Typography>
+                <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                  <FormControl  error={emailError}>
+                    <Input
+                      value={temporaryData.email}
+                      classes={{ input: classes.input }}
+                      onChange={e => setData({ ...temporaryData, email: e.target.value })}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
               <Typography>Preferred Communication Channel</Typography>
                   <FormControl  classes={{ root: classes.inputContainer }} >
                     <Select
@@ -424,6 +441,21 @@ const EditCreate = props => {
                       <MenuItem value={'email'}>Email</MenuItem>
                     </Select>
                   </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }} className='comment' >
+              <Grid>
+                <Typography>Comment</Typography>
+                <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                  <FormControl  error={emailError}>
+                    <Input
+                      value={temporaryData.comment}
+                      classes={{ input: classes.input }}
+                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                    />
+                  </FormControl>
+                </Tooltip>
               </Grid>
             </Grid>
         </div>
@@ -444,6 +476,21 @@ const EditCreate = props => {
         
         <Grid classes={{ root: classes.inputContainer }}>
           <Grid>
+          <Typography>Uniq Taxpayer Reference</Typography>
+            <Tooltip open={utrError} title='Please provide valid UTR' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl  error={utrError}>
+                <Input
+                  value={temporaryData.utr}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'utr')}
+                />
+              </FormControl>
+            </Tooltip>
+          </Grid>
+        </Grid>
+        
+        <Grid classes={{ root: classes.inputContainer }}>
+          <Grid>
           <Typography>Adress 2</Typography>
             <FormControl >
               <Input
@@ -452,6 +499,37 @@ const EditCreate = props => {
                 onChange={e => setData({ ...temporaryData, secondPost: e.target.value })}
               />
             </FormControl>
+          </Grid>
+        </Grid>
+
+        <Grid classes={{ root: classes.inputContainer }} className={ temporaryData.type === 'company' ? '' : 'none' }>
+          <Grid>
+          <Typography>VAT Number</Typography>
+            <Tooltip open={vatError} title='Please provide valid VAT Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl  error={vatError}>
+                <Input
+                  value={temporaryData.vat}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'vat')}
+                />
+              </FormControl>
+            </Tooltip>
+          </Grid>
+        </Grid>
+
+
+        <Grid classes={{ root: classes.inputContainer }} className={ temporaryData.type === 'company' ? 'none' : '' }>
+          <Grid>
+          <Typography>NINO</Typography>
+            <Tooltip open={ninoError} title='Please provide valid NINO' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+              <FormControl  error={ninoError}>
+                <Input
+                  value={temporaryData.nino}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'nino')}
+                />
+              </FormControl>
+            </Tooltip>
           </Grid>
         </Grid>
 
@@ -469,79 +547,7 @@ const EditCreate = props => {
           </Grid>
         </Grid>
 
-        <Grid classes={{ root: classes.inputContainer }}>
-          <Grid>
-          <Typography>Zip Code</Typography>
-            <FormControl >
-              <Input
-                value={temporaryData.zipCode}
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-
-
-        <Grid classes={{ root: classes.inputContainer }}>
-          <Grid>
-          <Typography>VAT Number</Typography>
-            <Tooltip open={vatError} title='Please provide valid VAT Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl  error={vatError}>
-                <Input
-                  value={temporaryData.vat}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'vat')}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-
-        <Grid classes={{ root: classes.inputContainer }}>
-          <Grid>
-          <Typography>Uniq Taxpayer Reference</Typography>
-            <Tooltip open={utrError} title='Please provide valid UTR' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl  error={utrError}>
-                <Input
-                  value={temporaryData.utr}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'utr')}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-
-        <Grid classes={{ root: classes.inputContainer }}>
-          <Grid>
-          <Typography>NINO</Typography>
-            <Tooltip open={ninoError} title='Please provide valid NINO' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl  error={ninoError}>
-                <Input
-                  value={temporaryData.nino}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'nino')}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-
-        <Grid classes={{ root: classes.inputContainer }}>
-          <Grid>
-            <Typography>Email</Typography>
-            <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl  error={emailError}>
-                <Input
-                  value={temporaryData.email}
-                  classes={{ input: classes.input }}
-                  onChange={e => setData({ ...temporaryData, email: e.target.value })}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
+          
 
         {/* ACCOUNT INFORMATION */}
 
@@ -560,6 +566,19 @@ const EditCreate = props => {
 
           <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
+            <Typography>Zip Code</Typography>
+              <FormControl >
+                <Input
+                  value={temporaryData.zipCode}
+                  classes={{ input: classes.input }}
+                  onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
             <Typography>Sort Code</Typography>
               <FormControl >
                 <Input
@@ -570,52 +589,15 @@ const EditCreate = props => {
               </FormControl>
             </Grid>
           </Grid>
-        </div>    
+        </div>  
+      </Grid>  
+    
 
-        
 
-
-        <Grid classes={{ root: classes.inputContainer }}>
+        <Grid className='trades-list'>
+          <p>Trade</p>
           <Grid>
-          <Typography>Trade</Typography>
-            <Tooltip open={categoryError} title='Please select status' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-              <FormControl  classes={{ root: classes.inputContainer }}>
-                <Select
-                  placeholder='Choose percentage tax paid '
-                  value={temporaryData.category}
-                  onChange={e => setData({ ...temporaryData, category: e.target.value })}
-                >
-                  <MenuItem value={'General Labourer'}>General Labourer</MenuItem>
-                  <MenuItem value={'Skilled Labourer'}>Skilled Labourer</MenuItem>
-                  <MenuItem value={'Demolition Labourer'}>Demolition Labourer</MenuItem>
-                  <MenuItem value={'CCDO Labourer'}>CCDO Labourer</MenuItem>
-                  <MenuItem value={'Basic Groundworker'}>Basic Groundworker</MenuItem>
-                  <MenuItem value={'Skilled Groundworker'}>Skilled Groundworker</MenuItem>
-                  <MenuItem value={'Shuttering Carpenter'}>Shuttering Carpenter</MenuItem>
-                  <MenuItem value={'Striker'}>Striker</MenuItem>
-                  <MenuItem value={'Steel Fixer'}>Steel Fixer</MenuItem>
-                  <MenuItem value={'Nip Hand'}>Nip Hand</MenuItem>
-                  <MenuItem value={'Painter'}>Painter</MenuItem>
-                  <MenuItem value={'1st Fix Carpenter'}>1st Fix Carpenter</MenuItem>
-                  <MenuItem value={'2nd Fix Carpenter'}>2nd Fix Carpenter</MenuItem>
-                  <MenuItem value={'Tiler'}>Tiler</MenuItem>
-                  <MenuItem value={'Dry Liner/Ceiling Fixer'}>Dry Liner/Ceiling Fixer</MenuItem>
-                  <MenuItem value={'Handyman'}>Handyman</MenuItem>
-                  <MenuItem value={'Plasterer'}>Plasterer</MenuItem>
-                  <MenuItem value={'Bricklayer'}>Bricklayer</MenuItem>
-                  <MenuItem value={'Scaffolder Part1'}>Scaffolder Part1</MenuItem>
-                  <MenuItem value={'Scaffolder Part2'}>Scaffolder Part2</MenuItem>
-                  <MenuItem value={'Scaffolder Adv'}>Scaffolder Adv</MenuItem>
-                  <MenuItem value={'360 Excavator'}>360 Excavator</MenuItem>
-                  <MenuItem value={'Forklift Telehandler'}>Forklift Telehandler</MenuItem>
-                  <MenuItem value={'FTD/Forward Tipping Dumper'}>FTD/Forward Tipping Dumper</MenuItem>
-                  <MenuItem value={'Slinger Banksman'}>Slinger Banksman</MenuItem>
-                  <MenuItem value={'Crane Supervisor'}>Crane Supervisor</MenuItem>
-                  <MenuItem value={'Crane Opertor'}>Crane Opertor</MenuItem>
-                  <MenuItem value={'Cleaner'}>Cleaner</MenuItem>
-                </Select>
-              </FormControl>
-            </Tooltip>
+            Skilled Labar
           </Grid>
         </Grid>
 
@@ -632,8 +614,7 @@ const EditCreate = props => {
             SAVE
           </Button>
         </Grid>
-      </Grid>
-    </>
+    </> 
   );
 };
 
