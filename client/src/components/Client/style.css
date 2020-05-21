@@ -1,0 +1,173 @@
+/* INDEX SEARCH BAR*/
+.client-wr .MuiSelect-root {
+    width: 300px !important;
+    height: 30px !important;
+    background-color: #eee;
+    line-height: 30px;
+    padding-left: 10px;
+}
+.client-wr .MuiInput-underline {
+    width: 300px !important ;
+}
+.client-wr .MuiGrid-root {
+    padding: 0 !important;
+}
+
+.search-client {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 70% 15%;
+  height: 67px !important;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+  justify-items: left;
+}
+
+.create-newclient-btn {
+    background-color: orange !important;
+    width: 205px;
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    height: 45px;
+}
+
+/* EDIT CREATE TOP BAR*/
+.MuiInputBase-root {
+    width: 300px !important;
+    height: 30px !important;
+    background-color: #eee;
+    line-height: 30px;
+    padding-left: 10px;
+}
+
+
+.create-btn {
+    background-color: orange !important;
+    width: 250px;
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+
+
+.client-topbar {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 25% 25% 50%;
+    height: 67px !important;
+    margin-bottom: 30px !important;
+    justify-items: end !important;
+}
+
+.client-topbar .create-btn {
+    height: 42px !important;
+    width: 150px !important;
+    position: relative;
+    top: 25px !important;
+}
+
+/* content */
+
+.content-cl .MuiInputBase-root {
+    background-color: #eee !important;
+    height: 40px !important;
+}
+.content-cl .MuiInput-underline {
+    border-bottom: none !important;
+}
+.content-cl .content-site .MuiGrid-root {
+    width: 250px !important;
+}
+
+.contact-person {
+    padding: 0px 0 0px 0%;
+    display:inline;
+}
+.company-address {
+    padding: 0px 0 0px 46%;
+    display:inline;
+}
+
+.content-client, .content-info {
+    width: 45% !important;
+    background-color: #ccc;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding: 5px 0 20px 2%;
+}
+.content-client {
+    float: left;
+}
+.content-info {
+    float: right;
+}
+
+.content-cl .content-site .MuiTypography-root {
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+
+.comment1 .MuiInput-underline {
+    position: relative;
+    width: 157% !important;
+}
+
+/* SITE */
+.site-orange {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 33% 5%;
+    height: 67px !important;
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    justify-items: left;
+
+}
+
+.site-nametag {
+    background-color: orange !important;
+    width: 88% !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size:  15px !important;
+    margin-top: 30px !important;
+    border-radius: 5px;
+}
+
+
+.save-btn {
+    background-color: orange !important;
+    width: 150px !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    margin-top: 30px !important;
+    font-size: 13px !important;
+}
+
+.site-info {
+    float: left;
+    width: 45% !important;
+    background-color: #ccc;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding: 5px 0 20px 2%;
+    margin-bottom: 20px !important;
+}
+
+.site-name {
+    grid-column: 1/3 !important;
+}
+
+.sites-table {
+    float: right;
+    width: 45% !important;
+    padding: 5px 0 20px 2%;
+    margin-bottom: 20px !important;
+
+}
+
+.content-site {
+  background-color: #eee !important;
+}

@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { Divider } from "@material-ui/core";
 import Switch from '@material-ui/core/Switch';
 import Snackbar from '@material-ui/core/Snackbar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -117,15 +118,14 @@ const Client = props => {
   };
 
   return (
-    <Grid>
+    <Grid className='client-wr'>
       <Dashboard/>
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} companyId={companyId} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (
         <>
-          <Grid container justify='space-between' classes={{ root: classes.pageHeader }}>
+          <Grid container justify='space-between' style={{ marginTop: '20px' }} className='search-client'>
             <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
-              <Typography style={{ paddingRight: '10px' }}>Client</Typography>
               <Search setSearchedData={setSearchedData} data={clientData} keys={['companyName', 'peer', 'phone', 'communicationChannel']} />
             </Grid>
             <Button
@@ -133,16 +133,17 @@ const Client = props => {
                 isDialogOpened(true);
                 setActionType('create');
               }}
-              classes={{ root: classes.pageHeaderButton }}
+              className='create-newclient-btn'
             >
-              Create
+              Create New Client
             </Button>
-            <Typography>
-              Active
-              <Switch onChange={isArchived.bind(null, !archived)} />
-              Archived
-            </Typography>
           </Grid>
+
+          <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
+
+
+          <Divider />
+
           <TableContainer>
             <Table>
               <TableHead>
@@ -150,12 +151,15 @@ const Client = props => {
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('companyName', sort.companyName)}>
                     <Grid container>Company Name {sort.companyName === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
+
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('peer', sort.peer)}>
-                    <Grid container>Peere {sort.peer === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    <Grid container>Contact Person {sort.peer === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
+
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
                     <Grid container>Phone Number {sort.phone === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
+
                   <TableCell
                     classes={{ root: classes.cellHeaderSortable }}
                     onClick={() => sortHandler('communicationChannel', sort.communicationChannel)}
@@ -164,7 +168,12 @@ const Client = props => {
                       Preferred Communication Channel {sort.communicationChannel === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
                     </Grid>
                   </TableCell>
-                  <TableCell classes={{ root: classes.cellHeader }}>Site</TableCell>
+
+                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
+                    <Grid container>eMail {sort.email === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                  </TableCell>
+
+                  <TableCell classes={{ root: classes.cellHeader }}>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

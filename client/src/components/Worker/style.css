@@ -30,7 +30,7 @@
 .worker-topbar {
     width: 100% !important;
     display: grid !important;
-    grid-template-columns: 45% 8% auto auto auto;
+    grid-template-columns: 45% 10% auto auto auto;
     height: 67px !important;
     margin-bottom: 30px !important;
 }
@@ -46,24 +46,7 @@
     height: 38px !important;
     position: relative;
     top: 35px !important;
-    margin: 0 25px;
 }
-.company-field input {
-    width: 300px !important;
-    height: 30px !important;
-    background-color: #eee !important;
-    line-height: 30px;
-    padding-left: 10px;
-}
-
-.status-wr {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-.status-wr .right {
-    justify-self: right;
-}
-
 
 /* CONTENT WRAPER */
 
@@ -83,7 +66,7 @@
     background-color: #ccc;
     display: grid;
     grid-template-columns: 50% 50%;
-    padding: 5px 0 20px 2%;
+    padding: 10px;
 }
 .content-worker {
     float: left;
@@ -91,30 +74,6 @@
 .content-info {
     float: right;
 }
-
-.content-wr .MuiTypography-root {
-    margin-top: 10px;
-    margin-bottom: 2px;
-}
-.comment .MuiInput-underline {
-    position: relative;
-    width: 315% !important;
-}
-
-
-/* TREADE */
-.trades-list {  
-    float: left;
-    width: 100% !important;
-}
-.trades-list div {
-    background-color: #ccc;
-    height: 40px;
-    line-height: 40px;
-    width: 100% !important;
-    text-indent: 10px;
-}
-.trades-list p {
-    width: 100%;
-    margin-top: 18px !important;
+.content-worker div {
+    align-self: center;
 }

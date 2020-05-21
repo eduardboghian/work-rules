@@ -7,6 +7,7 @@ import AgentSourcer from './components/AgentSourcer';
 import Client from './components/Client';
 import Worker from './components/Worker';
 import WeeklyStatemnt from './components/WeeklyStatements';
+import ClientTest from './components/Test/indextest.js';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route exact path='/client' component={Client} />
         <Route exact path='/workers' component={Worker}/>
         <Route exact path='/weekly-statement' component={WeeklyStatemnt} />
+        <Route exact path='/test' component={ClientTest} />
     </Router>
   );
 }

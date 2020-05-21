@@ -10,6 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import Input from "@material-ui/core/Input";
+import './style.css'
 
 import { createClient, createSite } from "../../utils/api";
 
@@ -25,6 +26,8 @@ const EditCreate = props => {
   const [sites, setSites] = useState([]);
   const [companyNameError, setCompanyNameError] = useState(false);
   const [peerError, setPeerError] = useState(false);
+  const [firstnameError, setFirstnameError] = useState(false);
+  const [lastnameError, setLastnameError] = useState(false);
   const [firstPostError, setFirstPostError] = useState(false);
   const [secondPostError, setSecondPostError] = useState(false);
   const [utrError, setUtrError] = useState(false);
@@ -36,6 +39,8 @@ const EditCreate = props => {
   const [statusError, setStatusError] = useState(false);
   const [pending, setPending] = useState(false);
   const [clientId, setCliId] = useState('')
+  const [categoryError, setCategoryError] = useState(false);
+  const [ninoError, setNinoError] = useState(false);
 
   useEffect(() => {
     findSites();
@@ -48,7 +53,7 @@ const EditCreate = props => {
   const findSites = async () => {
     setSites(props.data.sites);
   };
-  
+
   const closePage = () => {
     props.isDialogOpened(false);
     props.setEditData({
@@ -78,49 +83,44 @@ const EditCreate = props => {
   }
 
   const validation2 = async () => {
-    if (temporaryData.companyName.length < 6) {
-      setCompanyNameError(true);
-      let timer = setTimeout(() => setCompanyNameError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (temporaryData.status.length === 0) {
-      setStatusError(true);
-      let timer = setTimeout(() => setStatusError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (temporaryData.peer.length < 3) {
-      setPeerError(true);
-      let timer = setTimeout(() => setPeerError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (temporaryData.firstPost.length === 0) {
-      setFirstPostError(true);
-      let timer = setTimeout(() => setFirstPostError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    if (temporaryData.secondPost.length === 0) {
-      setSecondPostError(true);
-      let timer = setTimeout(() => setSecondPostError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
+    if (temporaryData.type === 'physical') {
+      if (temporaryData.firstname.length < 3) {
+        setFirstnameError(true);
+        let timer = setTimeout(() => setFirstnameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
+      if (temporaryData.lastname.length < 3) {
+        setLastnameError(true);
+        let timer = setTimeout(() => setLastnameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
+    } else if (temporaryData.type === 'company') {
+      if (temporaryData.companyName.length < 6) {
+        setCompanyNameError(true);
+        let timer = setTimeout(() => setCompanyNameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
+      if (temporaryData.peer.length < 3) {
+        setPeerError(true);
+        let timer = setTimeout(() => setPeerError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
     }
 
-    if(temporaryData.utr.length < 1) {}
-    else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
+    if (temporaryData.utr.length === 0) {
+    } else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
       setUtrError(true);
       let timer = setTimeout(() => setUtrError(false), 3000);
       return () => {
@@ -128,10 +128,21 @@ const EditCreate = props => {
         return false;
       };
     }
+    if (temporaryData.vat.length < 4 ) {
 
-    if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
+    } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
+
       setVatError(true);
       let timer = setTimeout(() => setVatError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
+    if (temporaryData.nino.length === 0) {
+    } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
+      setNinoError(true);
+      let timer = setTimeout(() => setNinoError(false), 3000);
       return () => {
         clearTimeout(timer);
         return false;
@@ -140,6 +151,7 @@ const EditCreate = props => {
 
     if(temporaryData.phone.length < 4) {}
     else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
+      console.log(temporaryData.phone.length)
       setPhoneError(true);
       let timer = setTimeout(() => setPhoneError(false), 3000);
       return () => {
@@ -150,7 +162,7 @@ const EditCreate = props => {
 
     if(temporaryData.email.length < 1) {}
     else if (
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         temporaryData.email
       ) === false
     ) {
@@ -162,19 +174,21 @@ const EditCreate = props => {
       };
     }
 
-    if (temporaryData.sites.length === 0) {
-      setSitesError(true);
-      let timer = setTimeout(() => setSitesError(false), 3000);
+    if (temporaryData.category.length === 0) {
+      setCategoryError(true);
+      let timer = setTimeout(() => setCategoryError(false), 3000);
       return () => {
         clearTimeout(timer);
         return false;
       };
     }
+
     setPending(true);
     await createClient({ ...temporaryData }, props.actionType);
-    props.update();
+    await props.update();
     closePage();
   };
+
   const inputHadnler = (data, fieldName) => {
     switch (fieldName) {
       case "peer":
@@ -216,13 +230,13 @@ const EditCreate = props => {
     }
   };
   const deleteSite = id => {
-    
+
     let a = temporaryData.sites.filter(item => item._id !== id);
     let b = sites.filter(item => item._id !== id);
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-    axios.delete('/site/delete', { 
+    axios.delete('/site/delete', {
       headers: {
         authorization: "Bearer " + localStorage.getItem("token")
       },
@@ -237,390 +251,400 @@ const EditCreate = props => {
 
   return (
     <>
-      <Grid container direction="row" justify="space-between" classes={{ root: classes.editContainer }}>
-        <Typography>{props.actionType === "edit" ? "Edit Client" : "Create Client"}</Typography>
-        <Button classes={{ root: classes.button }} onClick={closePage}>
-          Back
-        </Button>
-      </Grid>
-      <Grid container direction="column" classes={{ root: classes.editContainer }}>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Company Name</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={companyNameError} title="Please enter Company Name" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={companyNameError}>
-                <Input
-                  value={temporaryData.companyName}
-                  placeholder="Torchwood"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setCompanyNameError(false);
-                    setData({ ...temporaryData, companyName: e.target.value });
-                  }}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Status</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={statusError} title="Please select Status" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth classes={{ root: classes.inputContainer }} error={statusError}>
-                <Select
-                  value={temporaryData.status}
-                  onChange={e => {
-                    setStatusError(false);
-                    setData({ ...temporaryData, status: e.target.value });
-                  }}
-                >
-                  <MenuItem value={"active"}>Active</MenuItem>
-                  <MenuItem value={"archived"}>Not Active</MenuItem>
-                </Select>
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Peer</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={peerError} title="Please enter at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={peerError}>
-                <Input
-                  value={temporaryData.peer}
-                  placeholder="John Smith"
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, "peer")}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>ID</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                disabled
-                value={temporaryData.id}
-                placeholder="TRCHWD"
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, id: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
+
+        <Grid container justify='space-between' className='client-topbar'>
+            <Grid>
+              <Typography>Company Name</Typography>
+              <Tooltip open={companyNameError} title="Please enter Company Name" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth error={companyNameError}>
+                  <Input
+                    value={temporaryData.companyName}
+                    placeholder="Torchwood"
+                    classes={{ input: classes.input }}
+                    onChange={e => {
+                      setCompanyNameError(false);
+                      setData({ ...temporaryData, companyName: e.target.value });
+                    }}
+                  />
+                </FormControl>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Typography>Status</Typography>
+              <Tooltip open={statusError} title="Please select Status" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth classes={{ root: classes.inputContainer }} error={statusError}>
+                  <Select
+                    value={temporaryData.status}
+                    onChange={e => {
+                      setStatusError(false);
+                      setData({ ...temporaryData, status: e.target.value });
+                    }}
+                  >
+                    <MenuItem value={"active"}>Active</MenuItem>
+                    <MenuItem value={"archived"}>Not Active</MenuItem>
+                  </Select>
+                </FormControl>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Button className='create-btn' onClick={closePage}>
+                Back
+              </Button>
+            </Grid>
         </Grid>
 
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 1</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={firstPostError} title="Please enter first Postal adress" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={firstPostError}>
-                <Input
-                  value={temporaryData.firstPost}
-                  placeholder="Postal adress 1"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setFirstPostError(false);
-                    setData({ ...temporaryData, firstPost: e.target.value });
-                  }}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 2</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={secondPostError} title="Please enter second Postal adress" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={secondPostError}>
-                <Input
-                  value={temporaryData.secondPost}
-                  placeholder="Postal adress 2"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setSecondPostError(false);
-                    setData({ ...temporaryData, secondPost: e.target.value });
-                  }}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
+        <div className='contact-person'>Contact Person</div>
+        <div className='company-address'>Company Address and HMTRC Registration Numers</div>
+        <Grid className='content-cl'>
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>City</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.city}
-                placeholder='City'
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, city: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Zip Code</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.zipCode}
-                placeholder='Zip Code'
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
+          <div className='content-client'>
+            <Grid classes={{ root: classes.inputContainer }}>
+                  <Grid>
+                    <Typography>First Name</Typography>
+                    <Tooltip
+                      open={firstnameError}
+                      title='Firstname should be at least 3 symbols length'
+                      classes={{ tooltip: classes.errorTooltip }}
+                      placement='top'
+                  >
+                    <FormControl  error={firstnameError}>
+                      <Input
+                        value={temporaryData.firstname}
+                        classes={{ input: classes.input }}
+                        onChange={e => inputHadnler(e.target.value, 'firstname')}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
 
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Uniq Taxpayer Reference</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={utrError} title="Please enter valit UTR" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={utrError}>
-                <Input
-                  value={temporaryData.utr}
-                  placeholder="12345 67890"
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, "utr")}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>VAT Number</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={vatError} title="Please provide a valid VAT" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={vatError}>
-                <Input
-                  value={temporaryData.vat}
-                  placeholder="GB 123456789"
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, "vat")}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>CIS</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Switch checked={temporaryData.cis} onChange={setData.bind(null, { ...temporaryData, cis: !temporaryData.cis })} />
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Phone Number</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={phoneError} title="Please provide a valid phone number" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={phoneError}>
-                <Input
-                  value={temporaryData.phone}
-                  placeholder="+44"
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, "phone")}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Email</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Tooltip open={emailError} title="Please provide a valid Email" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={emailError}>
-                <Input
-                  value={temporaryData.email}
-                  placeholder="user@mail.com"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setEmailError(false);
-                    setData({ ...temporaryData, email: e.target.value });
-                  }}
-                />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Preferred communication channel</Typography>
-          </Grid>
-          <Grid item xs={9}>
-             <FormControl fullWidth classes={{ root: classes.inputContainer }} error={commChannelError}>
-                <Select
-                  placeholder="Choose preferred communication channel"
-                  value={temporaryData.communicationChannel}
-                  onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
-                >
-                  <MenuItem value={"whatsapp"}>WhatsApp</MenuItem>
-                  <MenuItem value={"viber"}>Viber</MenuItem>
-                  <MenuItem value={"telegram"}>Telegram</MenuItem>
-                  <MenuItem value={"email"}>Email</MenuItem>
-                </Select>
-              </FormControl>
-          </Grid>
-        </Grid>
+              <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                  <Typography>Last Name</Typography>
+                  <Tooltip
+                    open={lastnameError}
+                    title='Lastname should be at least 3 symbols length'
+                    classes={{ tooltip: classes.errorTooltip }}
+                    placement='top'
+                  >
+                    <FormControl  error={lastnameError}>
+                      <Input
+                        value={temporaryData.lastname}
+                        classes={{ input: classes.input }}
+                        onChange={e => inputHadnler(e.target.value, 'lastname')}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
 
-                  {/* =========SITE FORM=========== */}
+              <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                <Typography>Mobile Phone Number</Typography>
+                  <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                    <FormControl  error={phoneError}>
+                      <Input
+                        value={temporaryData.phone}
+                        classes={{ input: classes.input }}
+                        onChange={e => inputHadnler(e.target.value, 'phone')}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
 
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}  style={{ margin: '20px 0 5px' }}>
-          <Grid item xs={3}>
-            <Typography>Sites</Typography>
+              <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                <Typography>Alternative Phone Number</Typography>
+                  <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                    <FormControl  error={phoneError}>
+                      <Input
+                        value={temporaryData.phone2}
+                        classes={{ input: classes.input }}
+                        onChange={e => inputHadnler(e.target.value, 'phone2')}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+
+              <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                  <Typography>Email</Typography>
+                  <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                    <FormControl  error={emailError}>
+                      <Input
+                        value={temporaryData.email}
+                        classes={{ input: classes.input }}
+                        onChange={e => setData({ ...temporaryData, email: e.target.value })}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+
+              <Grid classes={{ root: classes.inputContainer }}>
+                <Grid>
+                <Typography>Preferred Communication Channel</Typography>
+                    <FormControl  classes={{ root: classes.inputContainer }} >
+                      <Select
+                        value={temporaryData.communicationChannel}
+                        onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
+                      >
+                        <MenuItem value={'whatsapp'}>WhatsApp</MenuItem>
+                        <MenuItem value={'viber'}>Viber</MenuItem>
+                        <MenuItem value={'telegram'}>Telegram</MenuItem>
+                        <MenuItem value={'email'}>Email</MenuItem>
+                      </Select>
+                    </FormControl>
+                </Grid>
+              </Grid>
+
+              <Grid classes={{ root: classes.inputContainer }} className='comment' >
+                <Grid>
+                  <Typography>Comment</Typography>
+                  <Tooltip>
+                    <FormControl>
+                      <Input
+                        value={temporaryData.comment}
+                        classes={{ input: classes.input }}
+                        onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                      />
+                    </FormControl>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+          </div>
+
+          <div className='content-info'>
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Adress Line 1</Typography>
+                <Tooltip open={firstPostError} title="Please enter your first adress line" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                  <FormControl fullWidth error={firstPostError}>
+                    <Input
+                      value={temporaryData.firstPost}
+                      classes={{ input: classes.input }}
+                      onChange={e => {
+                        setFirstPostError(false);
+                        setData({ ...temporaryData, firstPost: e.target.value });
+                      }}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Uniq Taxpayer Reference (UTR)</Typography>
+                <Tooltip open={utrError} title="Please enter valit UTR" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                  <FormControl fullWidth error={utrError}>
+                    <Input
+                      value={temporaryData.utr}
+                      classes={{ input: classes.input }}
+                      onChange={e => inputHadnler(e.target.value, "utr")}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Adress Line 2</Typography>
+                <Tooltip open={secondPostError} title="Please enter second adress line" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                  <FormControl fullWidth error={secondPostError}>
+                    <Input
+                      value={temporaryData.secondPost}
+                      classes={{ input: classes.input }}
+                      onChange={e => {
+                        setSecondPostError(false);
+                        setData({ ...temporaryData, secondPost: e.target.value });
+                      }}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>VAT Registration Number</Typography>
+                <Tooltip open={vatError} title="Please provide a valid VAT" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                  <FormControl fullWidth error={vatError}>
+                    <Input
+                      value={temporaryData.vat}
+                      classes={{ input: classes.input }}
+                      onChange={e => inputHadnler(e.target.value, "vat")}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>City</Typography>
+                <FormControl fullWidth>
+                  <Input
+                    value={temporaryData.city}
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, city: e.target.value })}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>CIS Registration Number</Typography>
+                <Switch checked={temporaryData.cis} onChange={setData.bind(null, { ...temporaryData, cis: !temporaryData.cis })} />
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Zip Code</Typography>
+                <FormControl fullWidth>
+                  <Input
+                    value={temporaryData.zipCode}
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }} className='comment2' >
+              <Grid>
+                <Typography>Comment</Typography>
+                <Tooltip>
+                  <FormControl>
+                    <Input
+                      value={temporaryData.comment}
+                      classes={{ input: classes.input }}
+                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </div>
+        </Grid>
+                      {/* =========SITE FORM=========== */}
+
+        <Grid className='site-orange'>
+          <Grid className='site-nametag'>
+            <Typography>Site</Typography>
           </Grid>
-          <Grid item xs={8}>
-            <Tooltip open={sitesError} title="Please add at least one Site" classes={{ tooltip: classes.errorTooltip }} placement="top">
-              <FormControl fullWidth error={sitesError}>
-                <Input value={newSiteName} placeholder="Site Name" classes={{ input: classes.input }} onChange={e => setSiteName(e.target.value)} />
-              </FormControl>
-            </Tooltip>
-          </Grid>
-          
-          <Grid item xs={1}>
-            <Button
-              onClick={async (e) => {
-                e.preventDefault()
-                let a = await createSite({ 
-                  siteName: newSiteName, 
-                  companyName: temporaryData.companyName ,
-                  address1: temporaryData.siteAddress1,
-                  address2: temporaryData.siteAddress2,
-                  city: temporaryData.siteCity,
-                  zipCode: temporaryData.siteZipCode
-                
-                });
-                setData({ ...temporaryData, sites: [...temporaryData.sites, { 
-                    _id: a.data._id, 
-                    siteName: a.data.siteName,
-                    address1:  a.data.address2,
-                    address2:  a.data.address1,
-                    city:  a.data.city,
-                    zipCode:  a.data.zipCode
-                }] });
-                setSites([...sites, a.data]);
-              }}
-            >
-              Create
+          <Grid>
+            <Button className='save-btn' onClick={async () => {validation()}}>
+              Save New Site
             </Button>
           </Grid>
-
-          <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 1</Typography>
-          </Grid>
-          <Grid item xs={9}>
-              <FormControl fullWidth>
-                <Input
-                  value={temporaryData.siteAddress1}
-                  placeholder="Postal adress 1"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setFirstPostError(false);
-                    setData({ ...temporaryData, siteAddress1: e.target.value });
-                  }}
-                />
-              </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Postal adress 2</Typography>
-          </Grid>
-          <Grid item xs={9}>
-              <FormControl fullWidth >
-                <Input
-                  value={temporaryData.siteAddress2}
-                  placeholder="Postal adress 2"
-                  classes={{ input: classes.input }}
-                  onChange={e => {
-                    setSecondPostError(false);
-                    setData({ ...temporaryData, siteAddress2: e.target.value });
-                  }}
-                />
-              </FormControl>
-          </Grid>
         </Grid>
 
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>City</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.siteCity}
-                placeholder='City'
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, siteCity: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container direction='row' classes={{ root: classes.inputContainer }}>
-          <Grid item xs={3}>
-            <Typography>Zip Code</Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl fullWidth>
-              <Input
-                value={temporaryData.siteZipCode}
-                placeholder='Zip Code'
-                classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, siteZipCode: e.target.value })}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
+        <Grid className='content-site'>
+          <div className='site-info'>
+            <Grid className='site-name'>
+              <Typography>Site Name</Typography>
+              <Tooltip open={sitesError} title="Please add at least one Site" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth error={sitesError}>
+                  <Input value={newSiteName} placeholder="Site Name" classes={{ input: classes.input }} onChange={e => setSiteName(e.target.value)} />
+                </FormControl>
+              </Tooltip>
+            </Grid>
 
-        </Grid>
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Address Line 1</Typography>
+                  <FormControl>
+                    <Input
+                      value={temporaryData.siteAddress1}
+                      placeholder="Postal adress 1"
+                      classes={{ input: classes.input }}
+                      onChange={e => {
+                        setFirstPostError(false);
+                        setData({ ...temporaryData, siteAddress1: e.target.value });
+                      }}
+                    />
+                  </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Address Line 2</Typography>
+                  <FormControl fullWidth >
+                    <Input
+                      value={temporaryData.siteAddress2}
+                      placeholder="Postal adress 2"
+                      classes={{ input: classes.input }}
+                      onChange={e => {
+                        setSecondPostError(false);
+                        setData({ ...temporaryData, siteAddress2: e.target.value });
+                      }}
+                    />
+                  </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>City</Typography>
+                <FormControl fullWidth>
+                  <Input
+                    value={temporaryData.siteCity}
+                    placeholder='City'
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, siteCity: e.target.value })}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid classes={{ root: classes.inputContainer }}>
+              <Grid>
+                <Typography>Zip Code</Typography>
+                <FormControl fullWidth>
+                  <Input
+                    value={temporaryData.siteZipCode}
+                    placeholder='Zip Code'
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, siteZipCode: e.target.value })}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid classes={{ root: classes.inputContainer }} className='comment' >
+              <Grid>
+                <Typography>Comment</Typography>
+                <Tooltip>
+                  <FormControl>
+                    <Input
+                      value={temporaryData.comment}
+                      classes={{ input: classes.input }}
+                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                    />
+                  </FormControl>
+                </Tooltip>
+              </Grid>
+            </Grid>
+
+          </div>
 
 
-        <Grid container style={{ margin: '20px 0' }}>
-          <Grid item xs={3} />
-          <Grid item xs={9}>
-            <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} />
-          </Grid>
-        </Grid>
-        <Grid container justify="space-around">
-          <Button
-            classes={{ root: classes.button }}
-            disabled={pending}
-            onClick={async () => {
-              validation();
-            }}
-          >
-            SAVE
-          </Button>
-        </Grid>
+          <div className='sites-table'>
+            <Grid container style={{ margin: '20px 0' }}>
+              <Grid>
+                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} />
+              </Grid>
+            </Grid>
+          </div>
+
       </Grid>
+
     </>
   );
 };
