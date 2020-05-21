@@ -28,7 +28,7 @@ function Worker({dispatch, worker, site, weekEnding}) {
         setOT(worker.worker.hoursOT)
         setData(worker.rates)
         console.log(worker.worker.category)
-        setTrade('Muncitors')
+        setTrade(worker.worker.category)
         console.log(new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD'))
     }, [worker])
 
@@ -172,6 +172,24 @@ function Worker({dispatch, worker, site, weekEnding}) {
 
     }
 
+    const updateTrade = ( trade, siteId, uid ) => {
+      axios.put('/site/add-category', {
+        category: trade,
+        siteId,
+        uid
+      })
+      .then(res => console.log(res))
+      .catch(err => console.error(err)) 
+
+      axios.put('/worker/add-trade', {
+        trade,
+        siteId,
+        uid
+      })
+      .then(res => console.log(res))
+      .catch(err => console.error(err)) 
+    }
+
     return (
         <div className='worker-wr'>
             <ul className='test'>
@@ -184,7 +202,10 @@ function Worker({dispatch, worker, site, weekEnding}) {
                           xs={9}
                           placeholder='Choose percentage tax paid '
                           value={trade}
-                          onChange={e => setTrade(e.target.value) }
+                          onChange={e => {
+                            updateTrade(e.target.value, site._id, worker.worker._id)
+                            setTrade(e.target.value) 
+                          }}
                         >
                           <MenuItem value={'1st Fix Carpenter'}>1st Fix Carpenter</MenuItem>
                           <MenuItem value={'2nd Fix Carpenter'}>2nd Fix Carpenter</MenuItem>

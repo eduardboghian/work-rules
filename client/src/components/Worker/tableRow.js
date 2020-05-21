@@ -37,11 +37,12 @@ const WorkerRow = props => {
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{`${item.category}`}</Typography>
       </TableCell>
-      <TableCell classes={{ root: classes.cell }}>
-        <Typography>{`${item.category}`}</Typography>
+      <TableCell classes={{ root: classes.cell }}>{item.tickets.map( (data, i) => {
+          return <p style={{ display: 'inline-block', margin: '0 3px', fontWeight: '500', fontSize: '16px' }} key={i}>{data}, </p>
+        })}
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
-        <Typography>{`${item.category}`}</Typography>
+        <Typography>{`${item.comment}`}</Typography>
       </TableCell>
 
     </TableRow>

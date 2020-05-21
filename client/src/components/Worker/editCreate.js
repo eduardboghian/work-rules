@@ -9,6 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
+import axios from 'axios'
 
 import { createWorker } from '../../utils/api';
 
@@ -30,6 +31,8 @@ const EditCreate = props => {
   const [phoneError, setPhoneError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
+  const [ticket, setTicket] = useState('')
+  const [popStyle, setPopStyle] = useState('none')
 
 
   useEffect(() => {
@@ -42,8 +45,6 @@ const EditCreate = props => {
     setData({ ...temporaryData, marginOT: sum });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [temporaryData.overtimeGot, temporaryData.overtimePaid]);
-  
-
   
   const closePage = () => {
     props.isDialogOpened(false);
@@ -61,11 +62,15 @@ const EditCreate = props => {
       vat: ' ',
       nino: '',
       phone: '+44',
+      phoneScnd: '+44',
       email: '',
       communicationChannel: '',
       account: '',
       sortCode: '',
       category: '',
+      trades: [],
+      tickets: [],
+      comment: '',
       status: ''
     });
   };
@@ -147,7 +152,6 @@ const EditCreate = props => {
     
     if(temporaryData.phone.length < 4) {}
     else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
-      console.log(temporaryData.phone.length)
       setPhoneError(true);
       let timer = setTimeout(() => setPhoneError(false), 3000);
       return () => {
@@ -222,42 +226,20 @@ const EditCreate = props => {
         break;
       case 'nino':
         if (data.length <= 9) {
-          if (data.length >= 2) {
-            let firstLetters = data.slice(0, 2);
-            firstLetters = firstLetters.replace(/[^A-Z]/g, '');
-            if (data.length >= 8) {
-              let numbers = data.slice(2, 8);
-              numbers = numbers.replace(/[^0-9]/g, '');
-              if (data.length === 9) {
-                let lastLetter = data.slice(8, 9);
-                lastLetter = lastLetter.replace(/[^A-Z]/g, '');
-                setData({ ...temporaryData, nino: `${firstLetters}${numbers}${lastLetter}` });
-                break;
-              }
-              setData({ ...temporaryData, nino: `${firstLetters}${numbers}` });
-              break;
-            } else {
-              let numbers = data.slice(2, data.length);
-              numbers = numbers.replace(/[^0-9]/g, '');
-              setData({ ...temporaryData, nino: `${firstLetters}${numbers}` });
-              break;
-            }
-          } else {
-            let checked = data.replace(/[^A-Z]/g, '');
-            setData({ ...temporaryData, nino: checked });
-            break;
-          }
+          setData({...temporaryData, nino: data})
         }
-        break;
+      break;
+
       case 'phone':
+      case 'phoneScnd':   
         if (data.length <= 13) {
           if (data === '+4') {
-            setData({ ...temporaryData, phone: '+44' });
+            setData({ ...temporaryData, [fieldName]: '+44' });
             break;
           }
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, '');
-          setData({ ...temporaryData, phone: `+44${checked}` });
+          setData({ ...temporaryData, [fieldName]: `+44${checked}` });
           break;
         }
         break;;
@@ -266,6 +248,7 @@ const EditCreate = props => {
       case 'sortCode': 
       case 'city':
       case 'zipCode':
+      case 'uniqueID':
         setData({ ...temporaryData, [fieldName]: data })
         break
       default:
@@ -273,7 +256,14 @@ const EditCreate = props => {
     }
   };
 
- 
+  const deleteTicket = (uid, ticket) => {
+      axios.post('/worker/delete-ticket', {
+        uid,
+        ticket
+      })
+      .then(res => window.location.reload(true))
+      .catch(err => console.error(err))    
+  }
 
   const classes = useStyles();
   return (
@@ -314,13 +304,14 @@ const EditCreate = props => {
         
         <div></div> 
 
-        <Grid>
+        <Grid className='uid-wr'>
           <Typography>Unique ID</Typography>
-          <FormControl classes={{ root: classes.inputContainer }} >
-            <Select value={temporaryData.status} onChange={e => setData({ ...temporaryData, status: e.target.value })}>
-              <MenuItem value={'active'}>Active</MenuItem>
-              <MenuItem value={'archived'}>Not Active</MenuItem>
-            </Select>
+          <FormControl  error={firstnameError}>
+              <Input
+                value={temporaryData.uniqueID}
+                classes={{ input: classes.input }}
+                onChange={e => inputHadnler(e.target.value, 'uniqueID')}
+              />
           </FormControl>
         </Grid>
         
@@ -403,9 +394,9 @@ const EditCreate = props => {
                 <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
                   <FormControl  error={phoneError}>
                     <Input
-                      value={temporaryData.phone2}
+                      value={temporaryData.phoneScnd}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'phone2')}
+                      onChange={e => inputHadnler(e.target.value, 'phoneScnd')}
                     />
                   </FormControl>
                 </Tooltip>
@@ -596,9 +587,47 @@ const EditCreate = props => {
 
         <Grid className='trades-list'>
           <p>Trade</p>
-          <Grid>
-            Skilled Labar
+          <Grid className='trades-wr'>
+            {temporaryData.trades.map( (trade, i) => {
+              return <div key={i} className='trades-elements'>{trade}</div>
+            })}
           </Grid>
+        </Grid>
+        
+        <Grid className='tickets-wr'>
+          <Grid >
+            <Typography>Add Ticket</Typography>
+            <FormControl className='tickets-dropdown'>
+            <Select 
+              value={ticket} 
+              onChange={e => {
+                setTicket(e.target.value)
+                let newTickets = [...temporaryData.tickets]
+                newTickets.push(e.target.value)
+                setData({ ...temporaryData, tickets: newTickets })
+              }}
+            >
+                <MenuItem value={'active'}>Active</MenuItem>
+                <MenuItem value={'archived'}>Not Active</MenuItem>
+                <MenuItem value={'others'}>Other</MenuItem>
+              </Select>
+            </FormControl>
+            <Grid className='tickets-list'>
+              {temporaryData.tickets.map((data, i)=> {
+                  return <div key={i} className='ticket-wr'>
+                      <div className='ticket'> {data} </div>
+                      <div className='delete-btn' onClick={ e=> setPopStyle('') } >X</div> 
+                      <section className={`${popStyle} pop-out`}>
+                          Do you want DELETE the ticket?
+                          <button className='ok' onClick={ e=> deleteTicket(temporaryData._id, data) }>OK</button>
+                          <button className='cancel' onClick={ e=> setPopStyle('none') }>Cancel</button>
+                      </section>
+                  </div>
+              })}
+              
+          </Grid>
+        </Grid>
+          
         </Grid>
 
         <Grid container justify='space-around'>

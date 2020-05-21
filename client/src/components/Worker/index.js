@@ -28,7 +28,7 @@ import Dashboard from '../../pages/Dashboard';
 const useStyles = makeStyles(pageStyles);
 
 const Worker = props => {
-  const [dialog, isDialogOpened] = useState(true);
+  const [dialog, isDialogOpened] = useState(false);
   const [snackbarState, setSnackbarState] = useState(false);
   const [workersData, setWorkersData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -38,22 +38,25 @@ const Worker = props => {
     peer: "",
     firstname: "",
     lastname: "",
-    id: "",
+    uniqueID: "",
     firstPost: "",
     secondPost: "",
     city: '',
     zipCode: '',
     utr: "",
     vat: "GB ",
-    cis: false,
     nino: "",
     phone: "+44",
+    phoneScnd: '+44',
     email: "",
     communicationChannel: "",
     account: '',
     sortCode: '',
     taxPercentage: "",
     category: "",
+    trades: [],
+    tickets: [],
+    comment: '',
     status: ""
   });
   const [actionType, setActionType] = useState("edit");
@@ -77,15 +80,6 @@ const Worker = props => {
   useEffect(() => {
     const workersFilter = () => {
       let data = [...workersData];
-      if (!archived) {
-        data = data.filter(item => item.status === "active");
-      }
-      if (noUtr) {
-        data = data.filter(item => item.utr.length === 0);
-      }
-      if (noNino) {
-        data = data.filter(item => item.nino.length === 0);
-      }
       if (!!searchedData) {
         data = data.filter(item => !!searchedData.find(data => data._id === item._id));
       }
