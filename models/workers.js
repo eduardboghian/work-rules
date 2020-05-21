@@ -8,32 +8,30 @@ const Worker = new Schema({
     peer: { type: String },
     firstname: { type: String },
     lastname: { type: String },
-    id: { type: String },
+    uniqueID: { type: String },
     firstPost: { type: String },
     secondPost: { type: String },
     city: { type: String },
     zipCode: { type: String },
     utr: { type: String },
     vat: { type: String },
-    cis: { type: Boolean },
     nino: { type: String },
     phone: { type: String },
+    phoneScnd: { type: String },
     email: { type: String },
     communicationChannel: { type: String },
     date: {
         type: Date,
         default: new Date()
     },
-    taxPercentage: { type: String },
+    comment: { type: String },
     category: { type: String },
     hours: { type: Number },
     hoursOT: { type: Number },
     sortCode: { type: String },
     account: { type: Number },
-    paymentStatus: {
-        type: String,
-        default: 'No'
-    },
+    trades: { type: Array },
+    tickets: { type: Array },
     status: { type: String },
 });
 

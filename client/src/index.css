@@ -54,6 +54,10 @@ a {
   z-index: -1;
 }
 
-.test span {
+.test .MuiGrid-root, .test .MuiInputBase-root, .test .MuiSelect-root {
   width: 100% !important;
+}
+
+input {
+  text-indent: 10px !important;
 }

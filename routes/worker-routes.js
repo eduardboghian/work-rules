@@ -41,19 +41,35 @@ router.post('/add', async (req, res) => {
     });
 });
 
-router.put('/add-hours', async (req, res) => {
-    let worker = await Workers.find({ _id: req.body.id })
-    if(!worker) return res.send('no worker with this id was found')
+router.put('/add-trade', async (req, res) => {
+    let worker = await Workers.find({ _id: req.body.uid })
+    worker = worker[0]
+    if(!worker) return res.send('Something went wrong, please try again!')
+    let trades
 
-    worker = await Workers.findByIdAndUpdate({ _id: req.body.id }, { hours: req.body.hours, hoursOT: req.body.hoursOT }, { new: true })
+    if(worker.trades === undefined) {
+        trades = []
+    }else {
+        trades = worker.trades
+    }
+
+    trades.push(req.body.trade)
+
+
+    worker = await Workers.findOneAndUpdate({ _id: req.body.uid }, { trades } , { new: true })
     res.send(worker)
 })
 
-router.put('/payment-status', async (req, res) => {
-    let worker = await Workers.find({ _id: req.body.id })
-    if(!worker) return res.send('no worker with this id was found')
+router.post('/delete-ticket', async (req, res) => {
+    let worker = await Workers.find({ _id: req.body.uid })
+    worker = worker[0]
+    if(!worker) return res.send('Something went wrong, please try again!')
+    let tickets = worker.tickets
 
-    worker = await Workers.findByIdAndUpdate({ _id: req.body.id }, { paymentStatus: 'yes' }, { new: true })
+    let index = tickets.indexOf(req.body.ticket)
+    tickets.splice(index, 1)
+
+    worker = await Workers.findOneAndUpdate({ _id: req.body.uid }, { tickets }, { new: true })
     res.send(worker)
 })
 

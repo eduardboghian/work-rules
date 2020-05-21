@@ -26,3 +26,12 @@
     cursor: pointer;
     margin: 8px 10px 0 0 ;
 }
+.search-field-wr input {
+    width: 1000px !important;
+}   
+.search-field-wr .MuiInputBase-root {
+    width: 1000px !important;
+}
+.search-field-wr .MuiInput-underline {
+    width: 1000px !important;
+}

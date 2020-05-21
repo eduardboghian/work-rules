@@ -121,6 +121,22 @@ router.put('/add-hours', async (req, res) => {
     res.send(response)
 })
 
+router.put('/add-category', async (req, res) => {
+    let site = await Sites.find({ _id: req.body.siteId })
+    if(!site) return res.send('no site with this id was found')
+    let newWorkers = site[0].workers
+
+    let worker = site[0].workers.find( item => item.worker._id === req.body.uid )
+    let index = site[0].workers.indexOf(worker)
+    worker.worker.category = req.body.category
+
+    newWorkers[index] = worker
+
+    let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
+
+    res.send(response)
+})
+
 router.put('/update-rates', async (req, res) => {
     let site = await Sites.find({ _id: req.body.siteId })
     if(!site) return res.send('nope')
