@@ -16,14 +16,13 @@
 .worker-wr .MuiSelect-root {
     width: 300px !important;
     height: 30px !important;
-    background-color: #eee;
+    background-color: #fff;
     line-height: 30px;
     padding-left: 10px;
     text-indent: 10px !important;
 }
 .content-wr .MuiInput-underline, .uid-wr .MuiInput-underline {
     width: 300px !important ;
-    text-indent: 10px !important;
 }
 .worker-wr .MuiGrid-root {
     padding: 0 !important;
@@ -34,7 +33,7 @@
 .worker-topbar {
     width: 100% !important;
     display: grid !important;
-    grid-template-columns: 45% 10% auto auto auto;
+    grid-template-columns: 45% 8% auto auto auto;
     height: 67px !important;
     margin-bottom: 30px !important;
 }
@@ -50,12 +49,29 @@
     height: 38px !important;
     position: relative;
     top: 35px !important;
+    margin: 0 25px;
 }
+.company-field input {
+    width: 300px !important;
+    height: 30px !important;
+    background-color: #fff !important;
+    line-height: 30px;
+    padding-left: 10px;
+}
+
+.status-wr {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.status-wr .right {
+    justify-self: right;
+}
+
 
 /* CONTENT WRAPER */
 
 .content-wr .MuiInputBase-root, .uid-wr .MuiInputBase-root {
-    background-color: #eee !important;
+    background-color: #fff !important;
     height: 40px !important;
     text-indent: 10px !important;
 }
@@ -69,10 +85,11 @@
 
 .content-worker, .content-info {
     width: 45% !important;
-    background-color: #ccc;
+    background-color: #eee;
     display: grid;
     grid-template-columns: 50% 50%;
-    padding: 10px;
+    padding: 5px 0 20px 2%;
+    box-shadow: 0 0 4px #00000038;
 }
 .content-worker {
     float: left;
@@ -80,8 +97,29 @@
 .content-info {
     float: right;
 }
-.content-worker div {
-    align-self: center;
+
+.content-wr .MuiTypography-root {
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+.comment .MuiInput-underline {
+    position: relative;
+    width: 315% !important;
+}
+
+
+/* TREADE */
+.trades-list {  
+    float: left;
+    width: 100% !important;
+}
+.trades-list div {
+    border-radius: 3px;
+    background-color: #eee;
+    height: 40px;
+    line-height: 40px;
+    width: 100% !important;
+    text-indent: 10px;
 }
 .trades-list p {
     width: 100%;
@@ -104,9 +142,10 @@
 }
 .tickets-dropdown {
     float: left;
+    background-color: #eee;
 }
 .tickets-list {
-    background-color: #ccc;
+    background-color: #eee;
     width: 75% !important;
     height: 40px;
     float: right;

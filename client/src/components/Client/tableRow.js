@@ -25,8 +25,10 @@ const ClientRow = props => {
   const classes = useStyles();
   const data = {
     companyName: item.companyName,
-    peer: item.peer,
+    peer: item.name+ ' '+item.lastName,
     id: item.id,
+    name: item.name,
+    lastName: item.lastName,
     firstPost: item.firstPost,
     secondPost: item.secondPost,
     city: item.city,
@@ -34,8 +36,10 @@ const ClientRow = props => {
     utr: item.utr,
     vat: item.vat,
     cis: item.cis,
-    gross: item.gross,
     phone: item.phone,
+    phoneScnd: item.phoneScnd,
+    comment: item.comment,
+    companyComment: item.companyComment,
     email: item.email,
     communicationChannel: item.communicationChannel,
     sites: item.sites,
@@ -54,7 +58,7 @@ const ClientRow = props => {
           openDialog(data);
         }}
       >
-        <Typography classes={{ root: classes.link }}>{item.peer}</Typography>
+        <Typography classes={{ root: classes.link }}>{item.name+ ' '+item.lastName}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.phone}</Typography>
@@ -62,7 +66,14 @@ const ClientRow = props => {
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.communicationChannel}</Typography>
       </TableCell>
-      <TableCell align="center" classes={{ root: classes.cell }}>
+      <TableCell classes={{ root: classes.cell }}>
+        <Typography>{item.email}</Typography>
+      </TableCell>
+      <TableCell xs={9} classes={{ root: classes.cell }}>
+        <Typography>{item.status}</Typography>
+      </TableCell>
+
+      {/* <TableCell align="center" classes={{ root: classes.cell }}>
         {item.sites.length > 0 ? (
           <Tooltip
             placement="top"
@@ -80,7 +91,7 @@ const ClientRow = props => {
             </Typography>
           </Tooltip>
         ) : null}
-      </TableCell>
+      </TableCell> */}
     </TableRow>
   );
 };

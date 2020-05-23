@@ -47,6 +47,10 @@ const EditCreate = props => {
   }, [props]);
 
   useEffect(() => {
+    console.log(temporaryData)
+  }, [temporaryData])
+
+  useEffect(() => {
     setCliId( props.companyId )
   }, [props])
 
@@ -58,16 +62,20 @@ const EditCreate = props => {
     props.isDialogOpened(false);
     props.setEditData({
       companyName: "",
-      peer: "",
-      id: "",
+      peer: '',
+      name: '',
+      lastName: '',
       firstPost: "",
       secondPost: "",
       city: '',
       zipCode: '',
       utr: "",
       vat: "GB ",
-      cis: false,
+      cis: '',
       phone: "+44",
+      phoneSncd: '+44',
+      comment: '',
+      companyComment: '',
       email: "",
       communicationChannel: "",
       sites: [],
@@ -80,6 +88,7 @@ const EditCreate = props => {
     await createClient({ ...temporaryData }, props.actionType);
     props.update();
     closePage();
+    window.location.reload()
   }
 
   const validation2 = async () => {
@@ -191,10 +200,10 @@ const EditCreate = props => {
 
   const inputHadnler = (data, fieldName) => {
     switch (fieldName) {
-      case "peer":
+      case "name":
+      case 'lastName':
         if (data.length <= 50) {
-          let checked = data.replace(/[^a-zA-Z\s\-]/g, "");
-          setData({ ...temporaryData, peer: checked });
+          setData({ ...temporaryData, [fieldName]: data });
         }
         break;
       case "utr":
@@ -215,14 +224,15 @@ const EditCreate = props => {
         }
         break;
       case "phone":
+      case "phoneScnd":  
         if (data.length <= 13) {
           if (data === "+4") {
-            setData({ ...temporaryData, phone: "+44" });
+            setData({ ...temporaryData, [fieldName]: "+44" });
             break;
           }
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, "");
-          setData({ ...temporaryData, phone: `+44${checked}` });
+          setData({ ...temporaryData, [fieldName]: `+44${checked}` });
         }
         break;
       default:
@@ -247,6 +257,21 @@ const EditCreate = props => {
     .then( res=> console.log('delete site response', res))
     .catch( err => console.log(err))
   };
+
+  const createNewSite = () => {
+    axios.post('/site/add', {
+      siteName: temporaryData.siteName,
+      companyName: temporaryData.companyName,
+      address1: temporaryData.siteAddress1,
+      address2: temporaryData.siteAddress2,
+      city: temporaryData.siteCity,
+      zipCode: temporaryData.zipCode,
+      comment: temporaryData.siteComment
+    })
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
+
   const classes = useStyles();
 
   return (
@@ -287,6 +312,18 @@ const EditCreate = props => {
               </Tooltip>
             </Grid>
             <Grid>
+              <Button
+                className='create-btn'
+                disabled={pending}
+                onClick={async () => {
+                  validation();
+                  setPending(false);
+                }}
+              >
+                SAVE
+              </Button>
+            </Grid>
+            <Grid>
               <Button className='create-btn' onClick={closePage}>
                 Back
               </Button>
@@ -309,9 +346,9 @@ const EditCreate = props => {
                   >
                     <FormControl  error={firstnameError}>
                       <Input
-                        value={temporaryData.firstname}
+                        value={temporaryData.name}
                         classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'firstname')}
+                        onChange={e => inputHadnler(e.target.value, 'name')}
                       />
                     </FormControl>
                   </Tooltip>
@@ -329,9 +366,9 @@ const EditCreate = props => {
                   >
                     <FormControl  error={lastnameError}>
                       <Input
-                        value={temporaryData.lastname}
+                        value={temporaryData.lastName}
                         classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'lastname')}
+                        onChange={e => inputHadnler(e.target.value, 'lastName')}
                       />
                     </FormControl>
                   </Tooltip>
@@ -384,7 +421,7 @@ const EditCreate = props => {
               </Grid>
 
               <Grid classes={{ root: classes.inputContainer }}>
-                <Grid>
+                <Grid className='select-wr'>
                 <Typography>Preferred Communication Channel</Typography>
                     <FormControl  classes={{ root: classes.inputContainer }} >
                       <Select
@@ -499,7 +536,13 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }}>
               <Grid>
                 <Typography>CIS Registration Number</Typography>
-                <Switch checked={temporaryData.cis} onChange={setData.bind(null, { ...temporaryData, cis: !temporaryData.cis })} />
+                <FormControl fullWidth>
+                  <Input
+                    value={temporaryData.cis}
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, cis: e.target.value })}
+                  />
+                </FormControl>      
               </Grid>
             </Grid>
 
@@ -522,9 +565,9 @@ const EditCreate = props => {
                 <Tooltip>
                   <FormControl>
                     <Input
-                      value={temporaryData.comment}
+                      value={temporaryData.companyComment}
                       classes={{ input: classes.input }}
-                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                      onChange={e => setData({ ...temporaryData, companyComment: e.target.value })}
                     />
                   </FormControl>
                 </Tooltip>
@@ -539,7 +582,7 @@ const EditCreate = props => {
             <Typography>Site</Typography>
           </Grid>
           <Grid>
-            <Button className='save-btn' onClick={async () => {validation()}}>
+            <Button className='save-btn' onClick={async () => {createNewSite()}}>
               Save New Site
             </Button>
           </Grid>
@@ -547,13 +590,19 @@ const EditCreate = props => {
 
         <Grid className='content-site'>
           <div className='site-info'>
-            <Grid className='site-name'>
-              <Typography>Site Name</Typography>
-              <Tooltip open={sitesError} title="Please add at least one Site" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                <FormControl fullWidth error={sitesError}>
-                  <Input value={newSiteName} placeholder="Site Name" classes={{ input: classes.input }} onChange={e => setSiteName(e.target.value)} />
-                </FormControl>
-              </Tooltip>
+          <Grid className='sitename-wr'>
+              <Grid>
+                <Typography>Site Name</Typography>
+                  <FormControl>
+                    <Input
+                      value={temporaryData.siteName}
+                      classes={{ input: classes.input }}
+                      onChange={e => {
+                        setData({ ...temporaryData, siteName: e.target.value });
+                      }}
+                    />
+                  </FormControl>
+              </Grid>
             </Grid>
 
             <Grid classes={{ root: classes.inputContainer }}>
@@ -562,7 +611,6 @@ const EditCreate = props => {
                   <FormControl>
                     <Input
                       value={temporaryData.siteAddress1}
-                      placeholder="Postal adress 1"
                       classes={{ input: classes.input }}
                       onChange={e => {
                         setFirstPostError(false);
@@ -579,7 +627,6 @@ const EditCreate = props => {
                   <FormControl fullWidth >
                     <Input
                       value={temporaryData.siteAddress2}
-                      placeholder="Postal adress 2"
                       classes={{ input: classes.input }}
                       onChange={e => {
                         setSecondPostError(false);
@@ -596,7 +643,6 @@ const EditCreate = props => {
                 <FormControl fullWidth>
                   <Input
                     value={temporaryData.siteCity}
-                    placeholder='City'
                     classes={{ input: classes.input }}
                     onChange={e => setData({ ...temporaryData, siteCity: e.target.value })}
                   />
@@ -609,7 +655,6 @@ const EditCreate = props => {
                 <FormControl fullWidth>
                   <Input
                     value={temporaryData.siteZipCode}
-                    placeholder='Zip Code'
                     classes={{ input: classes.input }}
                     onChange={e => setData({ ...temporaryData, siteZipCode: e.target.value })}
                   />
@@ -623,9 +668,9 @@ const EditCreate = props => {
                 <Tooltip>
                   <FormControl>
                     <Input
-                      value={temporaryData.comment}
+                      value={temporaryData.siteComment}
                       classes={{ input: classes.input }}
-                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                      onChange={e => setData({ ...temporaryData, siteComment: e.target.value })}
                     />
                   </FormControl>
                 </Tooltip>
@@ -636,7 +681,7 @@ const EditCreate = props => {
 
 
           <div className='sites-table'>
-            <Grid container style={{ margin: '20px 0' }}>
+            <Grid>
               <Grid>
                 <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} />
               </Grid>

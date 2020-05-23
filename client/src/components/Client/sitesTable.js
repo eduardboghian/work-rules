@@ -67,47 +67,22 @@ const SitesTable = props => {
             <TableCell classes={{ root: classes.cellHeader }}>
               <Typography>Site Name</Typography>
             </TableCell>
-            <TableCell classes={{ root: classes.cellHeader }}>
-              <Typography>Last Invoice</Typography>
-            </TableCell>
-            <TableCell classes={{ root: classes.cellHeader }}>
-              <Typography style={{ textAlign: 'center' }}>Workers</Typography>
-            </TableCell>
             <TableCell classes={{ root: classes.cellHeader }}></TableCell>
           </TableRow>
         </TableHead>
+
+
         <TableBody>
           {sites.map((site,i) => (
             <TableRow key={i}>
               <TableCell classes={{ root: classes.cell }}>
                 <Typography>{site.siteName}</Typography>
               </TableCell>
-              <TableCell classes={{ root: classes.cell }}>
-                <Typography>{!!site.lastInvoice && site.lastInvoice}</Typography>
-              </TableCell>
-              <TableCell classes={{ root: classes.cell }}>
-                {site.workers ? site.workers.length > 0 ? (
-                  <Tooltip
-                    placement='top'
-                    classes={{ tooltip: classes.tooltip }}
-                    title={
-                      <Grid container>
-                        {site.workers.map(worker => (
-                          <Typography>{`${worker.firstname} ${worker.lastname}`}</Typography>
-                        ))}
-                      </Grid>
-                    }
-                  >
-                    <Typography style={{ textAlign: 'center', textDecoration: 'underline', cursor: 'pointer', color: 'darkorange' }}>
-                      {site.workers.length}
-                    </Typography>
-                  </Tooltip>
-                ) : null : null}
-                <Typography>{!!site.workers && site.workers.length}</Typography>
-              </TableCell>
+
               <TableCell classes={{ root: classes.cell }}>
                 <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
               </TableCell>
+              
               <TableCell style={{ width: '150px' }} classes={{ root: classes.cell }}>
                 <FormControl style={{ width: '150px' }} fullWidth classes={{ root: classes.inputContainer }}>
                   <Select

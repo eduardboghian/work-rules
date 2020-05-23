@@ -40,6 +40,8 @@ const Client = props => {
     _id: '',
     companyName: '',
     peer: '',
+    name: '',
+    lastName: '',
     id: '',
     firstPost: '',
     secondPost: '',
@@ -47,10 +49,12 @@ const Client = props => {
     zipCode: '',
     utr: '',
     vat: 'GB ',
-    cis: false,
-    gross: '',
+    cis: '',
     phone: '+44',
+    phoneScnd: '+44',
     email: '',
+    comment: '',
+    companyComment: '',
     communicationChannel: '',
     sites: [],
     status: ''
@@ -93,6 +97,7 @@ const Client = props => {
   }
 
   const openDialog = data => {
+    console.log(data)
     setEditData(data);
     isDialogOpened(true);
   };

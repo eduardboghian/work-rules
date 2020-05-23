@@ -33,32 +33,40 @@
 }
 
 /* EDIT CREATE TOP BAR*/
-.MuiInputBase-root {
+/* .client-wr .MuiInputBase-root {
     width: 300px !important;
     height: 30px !important;
     background-color: #eee;
     line-height: 30px;
     padding-left: 10px;
-}
+} */
 
 
-.create-btn {
+.client-wr .create-btn {
     background-color: orange !important;
     width: 250px;
     color: #fff !important;
     font-weight: bold !important;
-    font-size: 16px !important;
+    height: 42px !important;
+    line-height: 42px !important;
+}
+
+.client-wr .MuiSelect-root {
+    width: 300px !important;
+    height: 30px !important;
+    background-color: #fff;
+    line-height: 30px;
+    padding-left: 10px;
+    text-indent: 10px !important;
 }
 
 
-
 .client-topbar {
-    width: 100% !important;
+    width: 99.5% !important;
     display: grid !important;
-    grid-template-columns: 25% 25% 50%;
+    grid-template-columns: 25.80% 25% 38% 12%;
     height: 67px !important;
     margin-bottom: 30px !important;
-    justify-items: end !important;
 }
 
 .client-topbar .create-btn {
@@ -66,36 +74,48 @@
     width: 150px !important;
     position: relative;
     top: 25px !important;
+    padding: 0 !important;
+    float: right !important;
 }
 
 /* content */
 
-.content-cl .MuiInputBase-root {
-    background-color: #eee !important;
+.content-cl .MuiInputBase-root, .client-topbar .MuiInputBase-root {
+    background-color: #fff !important;
     height: 40px !important;
 }
-.content-cl .MuiInput-underline {
-    border-bottom: none !important;
+.select-wr .MuiInput-underline::before {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.425) !important;
+}
+.select-wr {
+    margin: 0 !important;
 }
 .content-cl .content-site .MuiGrid-root {
     width: 250px !important;
 }
+.client-wr .MuiTypography-root {
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
 
 .contact-person {
-    padding: 0px 0 0px 0%;
+    padding: 0px 0 2px 0%;
     display:inline;
+    color: rgba(0, 0, 0, 0.507);
 }
 .company-address {
-    padding: 0px 0 0px 46%;
+    padding: 0px 0 2px 48%;
     display:inline;
+    color: rgba(0, 0, 0, 0.507);
 }
 
 .content-client, .content-info {
     width: 45% !important;
-    background-color: #ccc;
+    background-color: #eee !important;
     display: grid;
     grid-template-columns: 50% 50%;
     padding: 5px 0 20px 2%;
+    box-shadow: 0 0 4px #00000038;
 }
 .content-client {
     float: left;
@@ -118,12 +138,16 @@
 .site-orange {
     width: 100% !important;
     display: grid !important;
-    grid-template-columns: 33% 5%;
+    grid-template-columns: 35.5% 5%;
     height: 67px !important;
     margin-top: 30px !important;
     margin-bottom: 30px !important;
     justify-items: left;
-
+    
+}
+.site-orange p{
+    font-size: 20px !important;
+    line-height: 20px;
 }
 
 .site-nametag {
@@ -132,8 +156,10 @@
     color: #fff !important;
     font-weight: bold !important;
     font-size:  15px !important;
-    margin-top: 30px !important;
-    border-radius: 5px;
+    border-radius: 3px;
+    text-indent: 20px;
+    margin-top: 30px;
+    height: 40px !important;
 }
 
 
@@ -144,21 +170,27 @@
     font-weight: bold !important;
     margin-top: 30px !important;
     font-size: 13px !important;
+    height: 40px;
+    border-radius: 3px !important;
 }
 
 .site-info {
     float: left;
     width: 45% !important;
-    background-color: #ccc;
+    background-color: #eee;
     display: grid;
     grid-template-columns: 50% 50%;
     padding: 5px 0 20px 2%;
     margin-bottom: 20px !important;
+    box-shadow: 0 0 4px #00000038;
+}
+.sitename-wr {
+    grid-column: 1/3;
+}
+.sitename-wr .MuiInputBase-root {
+    width: 313% !important;
 }
 
-.site-name {
-    grid-column: 1/3 !important;
-}
 
 .sites-table {
     float: right;
@@ -167,7 +199,11 @@
     margin-bottom: 20px !important;
 
 }
-
 .content-site {
   background-color: #eee !important;
+}
+.site-info .MuiInputBase-root {
+    background-color: #fff !important;
+    height: 40px !important;
+    text-indent: 10px !important;
 }

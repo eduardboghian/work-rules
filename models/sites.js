@@ -13,7 +13,8 @@ const Site = new Schema({
     status: {
         type: String,
         default: 'Active'
-    }
+    },
+    comment: String
 });
 
 module.exports = mongoose.model('sites', Site, 'sites');
