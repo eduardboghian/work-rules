@@ -206,4 +206,23 @@
     background-color: #fff !important;
     height: 40px !important;
     text-indent: 10px !important;
+    width: 40px !important;
 }
+
+.sites-table .MuiFormControl-root {
+    width: 40px !important;
+}
+.sites-table .MuiInput-underline {
+    width: 40px !important;
+}
+.active-sites, .inactive-sites {
+    width: 45%;
+}
+
+.active-sites {
+    float: left;
+}
+.inactive-sites {
+    float: right;
+}
+

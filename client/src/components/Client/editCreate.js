@@ -681,9 +681,15 @@ const EditCreate = props => {
 
 
           <div className='sites-table'>
-            <Grid>
+            <Grid className='active-sites'>
               <Grid>
-                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} />
+                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'active'} />
+              </Grid>
+            </Grid>
+
+            <Grid className='active-sites'>
+              <Grid>
+                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'inactive'} />
               </Grid>
             </Grid>
           </div>

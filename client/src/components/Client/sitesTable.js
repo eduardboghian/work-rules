@@ -36,9 +36,24 @@ const SitesTable = props => {
   const classes = useStyles();
   const { sites } = props;
   const [clientId, setCliId] = useState('')
+  const [sitesList, setSites] = useState([])
 
   useEffect(() => {
     setCliId( props.clinetId )
+    let filtratedSites
+    if(sites) {
+      console.log(sites)
+      if(props.type === 'active') {
+        filtratedSites = sites.filter(site => site.status === 'Active')
+        setSites(filtratedSites)
+        console.log('active', sitesList)
+      } else {
+        filtratedSites = sites.filter(site => site.status !== 'Active')
+        setSites(filtratedSites)
+        console.log('inactive', sitesList)
+      }
+    }
+
   }, [props])
   
   const updateStatusDB = (value, site) => {
@@ -73,7 +88,7 @@ const SitesTable = props => {
 
 
         <TableBody>
-          {sites.map((site,i) => (
+          {sitesList.map((site,i) => (
             <TableRow key={i}>
               <TableCell classes={{ root: classes.cell }}>
                 <Typography>{site.siteName}</Typography>
@@ -83,10 +98,10 @@ const SitesTable = props => {
                 <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
               </TableCell>
               
-              <TableCell style={{ width: '150px' }} classes={{ root: classes.cell }}>
-                <FormControl style={{ width: '150px' }} fullWidth classes={{ root: classes.inputContainer }}>
+              <TableCell style={{ width: '50px' }} classes={{ root: classes.cell }}>
+                {/* <FormControl style={{ width: '150px' }} fullWidth classes={{ root: classes.inputContainer }}>
                   <Select
-                    style={{ width: '150px' }}
+                    style={{ width: '50px' }}
                     renderValue={()=> {
                         return site.status
                     }}
@@ -99,7 +114,8 @@ const SitesTable = props => {
                     <MenuItem value={'Active'}>Active</MenuItem>
                     <MenuItem value={'Not Active'}>Not Active</MenuItem>
                   </Select>
-                </FormControl>
+                </FormControl> */}
+                <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
               </TableCell>
             </TableRow>
           ))}
