@@ -58,7 +58,7 @@ if (cluster.isMaster) {
     restartWeekEnding()
     db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
         cluster.fork()
     }
 
