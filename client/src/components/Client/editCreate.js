@@ -261,7 +261,6 @@ const EditCreate = props => {
   };
 
   const createNewSite = () => {
-    console.log(sites)
     let newList = temporaryData.sites;
     newList.push(newSite)
 
