@@ -41,9 +41,11 @@ const EditCreate = props => {
   const [clientId, setCliId] = useState('')
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
+  const [newSite, setNewSite] = useState({})
 
   useEffect(() => {
     findSites();
+    setNewSite({ ...newSite, companyName: temporaryData.companyName })
   }, [props]);
 
   useEffect(() => {
@@ -259,16 +261,23 @@ const EditCreate = props => {
   };
 
   const createNewSite = () => {
+    console.log(sites)
+    let newList = temporaryData.sites;
+    newList.push(newSite)
+
+    setData({ ...temporaryData, sites: newList });
+    setSites(newList);
+    
+
     axios.post('/site/add', {
-      siteName: temporaryData.siteName,
-      companyName: temporaryData.companyName,
-      address1: temporaryData.siteAddress1,
-      address2: temporaryData.siteAddress2,
-      city: temporaryData.siteCity,
-      zipCode: temporaryData.zipCode,
-      comment: temporaryData.siteComment
+      action: 'create',
+      data: newSite
+    }, {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('token')
+      }
     })
-    .then(res => console.log(res))
+    .then(res => console.log(sites))
     .catch(err => console.log(err))
   }
 
@@ -440,7 +449,7 @@ const EditCreate = props => {
               <Grid classes={{ root: classes.inputContainer }} className='comment' >
                 <Grid>
                   <Typography>Comment</Typography>
-                  <Tooltip>
+                  <Tooltip title='Please enter a valid commit'>
                     <FormControl>
                       <Input
                         value={temporaryData.comment}
@@ -562,7 +571,7 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }} className='comment2' >
               <Grid>
                 <Typography>Comment</Typography>
-                <Tooltip>
+                <Tooltip title='Please enter a vaild comment'>
                   <FormControl>
                     <Input
                       value={temporaryData.companyComment}
@@ -595,10 +604,10 @@ const EditCreate = props => {
                 <Typography>Site Name</Typography>
                   <FormControl>
                     <Input
-                      value={temporaryData.siteName}
+                      value={newSite.siteName}
                       classes={{ input: classes.input }}
                       onChange={e => {
-                        setData({ ...temporaryData, siteName: e.target.value });
+                        setNewSite({ ...newSite, siteName: e.target.value });
                       }}
                     />
                   </FormControl>
@@ -610,11 +619,11 @@ const EditCreate = props => {
                 <Typography>Address Line 1</Typography>
                   <FormControl>
                     <Input
-                      value={temporaryData.siteAddress1}
+                      value={newSite.address1}
                       classes={{ input: classes.input }}
                       onChange={e => {
                         setFirstPostError(false);
-                        setData({ ...temporaryData, siteAddress1: e.target.value });
+                        setNewSite({ ...newSite, address1: e.target.value });
                       }}
                     />
                   </FormControl>
@@ -626,11 +635,11 @@ const EditCreate = props => {
                 <Typography>Address Line 2</Typography>
                   <FormControl fullWidth >
                     <Input
-                      value={temporaryData.siteAddress2}
+                      value={newSite.address2}
                       classes={{ input: classes.input }}
                       onChange={e => {
                         setSecondPostError(false);
-                        setData({ ...temporaryData, siteAddress2: e.target.value });
+                        setNewSite({ ...newSite, address2: e.target.value });
                       }}
                     />
                   </FormControl>
@@ -642,9 +651,9 @@ const EditCreate = props => {
                 <Typography>City</Typography>
                 <FormControl fullWidth>
                   <Input
-                    value={temporaryData.siteCity}
+                    value={newSite.city}
                     classes={{ input: classes.input }}
-                    onChange={e => setData({ ...temporaryData, siteCity: e.target.value })}
+                    onChange={e => setNewSite({ ...newSite, city: e.target.value })}
                   />
                 </FormControl>
               </Grid>
@@ -654,9 +663,9 @@ const EditCreate = props => {
                 <Typography>Zip Code</Typography>
                 <FormControl fullWidth>
                   <Input
-                    value={temporaryData.siteZipCode}
+                    value={newSite.zipCode}
                     classes={{ input: classes.input }}
-                    onChange={e => setData({ ...temporaryData, siteZipCode: e.target.value })}
+                    onChange={e => setNewSite({ ...newSite, zipCode: e.target.value })}
                   />
                 </FormControl>
               </Grid>
@@ -665,12 +674,12 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }} className='comment' >
               <Grid>
                 <Typography>Comment</Typography>
-                <Tooltip>
+                <Tooltip title='Please enter a vaild comment'>
                   <FormControl>
                     <Input
-                      value={temporaryData.siteComment}
+                      value={newSite.comment}
                       classes={{ input: classes.input }}
-                      onChange={e => setData({ ...temporaryData, siteComment: e.target.value })}
+                      onChange={e => setNewSite({ ...newSite, comment: e.target.value })}
                     />
                   </FormControl>
                 </Tooltip>
@@ -687,7 +696,7 @@ const EditCreate = props => {
               </Grid>
             </Grid>
 
-            <Grid className='active-sites'>
+            <Grid className='inactive-sites'>
               <Grid>
                 <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'inactive'} />
               </Grid>

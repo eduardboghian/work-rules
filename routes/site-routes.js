@@ -35,6 +35,7 @@ router.post('/all', (req, res) => {
 });
 
 router.post('/add', (req, res) => {
+    console.log(req.headers)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
@@ -49,10 +50,12 @@ router.post('/add', (req, res) => {
                     res.status(200);
                     break;
                 case 'create':
+                    console.log(req.body.data)
                     const item = new Sites(req.body.data);
                     item.save()
                         .then(result => res.status(200).send(result))
                         .catch(err => res.status(400).send());
+                    res.send('site created...')    
                     break;
                 default:
                     break;

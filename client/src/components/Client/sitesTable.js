@@ -42,15 +42,12 @@ const SitesTable = props => {
     setCliId( props.clinetId )
     let filtratedSites
     if(sites) {
-      console.log(sites)
       if(props.type === 'active') {
         filtratedSites = sites.filter(site => site.status === 'Active')
         setSites(filtratedSites)
-        console.log('active', sitesList)
       } else {
         filtratedSites = sites.filter(site => site.status !== 'Active')
         setSites(filtratedSites)
-        console.log('inactive', sitesList)
       }
     }
 

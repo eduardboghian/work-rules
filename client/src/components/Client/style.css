@@ -195,7 +195,7 @@
 .sites-table {
     float: right;
     width: 45% !important;
-    padding: 5px 0 20px 2%;
+    padding: 5px 0 0;
     margin-bottom: 20px !important;
 
 }
@@ -206,7 +206,6 @@
     background-color: #fff !important;
     height: 40px !important;
     text-indent: 10px !important;
-    width: 40px !important;
 }
 
 .sites-table .MuiFormControl-root {
@@ -224,5 +223,6 @@
 }
 .inactive-sites {
     float: right;
+    padding-left: 20px !important
 }
 

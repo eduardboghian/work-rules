@@ -90,6 +90,7 @@ const Client = props => {
   const loadClientData = () => {
     getClientData()
     .then(res => {
+      console.log(res.data)
       setCompanyId(res.data[0]._id)
       setClientData(res.data)
     })
