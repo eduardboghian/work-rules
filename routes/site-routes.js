@@ -6,13 +6,19 @@ const Sites = require('../models/sites')
 
 const router = express.Router();
 
-router.get('/get', (req, res) => {
+router.get('/get', async (req, res) => {
+    
+    let site = await Sites.find({ _id : req.query.id })
+    res.send(site)
+});
+
+router.get('/all', (req, res) => {
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
             res.sendStatus(403);
         }
-        if (authData.user.role === 'superuser' || authData.user.role === 'agent' || authData.user.role === 'sourcer') {
+        if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
             Sites.find().then(result => res.status(200).send(result));
         } else {
             res.status(403).send("You don't have access");
@@ -20,22 +26,7 @@ router.get('/get', (req, res) => {
     });
 });
 
-router.post('/all', (req, res) => {
-    const token = req.headers.authorization.replace('Bearer ', '');
-    jwt.verify(token, 'secretkey', (err, authData) => {
-        if (err) {
-            res.sendStatus(403);
-        }
-        if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
-            Clients.findOne({_id: req.body._id}).then(result => res.status(200).send(result));
-        } else {
-            res.status(403).send("You don't have access");
-        }
-    });
-});
-
 router.post('/add', (req, res) => {
-    console.log(req.headers)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
@@ -44,9 +35,9 @@ router.post('/add', (req, res) => {
         if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
             switch (req.body.action) {
                 case 'edit':
-                    Sites.findOneAndUpdate({ email: req.body.data.email }, req.body.data)
-                        .then(result => res.status(200).send())
-                        .catch(err => res.status(400).send());
+                    Sites.findOneAndUpdate({ _id: req.body.data._id }, req.body.data)
+                        .then(result => res.status(200).send(result))
+                        .catch(err => res.status(400).send(err));
                     res.status(200);
                     break;
                 case 'create':
@@ -191,6 +182,7 @@ router.put('/update-status', async (req, res) => {
 
     let site = await Sites.findOneAndUpdate({ _id: req.body.id }, { status: newStatus }, { new: true })
 
+    console.log(site)
     res.send(site)
 })
 

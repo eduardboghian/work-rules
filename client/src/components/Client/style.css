@@ -226,3 +226,9 @@
     padding-left: 20px !important
 }
 
+/* SVG STYLE */
+.edit-icon {
+    width: 20px;
+    cursor: pointer;
+}
+

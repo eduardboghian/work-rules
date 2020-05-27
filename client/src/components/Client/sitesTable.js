@@ -5,14 +5,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Tooltip } from '@material-ui/core';
+
+import EditIcon from '../../media/edit-regular.svg'
+import PowerButton from '../../media/power-off-solid.svg'
+
 import axios from 'axios';
 
 const useStyles = makeStyles({
@@ -69,6 +68,7 @@ const SitesTable = props => {
     })
     .then(res => {})
     .catch(err => console.error(err))
+    window.location.reload(true)
   }
 
   return (
@@ -77,42 +77,40 @@ const SitesTable = props => {
         <TableHead>
           <TableRow>
             <TableCell classes={{ root: classes.cellHeader }}>
-              <Typography>Site Name</Typography>
-            </TableCell>
+              {props.type === 'active' ? 
+                <Typography>Active Sites</Typography> :
+                <Typography>Closed Sites</Typography>
+              }
+              </TableCell>
             <TableCell classes={{ root: classes.cellHeader }}></TableCell>
           </TableRow>
         </TableHead>
 
 
-        <TableBody>
+        <TableBody style={{ overflowY: 'scroll', height: '400px !important' }}>
           {sitesList.map((site,i) => (
             <TableRow key={i}>
               <TableCell classes={{ root: classes.cell }}>
                 <Typography>{site.siteName}</Typography>
               </TableCell>
 
-              <TableCell classes={{ root: classes.cell }}>
-                <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
-              </TableCell>
+              {props.type === 'active' ?  
               
-              <TableCell style={{ width: '50px' }} classes={{ root: classes.cell }}>
-                {/* <FormControl style={{ width: '150px' }} fullWidth classes={{ root: classes.inputContainer }}>
-                  <Select
-                    style={{ width: '50px' }}
-                    renderValue={()=> {
-                        return site.status
-                    }}
-                    defaultValue={'John'}
-                    onChange={e => {
-                        updateStatusDB(e.target.value, site)
-                        site.status = e.target.value
-                    }}
-                  >
-                    <MenuItem value={'Active'}>Active</MenuItem>
-                    <MenuItem value={'Not Active'}>Not Active</MenuItem>
-                  </Select>
-                </FormControl> */}
-                <DeleteIcon onClick={props.deleteSite.bind(null, site._id)} />
+                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
+                  <img src={EditIcon} onClick={ e => props.editSite(site._id) } className='edit-icon' />
+                </TableCell>:
+
+                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
+                  <img src={PowerButton} onClick={ e => updateStatusDB( 'Active', site ) }  className='edit-icon' />
+                </TableCell>
+
+              }
+
+              <TableCell classes={{ root: classes.cell }}>
+              {props.type === 'active' ? 
+                <DeleteIcon onClick={ e => updateStatusDB( 'Not Active', site) } />:
+                <DeleteIcon onClick={ e => props.deleteSite(site._id) } />
+              }  
               </TableCell>
             </TableRow>
           ))}

@@ -26,10 +26,12 @@ const WeeklyStatemnt = ({dispatch, sites, weekEnding}) => {
     useEffect(() => {
         const addDataToState = () => {
             let sitesRes = new Promise((resolve, reject) => {
-                axios.get('/site/get',{headers: {
+                axios.get('/site/all',{headers: {
                     authorization: 'Bearer ' + localStorage.getItem('token')
-                  }})
+                  }}
+                )
                 .then(res => {
+                    console.log(res.data)
                     setNewSite(res.data[0])
                     setMenu(res.data)
                     dispatch( addSites(res.data) )

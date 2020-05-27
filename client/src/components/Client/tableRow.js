@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -45,6 +45,11 @@ const ClientRow = props => {
     sites: item.sites,
     status: item.status
   };
+
+  // useEffect(() => {
+  //   setActionType("edit");
+  //   openDialog(data);
+  // }, [data])
 
   return (
     <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
