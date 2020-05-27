@@ -3,7 +3,7 @@ var http = require('http');
 function startKeepAlive() {
     setInterval(function() {
         var options = {
-            host: 'work-rules.herokuapp.com',
+            host: 'work-rules-app.herokuapp.com',
             port: 80,
             path: '/api'
         };
