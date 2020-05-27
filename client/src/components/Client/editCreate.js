@@ -43,15 +43,13 @@ const EditCreate = props => {
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
   const [newSite, setNewSite] = useState({})
+  const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
 
   useEffect(() => {
     findSites();
     setNewSite({ ...newSite, companyName: temporaryData.companyName })
   }, [props]);
 
-  useEffect(() => {
-    console.log(temporaryData)
-  }, [temporaryData])
 
   useEffect(() => {
     setCliId( props.companyId )
@@ -299,25 +297,34 @@ const EditCreate = props => {
       default:
         break;
     }
-  };
+  }
+
   const deleteSite = id => {
+    axios.delete('/client/delete-site', {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token")
+      },
+      data: {
+        siteId: id,
+        clientId
+      }
+    })
+    .then( res=> console.log('delete site response', res))
+    .catch( err => console.log(err))
+
+    axios.put('site/update-status', {
+      id,
+      value: 'Not Active'
+    })
+    .then(res => console.log(res))
+    .catch(err => console.error(err))
 
     let a = temporaryData.sites.filter(item => item._id !== id);
     let b = sites.filter(item => item._id !== id);
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-    axios.delete('/site/delete', {
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token")
-      },
-      data: {
-        _id: id
-      }
-    })
-    .then( res=> console.log('delete site response', res))
-    .catch( err => console.log(err))
-  };
+  }
 
   const createNewSite = () => {
     let newList = temporaryData.sites;
@@ -336,6 +343,34 @@ const EditCreate = props => {
       }
     })
     .then(res => console.log(sites))
+    .catch(err => console.log(err))
+  }
+  
+  const editSite = async (siteId) => {
+    console.log(siteId)
+    setSiteButton('Save Changes')
+    axios.get('/site/get', {
+      params: {
+        id: siteId
+      }
+    })
+    .then( site => {
+      console.log(site.data[0])
+      setNewSite(site.data[0]) 
+    })
+    .catch(err => console.log(err))
+  }
+
+  const saveSiteChanges = () => {
+    axios.post('/site/add', {
+      action: 'edit',
+      data: newSite   
+    }, {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+    .then(res => setNewSite({ }))
     .catch(err => console.log(err))
   }
 
@@ -633,9 +668,15 @@ const EditCreate = props => {
             <Typography>Site</Typography>
           </Grid>
           <Grid>
-            <Button className='save-btn' onClick={async () => {createNewSite()}}>
-              Save New Site
-            </Button>
+            { editCreateSiteButton === 'Save New Site' ?
+              <Button className='save-btn' onClick={async () => {createNewSite()}}>
+                Save New Site
+              </Button>:
+
+              <Button className='save-btn' onClick={async () => {saveSiteChanges()}}>
+                Save Changes
+              </Button>
+            }
           </Grid>
         </Grid>
 
@@ -734,13 +775,23 @@ const EditCreate = props => {
           <div className='sites-table'>
             <Grid className='active-sites'>
               <Grid>
-                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'active'} />
+                <SitesTable 
+                  sites={temporaryData.sites} 
+                  clinetId={clientId} 
+                  editSite={editSite} 
+                  type={'active'} 
+                />
               </Grid>
             </Grid>
 
             <Grid className='inactive-sites'>
               <Grid>
-                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'inactive'} />
+                <SitesTable 
+                  sites={temporaryData.sites} 
+                  clinetId={clientId} 
+                  deleteSite={deleteSite} 
+                  type={'inactive'} 
+                />
               </Grid>
             </Grid>
           </div>
