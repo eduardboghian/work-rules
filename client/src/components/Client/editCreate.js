@@ -156,7 +156,7 @@ const EditCreate = props => {
       };
     }
 
-    // if(temporaryData.phone.length < 20) {
+    // if(temporaryData.phone.length < 1) {
     //
     // }
     // else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {

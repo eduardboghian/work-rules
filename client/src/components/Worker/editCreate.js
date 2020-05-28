@@ -30,10 +30,15 @@ const EditCreate = props => {
   const [ninoError, setNinoError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [accountError, setAccountError] = useState(false);
+  const [sortCodeError, setSortCodeError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [ticket, setTicket] = useState('')
   const [popStyle, setPopStyle] = useState('none')
 
+  useEffect(() => {
+    console.log(temporaryData)
+  }, [temporaryData])
 
   useEffect(() => {
     let sum = +temporaryData.gotClient - +temporaryData.paidWorker;
@@ -135,15 +140,15 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.nino.length === 0) {
-    } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
-      setNinoError(true);
-      let timer = setTimeout(() => setNinoError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    // if (temporaryData.nino.length === 0) {
+    // } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
+    //   setNinoError(true);
+    //   let timer = setTimeout(() => setNinoError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
 
     if(temporaryData.phone.length < 4) {}
     else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
@@ -201,7 +206,7 @@ const EditCreate = props => {
         return false;
       };
     };
-  const ninoValidation = async () => {
+  const ninoValidation = () => {
       setNinoError(true);
       let timer = setTimeout(() => setNinoError(false), 3000);
       return () => {
@@ -209,8 +214,25 @@ const EditCreate = props => {
         return false;
       };
     };
+  const accountValidation = () => {
+      setAccountError(true);
+      let timer = setTimeout(() => setAccountError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+  const sortCodeValidation = () => {
+      setSortCodeError(true);
+      let timer = setTimeout(() => setSortCodeError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
   function isUpperCase(str) {
-    return str === str.toUpperCase();
+    if(str === str.toUpperCase()) return true
+    return false
   }
   // INPUT HANDLER
   const inputHandler = (data, fieldName) => {
@@ -255,29 +277,21 @@ const EditCreate = props => {
             setData({ ...temporaryData, vat: `${data} ` });
             break;
           }
-          let checked = data.slice(3);
-          checked = checked.replace(/[^0-9]/g, "");
-          setData({ ...temporaryData, vat: `GB ${checked}` });
           if (data.length > 12) {
             vatValidation();
           }
+          let checked = data.slice(3);
+          checked = checked.replace(/[^0-9]/g, "");
+          setData({ ...temporaryData, vat: `GB ${checked}` });
         }
         break;
       case 'nino':
         if (data.length <= 20) {
-          if (data.length === 1) {
-            for (var i=1; i<data.length; i++) {
-              if (isNaN(data[i]) === true || isUpperCase(data[i]) === false) {
-                ninoValidation()
-              }
+          for (var i=0; i<data.length; i++) {
+            if (isUpperCase(data[i]) === false) {
+              ninoValidation()
             }
-          } else {
-              for (var i=1; i<data.length; i++) {
-                if (isNaN(data[i]) === false /*|| isUpperCase(data[i]) === false*/) {
-                  ninoValidation()
-                }
-              }
-            }
+          }
           setData({...temporaryData, nino: data});
         }
         break;
@@ -296,10 +310,43 @@ const EditCreate = props => {
         }
         break;;
 
-      case 'account':
-      case 'sortCode':
       case 'city':
+        if(data.length <= 100) {
+          setData({ ...temporaryData, city: data });
+        }
+        break;
       case 'zipCode':
+        if(data.length <= 10) {
+          setData({ ...temporaryData, zipCode: data });
+        }
+        break;
+      case 'account':
+        if (data.length <= 10) {
+          for (var i=0; i<data.length; i++) {
+            if (isNaN(data[i]) === true) {
+              accountValidation()
+            }
+          }
+          setData({ ...temporaryData, account: data });
+        }
+        break;
+      case 'sortCode':
+        if(data.length <= 8) {
+          for (var i=0; i<data.length; i++) {
+            if (isNaN(data[i]) === false || data[i] === '-') {
+              if(data.length === 2 && data[0] !== '-' && data[1] !== '-') {
+                data = data + '-'
+              }
+              if(data.length === 5 && data[0] !== '-' && data[1] !== '-' && data[3] !== '-' && data[4] !== '-') {
+                data = data + '-'
+              }
+            } else {
+              sortCodeValidation()
+            }
+          }
+          setData({ ...temporaryData, [fieldName]: data });
+        }
+        break;
       case 'uniqueID':
         setData({ ...temporaryData, [fieldName]: data })
         break
@@ -580,7 +627,7 @@ const EditCreate = props => {
               <Input
                 value={temporaryData.city}
                 classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, city: e.target.value })}
+                onChange={e => inputHandler(e.target.value, 'city')}
               />
             </FormControl>
           </Grid>
@@ -593,13 +640,15 @@ const EditCreate = props => {
           <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
             <Typography>Account Number</Typography>
-              <FormControl >
-                <Input
-                  value={temporaryData.account}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHandler(e.target.value, 'account')}
-                />
-              </FormControl>
+              <Tooltip open={accountError} title='Warning: Account has to have 10 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={accountError}>
+                  <Input
+                    value={temporaryData.account}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHandler(e.target.value, 'account')}
+                  />
+                </FormControl>
+              </Tooltip>
             </Grid>
           </Grid>
 
@@ -610,7 +659,7 @@ const EditCreate = props => {
                 <Input
                   value={temporaryData.zipCode}
                   classes={{ input: classes.input }}
-                  onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+                  onChange={e => inputHandler(e.target.value , 'zipCode')}
                 />
               </FormControl>
             </Grid>
@@ -619,13 +668,15 @@ const EditCreate = props => {
           <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
             <Typography>Sort Code</Typography>
-              <FormControl >
-                <Input
-                  value={temporaryData.sortCode}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHandler(e.target.value, 'sortCode')}
-                />
-              </FormControl>
+              <Tooltip open={sortCodeError} title='Warning: Sort Code has to have 6 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={sortCodeError}>
+                  <Input
+                    value={temporaryData.sortCode}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHandler(e.target.value, 'sortCode')}
+                  />
+                </FormControl>
+              </Tooltip>
             </Grid>
           </Grid>
         </div>
