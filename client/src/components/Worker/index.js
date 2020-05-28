@@ -49,7 +49,7 @@ const Worker = props => {
     phone: "+44",
     phoneScnd: '+44',
     email: "",
-    communicationChannel: "",
+    communicationChannel: "whatsapp",
     account: '',
     sortCode: '',
     taxPercentage: "",
@@ -57,7 +57,7 @@ const Worker = props => {
     trades: [],
     tickets: [],
     comment: '',
-    status: ""
+    status: "active"
   });
   const [actionType, setActionType] = useState("edit");
   const [archived, isArchived] = useState(false);
@@ -97,7 +97,7 @@ const Worker = props => {
     setFilteredData(sortedData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort]);
-  
+
   const openDialog = data => {
     setEditData(data);
     isDialogOpened(true);
@@ -113,7 +113,7 @@ const Worker = props => {
     let data = await getWorkers();
     setWorkersData(data.data);
   };
-  
+
   const sortHandler = (name, dir) => {
     if (dir === "desc") {
       setSort({ [name]: "asc" });
@@ -144,13 +144,13 @@ const Worker = props => {
           </Grid>
           <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
 
-          
+
           <Divider />
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
-                  
+
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("firstname", sort.firstname)}>
                     <Grid container>Name {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
@@ -162,7 +162,7 @@ const Worker = props => {
                   <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
                     <Grid container>Trade {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                   </TableCell>
-                
+
                   <TableCell
                     classes={{ root: classes.cellHeaderSortable }}
                     onClick={() => sortHandler("communicationChannel", sort.communicationChannel)}

@@ -43,13 +43,16 @@ const EditCreate = props => {
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
   const [newSite, setNewSite] = useState({})
-  const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
+  const [siteNameError, setSiteNameError] = useState(false);
 
   useEffect(() => {
     findSites();
     setNewSite({ ...newSite, companyName: temporaryData.companyName })
   }, [props]);
 
+  useEffect(() => {
+    console.log(temporaryData)
+  }, [temporaryData])
 
   useEffect(() => {
     setCliId( props.companyId )
@@ -113,6 +116,14 @@ const EditCreate = props => {
       };
     }
     //}
+    if (newSite.siteName.length < 3 || newSite.siteName.length === 'none') {
+      setSiteNameError(true);
+      let timer = setTimeout(() => setSiteNameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
 
     if (temporaryData.utr.length === 0) {
     }
@@ -157,7 +168,7 @@ const EditCreate = props => {
     //   };
     // }
 
-    if(temporaryData.email.length > 100) {}
+    if(temporaryData.email.length < 1) {}
     else if (
       /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         temporaryData.email
@@ -170,24 +181,6 @@ const EditCreate = props => {
         return false;
       };
     }
-    // if (temporaryData.comment.length > 100) {
-    //   setCommentError(true);
-    //   let timer = setTimeout(() => setCommentError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
-
-    // if (temporaryData.category.length === 0) {
-    //   setCategoryError(true);
-    //   let timer = setTimeout(() => setCategoryError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
-
     setPending(true);
     await createClient({ ...temporaryData }, props.actionType);
     await props.update();
@@ -240,7 +233,7 @@ const EditCreate = props => {
           let checked = data.replace(/[^0-9\s]/g, "");
           setData({ ...temporaryData, utr: checked });
           if (data.length > 10) {
-            utrValidation()
+            utrValidation();
           }
         }
         break;
@@ -254,7 +247,7 @@ const EditCreate = props => {
           checked = checked.replace(/[^0-9]/g, "");
           setData({ ...temporaryData, vat: `GB ${checked}` });
           if (data.length > 12) {
-            vatValidation()
+            vatValidation();
           }
         }
         break;
@@ -262,13 +255,25 @@ const EditCreate = props => {
         if (data.length <= 20) {
           if (data.length === 1 && isNaN(data) === false || data.length > 11) {
             cisValidation()
-          }
+          };
+          if (data.length > 1)
+            for (var i=1; i<data.length; i++) {
+              if (isNaN(data[i]) === true) {
+                cisValidation();
+              }
+            };
           setData({ ...temporaryData, cis: data });
         }
         break;
       case "phone":
+        if (data.length <= 23) {
+          let checked = data.slice(3);
+          checked = checked.replace(/[^0-9]/g, "");
+          setData({ ...temporaryData, [fieldName]: `+44${checked}` });
+        }
+        break;
       case "phoneScnd":
-        if (data.length <= 20) {
+        if (data.length <= 23) {
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, "");
           setData({ ...temporaryData, [fieldName]: `+44${checked}` });
@@ -279,9 +284,19 @@ const EditCreate = props => {
           setData({ ...temporaryData, comment: data });
         }
         break;
+      case 'comment1':
+        if(data.length <= 100) {
+          setData({ ...temporaryData, companyComment: data });
+        }
+        break;
       case 'address':
         if(data.length <= 100) {
           setData({ ...temporaryData, firstPost: data });
+        }
+        break;
+      case 'address2-client':
+        if(data.length <= 100) {
+          setData({ ...temporaryData, secondPost: data });
         }
         break;
       case 'city':
@@ -294,37 +309,58 @@ const EditCreate = props => {
           setData({ ...temporaryData, zipCode: data});
         }
         break;
+      case 'site':
+        if(data.length <= 100) {
+          setNewSite({ ...newSite, siteName: data });
+        }
+        break;
+      case 'address1-site':
+        if (data.length <= 100) {
+          setNewSite({ ...newSite, address1: data });
+        }
+        break;
+      case 'address2-site':
+        if (data.length <= 100) {
+          setNewSite({ ...newSite, address2: data });
+        }
+        break;
+      case 'city-site':
+        if (data.length <= 100) {
+          setNewSite({ ...newSite, city: data });
+        }
+        break;
+      case 'zip-site':
+        if (data.length <= 100) {
+          setNewSite({ ...newSite, zipCode: data });
+        }
+        break;
+      case 'comment-site':
+        if (data.length <= 200) {
+          setNewSite({ ...newSite, comment: data });
+        }
+        break;
       default:
         break;
     }
-  }
-
+  };
   const deleteSite = id => {
-    axios.delete('/client/delete-site', {
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token")
-      },
-      data: {
-        siteId: id,
-        clientId
-      }
-    })
-    .then( res=> console.log('delete site response', res))
-    .catch( err => console.log(err))
-
-    axios.put('site/update-status', {
-      id,
-      value: 'Not Active'
-    })
-    .then(res => console.log(res))
-    .catch(err => console.error(err))
 
     let a = temporaryData.sites.filter(item => item._id !== id);
     let b = sites.filter(item => item._id !== id);
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-  }
+    axios.delete('/site/delete', {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("token")
+      },
+      data: {
+        _id: id
+      }
+    })
+    .then( res=> console.log('delete site response', res))
+    .catch( err => console.log(err))
+  };
 
   const createNewSite = () => {
     let newList = temporaryData.sites;
@@ -345,34 +381,6 @@ const EditCreate = props => {
     .then(res => console.log(sites))
     .catch(err => console.log(err))
   }
-  
-  const editSite = async (siteId) => {
-    console.log(siteId)
-    setSiteButton('Save Changes')
-    axios.get('/site/get', {
-      params: {
-        id: siteId
-      }
-    })
-    .then( site => {
-      console.log(site.data[0])
-      setNewSite(site.data[0]) 
-    })
-    .catch(err => console.log(err))
-  }
-
-  const saveSiteChanges = () => {
-    axios.post('/site/add', {
-      action: 'edit',
-      data: newSite   
-    }, {
-      headers: {
-        authorization: 'Bearer ' + localStorage.getItem('token')
-      }
-    })
-    .then(res => setNewSite({ }))
-    .catch(err => console.log(err))
-  }
 
   const classes = useStyles();
 
@@ -381,8 +389,8 @@ const EditCreate = props => {
 
         <Grid container justify='space-between' className='client-topbar'>
             <Grid>
-              <Typography>Company Name</Typography>
-              <Tooltip open={companyNameError} title="Please enter a valid Company Name" classes={{ tooltip: classes.errorTooltip }} placement="top">
+              <Typography>Company Name  *</Typography>
+                <Tooltip open={companyNameError} title="The Company Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
                 <FormControl fullWidth error={companyNameError}>
                   <Input
                     value={temporaryData.companyName}
@@ -504,7 +512,7 @@ const EditCreate = props => {
               <Grid classes={{ root: classes.inputContainer }}>
                 <Grid>
                   <Typography>Email</Typography>
-                  <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                  <Tooltip open={emailError} title='Please provide a valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
                     <FormControl  error={emailError}>
                       <Input
                         value={temporaryData.email}
@@ -583,7 +591,7 @@ const EditCreate = props => {
                     <Input
                       value={temporaryData.secondPost}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'address')}
+                      onChange={e => inputHadnler(e.target.value, 'address2-client')}
                     />
                   </FormControl>
               </Grid>
@@ -648,15 +656,13 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }} className='comment2' >
               <Grid>
                 <Typography>Comment</Typography>
-                <Tooltip title='Please enter a vaild comment'>
                   <FormControl>
                     <Input
                       value={temporaryData.companyComment}
                       classes={{ input: classes.input }}
-                      onChange={e => setData({ ...temporaryData, companyComment: e.target.value })}
+                      onChange={e => inputHadnler(e.target.value, 'comment1')}
                     />
                   </FormControl>
-                </Tooltip>
               </Grid>
             </Grid>
           </div>
@@ -668,15 +674,9 @@ const EditCreate = props => {
             <Typography>Site</Typography>
           </Grid>
           <Grid>
-            { editCreateSiteButton === 'Save New Site' ?
-              <Button className='save-btn' onClick={async () => {createNewSite()}}>
-                Save New Site
-              </Button>:
-
-              <Button className='save-btn' onClick={async () => {saveSiteChanges()}}>
-                Save Changes
-              </Button>
-            }
+            <Button className='save-btn' onClick={async () => {createNewSite()}}>
+              Save New Site
+            </Button>
           </Grid>
         </Grid>
 
@@ -684,16 +684,16 @@ const EditCreate = props => {
           <div className='site-info'>
           <Grid className='sitename-wr'>
               <Grid>
-                <Typography>Site Name</Typography>
-                  <FormControl>
-                    <Input
-                      value={newSite.siteName}
-                      classes={{ input: classes.input }}
-                      onChange={e => {
-                        setNewSite({ ...newSite, siteName: e.target.value });
-                      }}
-                    />
-                  </FormControl>
+                <Typography>Site Name  *</Typography>
+                  <Tooltip open={siteNameError} title="The Site Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                    <FormControl error={siteNameError}>
+                      <Input
+                        value={newSite.siteName}
+                        classes={{ input: classes.input }}
+                        onChange={e => inputHadnler(e.target.value, 'site')}
+                      />
+                    </FormControl>
+                  </Tooltip>
               </Grid>
             </Grid>
 
@@ -704,10 +704,7 @@ const EditCreate = props => {
                     <Input
                       value={newSite.address1}
                       classes={{ input: classes.input }}
-                      onChange={e => {
-                        setFirstPostError(false);
-                        setNewSite({ ...newSite, address1: e.target.value });
-                      }}
+                      onChange={e => inputHadnler(e.target.value, 'address1-site')}
                     />
                   </FormControl>
               </Grid>
@@ -720,10 +717,7 @@ const EditCreate = props => {
                     <Input
                       value={newSite.address2}
                       classes={{ input: classes.input }}
-                      onChange={e => {
-                        setSecondPostError(false);
-                        setNewSite({ ...newSite, address2: e.target.value });
-                      }}
+                      onChange={e => inputHadnler(e.target.value, 'address2-site')}
                     />
                   </FormControl>
               </Grid>
@@ -736,7 +730,7 @@ const EditCreate = props => {
                   <Input
                     value={newSite.city}
                     classes={{ input: classes.input }}
-                    onChange={e => setNewSite({ ...newSite, city: e.target.value })}
+                    onChange={e => inputHadnler(e.target.value, 'city-site')}
                   />
                 </FormControl>
               </Grid>
@@ -748,7 +742,7 @@ const EditCreate = props => {
                   <Input
                     value={newSite.zipCode}
                     classes={{ input: classes.input }}
-                    onChange={e => setNewSite({ ...newSite, zipCode: e.target.value })}
+                    onChange={e => inputHadnler(e.target.value, 'zip-site')}
                   />
                 </FormControl>
               </Grid>
@@ -757,15 +751,13 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }} className='comment' >
               <Grid>
                 <Typography>Comment</Typography>
-                <Tooltip title='Please enter a vaild comment'>
                   <FormControl>
                     <Input
                       value={newSite.comment}
                       classes={{ input: classes.input }}
-                      onChange={e => setNewSite({ ...newSite, comment: e.target.value })}
+                      onChange={e => inputHadnler(e.target.value, 'comment-site')}
                     />
                   </FormControl>
-                </Tooltip>
               </Grid>
             </Grid>
 
@@ -775,23 +767,13 @@ const EditCreate = props => {
           <div className='sites-table'>
             <Grid className='active-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  editSite={editSite} 
-                  type={'active'} 
-                />
+                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'active'} />
               </Grid>
             </Grid>
 
             <Grid className='inactive-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  deleteSite={deleteSite} 
-                  type={'inactive'} 
-                />
+                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'inactive'} />
               </Grid>
             </Grid>
           </div>
