@@ -1,10 +1,35 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const multer = require('multer')
 
 const Workers = require('../models/workers');
 const Sites = require('../models/sites');
 
 const router = express.Router();
+
+// MULTER CONFIGURATION
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, './uploads/')
+    },
+  
+    filename: function(req, file, cb) {
+      cb(null, file.originalname)
+    } 
+  })
+  
+const fileFilter = (req, file, cb) => {
+    if( file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ) {
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+}
+  
+const upload = multer({ storage: storage, fileFilter: fileFilter})
+
+// APIs
 
 router.get('/get', (req, res) => {
     Workers.find().sort({ site: 1 })
@@ -73,4 +98,28 @@ router.post('/delete-ticket', async (req, res) => {
     res.send(worker)
 })
 
+router.post('/upload-document/:id', upload.single('avatar'), async (req, res) => {
+    console.log(req.file, req.params.id)
+    let worker = await Workers.findOne({ _id: req.params.id })
+    let documents
+    
+    if(worker.documents === undefined ) {
+        documents = []
+    } else {
+        documents = worker.documents
+    }
+
+    documents.push(req.file.path)
+      
+    let doc = await Workers.findOneAndUpdate({_id: req.params.id}, { documents }, { new:true })
+    
+    res.send(doc)
+})
+
+router.delete('delete-document', async (req, res) => {
+
+})
+
 module.exports = router;
+
+

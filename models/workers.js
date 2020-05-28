@@ -33,6 +33,7 @@ const Worker = new Schema({
     trades: { type: Array },
     tickets: { type: Array },
     status: { type: String },
+    documents: { type: Array }
 });
 
 module.exports = mongoose.model('workers', Worker, 'workers');

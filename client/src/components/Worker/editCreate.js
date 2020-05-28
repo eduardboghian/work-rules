@@ -627,7 +627,13 @@ const EditCreate = props => {
               
           </Grid>
         </Grid>
-          
+          <div className="display-docs">Documente...</div>
+          <div>
+              <form action={`/worker/upload-document/${temporaryData._id}`} method="post" encType="multipart/form-data">
+                  <input type="file" name="avatar"  className='tests' />
+                  <button type='submit' >Send Picture</button>
+              </form>
+          </div>
         </Grid>
 
         <Grid container justify='space-around'>
