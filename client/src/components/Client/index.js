@@ -50,14 +50,16 @@ const Client = props => {
     utr: '',
     vat: 'GB ',
     cis: '',
+    nino: '',
+    category: '',
     phone: '+44',
     phoneScnd: '+44',
     email: '',
     comment: '',
     companyComment: '',
-    communicationChannel: '',
+    communicationChannel: 'whatsapp',
     sites: [],
-    status: ''
+    status: 'active'
   });
   const [actionType, setActionType] = useState('edit');
   const [archived, isArchived] = useState(true);
