@@ -43,7 +43,8 @@ const EditCreate = props => {
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
   const [newSite, setNewSite] = useState({
-    status: 'Active'
+    status: 'Active',
+    
   })
   const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
 
@@ -75,6 +76,7 @@ const EditCreate = props => {
       utr: "",
       vat: "GB ",
       cis: '',
+      nino: '',
       phone: "+44",
       phoneSncd: '+44',
       comment: '',
@@ -138,15 +140,15 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.nino.length === 0) {
-    } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
-      setNinoError(true);
-      let timer = setTimeout(() => setNinoError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    // if (temporaryData.nino.length === 0) {
+    // } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
+    //   setNinoError(true);
+    //   let timer = setTimeout(() => setNinoError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
 
     // if(temporaryData.phone.length < 20) {
     //
