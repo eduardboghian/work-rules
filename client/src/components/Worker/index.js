@@ -56,6 +56,7 @@ const Worker = props => {
     category: "",
     trades: [],
     tickets: [],
+    documents: [],
     comment: '',
     status: ""
   });

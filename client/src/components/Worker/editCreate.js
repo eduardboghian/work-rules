@@ -15,6 +15,7 @@ import { createWorker } from '../../utils/api';
 
 import { editCreateStyles } from '../../utils/styles';
 import './style.css'
+import Avatar from '../common/Avatar';
 
 const useStyles = makeStyles(editCreateStyles);
 
@@ -70,6 +71,7 @@ const EditCreate = props => {
       category: '',
       trades: [],
       tickets: [],
+      documents: [],
       comment: '',
       status: ''
     });
@@ -256,13 +258,25 @@ const EditCreate = props => {
     }
   };
 
-  const deleteTicket = (uid, ticket) => {
-      axios.post('/worker/delete-ticket', {
-        uid,
-        ticket
-      })
-      .then(res => window.location.reload(true))
-      .catch(err => console.error(err))    
+  const deleteTicket = (ticket) => {
+      let newTicketsList = temporaryData.tickets
+      let index = newTicketsList.indexOf(ticket)
+      
+     console.log(index, newTicketsList, ticket)
+
+      newTicketsList.splice(index, 1)
+
+      console.log(newTicketsList)
+      setData({ ...temporaryData, tickets: newTicketsList })
+
+      setPopStyle('none')
+  }
+
+  const deleteDoc = (uid, doc) => {
+    axios.post('/worker/delete-document', {
+       uid,
+       doc
+    })
   }
 
   const classes = useStyles();
@@ -607,50 +621,73 @@ const EditCreate = props => {
                 setData({ ...temporaryData, tickets: newTickets })
               }}
             >
-                <MenuItem value={'active'}>Active</MenuItem>
-                <MenuItem value={'archived'}>Not Active</MenuItem>
-                <MenuItem value={'others'}>Other</MenuItem>
+                <MenuItem value={'Asbestos'}>Asbestos</MenuItem>
+                <MenuItem value={'CPCS BLUE'}>CPCS BLUE</MenuItem>
+                <MenuItem value={'CPCS RED'}>CPCS RED</MenuItem>
+                <MenuItem value={'CPCS Black'}>CPCS Black</MenuItem>
+                <MenuItem value={'CPCS Blue'}>CPCS Blue</MenuItem>
+                <MenuItem value={'CPCS Gold'}>CPCS Gold</MenuItem>
+                <MenuItem value={'CPCS Green'}>CPCS Green</MenuItem>
+                <MenuItem value={'ECS'}>ECS </MenuItem>
+                <MenuItem value={'Face Fir'}>Face Fit </MenuItem>
+                <MenuItem value={'First Aid'}>First Aid </MenuItem>
+                <MenuItem value={'IPAF'}>IPAF </MenuItem>
+                <MenuItem value={'JIB'}>JIB </MenuItem>
+                <MenuItem value={'NPORS'}>NPORS </MenuItem>
+                <MenuItem value={'PASMA'}>PASMA </MenuItem>
+                <MenuItem value={'PTS'}>PTS </MenuItem>
+                <MenuItem value={'SIA Ticket'}>SIA Ticket </MenuItem>
+                <MenuItem value={'SMSTS'}>SMSTS </MenuItem>
+                <MenuItem value={'SSSTS'}>SSSTS </MenuItem>
+                <MenuItem value={'Traffic Banksman'}>Traffic Banksman </MenuItem>
+                <MenuItem value={'Traffic Marshall'}>Traffic Marshall </MenuItem>
               </Select>
             </FormControl>
             <Grid className='tickets-list'>
               {temporaryData.tickets.map((data, i)=> {
                   return <div key={i} className='ticket-wr'>
                       <div className='ticket'> {data} </div>
-                      <div className='delete-btn' onClick={ e=> setPopStyle('') } >X</div> 
-                      <section className={`${popStyle} pop-out`}>
-                          Do you want DELETE the ticket?
-                          <button className='ok' onClick={ e=> deleteTicket(temporaryData._id, data) }>OK</button>
-                          <button className='cancel' onClick={ e=> setPopStyle('none') }>Cancel</button>
-                      </section>
+                      <div className='delete-btn' onClick={ e=> deleteTicket(data) } >X</div> 
                   </div>
               })}
               
           </Grid>
-        </Grid>
-          <div className="display-docs">Documente...</div>
-          <div>
-              <form action={`/worker/upload-document/${temporaryData._id}`} method="post" encType="multipart/form-data">
-                  <input type="file" name="avatar"  className='tests' />
-                  <button type='submit' >Send Picture</button>
-              </form>
-          </div>
-        </Grid>
+        </Grid>   
+      </Grid>
+      
+      <div className="display-docs">
+        <div className='form-wr'>
+            <form action={`/worker/upload-document/${temporaryData._id}`} method="post" encType="multipart/form-data">
+                <input type="file" name="avatar"  className='tests' />
+                <button type='submit' >Send Picture</button>
+            </form>
+        </div>
+        <div className='docs-wr'>
+          {temporaryData.documents.map( (data, i) => {
+            return <div key={i} style={{position: 'relative'}}>
+              <Avatar path={data} />
+              <div className='delete-btn' onClick={ e=> { deleteDoc(temporaryData._id, data) } } >X</div> 
+            </div>
+          })}
+        </div>
+      </div>
 
-        <Grid container justify='space-around'>
-          <Button
-            style={{ marginTop: '20px' }}
-            classes={{ root: classes.button }}
-            disabled={pending}
-            onClick={async () => {
-              validation();
-              setPending(false);
-            }}
-          >
-            SAVE
-          </Button>
-        </Grid>
+      <Grid container justify='space-around'>
+        <Button
+          style={{ marginTop: '20px' }}
+          classes={{ root: classes.button }}
+          disabled={pending}
+          onClick={async () => {
+            validation();
+            setPending(false);
+          }}
+        >
+          SAVE
+        </Button>
+      </Grid>
     </> 
   );
 };
 
 export default EditCreate;
+

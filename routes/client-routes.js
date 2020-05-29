@@ -35,10 +35,16 @@ router.post('/add', async (req, res) => {
                     res.status(200);
                     break;
                 case 'create':
+                    delete req.body.data._id
+                    console.log(req.body.data)
                     const item = new Clients(req.body.data);
                     item.save()
-                        .then(result => res.status(200).send())
-                        .catch(err => res.status(400).send());
+                        .then(result => res.status(200).send(result))
+                        .catch(err => {
+                            console.log(err)
+                            res.status(400).send(err)
+                        });
+                    res.status(200)    
                     break;
                 default:
                     break;

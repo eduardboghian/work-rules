@@ -21,6 +21,7 @@ const weekly = require('./routes/weekly-routes')
 const restartWeekEnding = require('./helpers/resetWeekEnding')
 
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use('/uploads/', express.static('uploads'))
 app.use(cors())
 app.use(bodyParser.json())
 

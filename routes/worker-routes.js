@@ -116,8 +116,17 @@ router.post('/upload-document/:id', upload.single('avatar'), async (req, res) =>
     res.send(doc)
 })
 
-router.delete('delete-document', async (req, res) => {
+router.post('/delete-document', async (req, res) => {
+    let worker = await Workers.find({ _id: req.body.uid })
+    worker = worker[0]
+    if(worker===undefined) return res.send('Something went wrong, please try again!')
+    let docs = worker.documents
 
+    let index = docs.indexOf(req.body.doc)
+    docs.splice(index, 1)
+
+    worker = await Workers.findOneAndUpdate({ _id: req.body.uid }, { documents: docs }, { new: true })
+    res.send(worker)
 })
 
 module.exports = router;

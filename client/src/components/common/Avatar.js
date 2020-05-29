@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './style.css'
 
 export default function Avatar(path) {
     const [newPath, setNewPath] = useState('')

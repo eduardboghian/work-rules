@@ -42,7 +42,9 @@ const EditCreate = props => {
   const [clientId, setCliId] = useState('')
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
-  const [newSite, setNewSite] = useState({})
+  const [newSite, setNewSite] = useState({
+    status: 'Active'
+  })
   const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
 
   useEffect(() => {
@@ -85,6 +87,7 @@ const EditCreate = props => {
   };
 
   const validation = async () => {
+    console.log(temporaryData)
     // if (temporaryData.type === 'physical') {
     //   if (temporaryData.firstname.length > 100) {
     //     setFirstnameError(true);
@@ -332,7 +335,6 @@ const EditCreate = props => {
 
     setData({ ...temporaryData, sites: newList });
     setSites(newList);
-
 
     axios.post('/site/add', {
       action: 'create',

@@ -36,3 +36,9 @@
 .search-field-wr .MuiInput-underline {
     width: 1000px !important;
 }
+
+.avatar {
+    width: 250px;
+    height: 200px;
+    margin-right: 20px;
+}
