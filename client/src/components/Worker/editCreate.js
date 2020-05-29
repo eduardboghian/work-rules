@@ -10,12 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
 import axios from 'axios'
-
 import { createWorker } from '../../utils/api';
 
 import { editCreateStyles } from '../../utils/styles';
 import './style.css'
 import Avatar from '../common/Avatar';
+
 
 const useStyles = makeStyles(editCreateStyles);
 
@@ -31,10 +31,15 @@ const EditCreate = props => {
   const [ninoError, setNinoError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [accountError, setAccountError] = useState(false);
+  const [sortCodeError, setSortCodeError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [ticket, setTicket] = useState('')
   const [popStyle, setPopStyle] = useState('none')
 
+  useEffect(() => {
+    console.log(temporaryData)
+  }, [temporaryData])
 
   useEffect(() => {
     let sum = +temporaryData.gotClient - +temporaryData.paidWorker;
@@ -46,7 +51,7 @@ const EditCreate = props => {
     setData({ ...temporaryData, marginOT: sum });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [temporaryData.overtimeGot, temporaryData.overtimePaid]);
-  
+
   const closePage = () => {
     props.isDialogOpened(false);
     props.setEditData({
@@ -78,33 +83,28 @@ const EditCreate = props => {
   };
 
   // VALIDATION FUNCTION
-  const validation = async () => {
-    setPending(true);
-    await createWorker({ ...temporaryData }, props.actionType);
-    await props.update();
-    closePage();
 
-  }
-  const validation2 = async () => {
-    if (temporaryData.type === 'physical') {
-      if (temporaryData.firstname.length < 3) {
-        setFirstnameError(true);
-        let timer = setTimeout(() => setFirstnameError(false), 3000);
-        return () => {
-          clearTimeout(timer);
-          return false;
-        };
-      }
-      if (temporaryData.lastname.length < 3) {
-        setLastnameError(true);
-        let timer = setTimeout(() => setLastnameError(false), 3000);
-        return () => {
-          clearTimeout(timer);
-          return false;
-        };
-      }
-    } else if (temporaryData.type === 'company') {
-      if (temporaryData.companyName.length < 6) {
+  const validation = async () => {
+    // if (temporaryData.type === 'physical') {
+    //   if (temporaryData.firstname.length < 3) {
+    //     setFirstnameError(true);
+    //     let timer = setTimeout(() => setFirstnameError(false), 3000);
+    //     return () => {
+    //       clearTimeout(timer);
+    //       return false;
+    //     };
+    //   }
+    //   if (temporaryData.lastname.length < 3) {
+    //     setLastnameError(true);
+    //     let timer = setTimeout(() => setLastnameError(false), 3000);
+    //     return () => {
+    //       clearTimeout(timer);
+    //       return false;
+    //     };
+    //   }
+    // }
+    if (temporaryData.type === 'company') {
+      if (temporaryData.companyName.length < 3) {
         setCompanyNameError(true);
         let timer = setTimeout(() => setCompanyNameError(false), 3000);
         return () => {
@@ -122,19 +122,19 @@ const EditCreate = props => {
       }
     }
 
-    if (temporaryData.utr.length === 0) {
-    } else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
-      setUtrError(true);
-      let timer = setTimeout(() => setUtrError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+    // if (temporaryData.utr.length === 0) {
+    // } else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
+    //   setUtrError(true);
+    //   let timer = setTimeout(() => setUtrError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
     if (temporaryData.vat.length < 4 ) {
-      
+
     } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
-      
+
       setVatError(true);
       let timer = setTimeout(() => setVatError(false), 3000);
       return () => {
@@ -142,16 +142,16 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.nino.length === 0) {
-    } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
-      setNinoError(true);
-      let timer = setTimeout(() => setNinoError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    
+    // if (temporaryData.nino.length === 0) {
+    // } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
+    //   setNinoError(true);
+    //   let timer = setTimeout(() => setNinoError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
+
     if(temporaryData.phone.length < 4) {}
     else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
       setPhoneError(true);
@@ -175,24 +175,69 @@ const EditCreate = props => {
         return false;
       };
     }
-    
-    if (temporaryData.category.length === 0) {
-      setCategoryError(true);
-      let timer = setTimeout(() => setCategoryError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
-    
+
+    // if (temporaryData.category.length === 0) {
+    //   setCategoryError(true);
+    //   let timer = setTimeout(() => setCategoryError(false), 3000);
+    //   return () => {
+    //     clearTimeout(timer);
+    //     return false;
+    //   };
+    // }
+
     setPending(true);
     await createWorker({ ...temporaryData }, props.actionType);
     await props.update();
     closePage();
   };
 
+  const utrValidation = async () => {
+      setUtrError(true);
+      let timer = setTimeout(() => setUtrError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+
+  const vatValidation = async () => {
+      setVatError(true);
+      let timer = setTimeout(() => setVatError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+  const ninoValidation = () => {
+      setNinoError(true);
+      let timer = setTimeout(() => setNinoError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+  const accountValidation = () => {
+      setAccountError(true);
+      let timer = setTimeout(() => setAccountError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+  const sortCodeValidation = () => {
+      setSortCodeError(true);
+      let timer = setTimeout(() => setSortCodeError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    };
+  function isUpperCase(str) {
+    if(str === str.toUpperCase()) return true
+    return false
+  }
   // INPUT HANDLER
-  const inputHadnler = (data, fieldName) => {
+  const inputHandler = (data, fieldName) => {
     switch (fieldName) {
       case 'type':
         if (data) {
@@ -201,44 +246,65 @@ const EditCreate = props => {
           setData({ ...temporaryData, type: 'physical' });
         }
         break;
+      case 'company':
+        if (data.length <= 10) {
+          setData({ ...temporaryData, companyName: data})
+        }
       case 'peer':
       case 'firstname':
       case 'lastname':
-        if (data.length <= 50) {
-          let checked = data.replace(/[^a-zA-Z\s-]/g, '');
-          setData({ ...temporaryData, [fieldName]: checked });
+      case 'address1':
+      case 'address2':
+        if (data.length <= 100) {
+          setData({ ...temporaryData, [fieldName]: data });
         }
         break;
-      case 'utr':
-        if (data.length <= 11) {
-          let checked = data.replace(/[^0-9\s]/g, '');
+      case 'comment':
+        if (data.length <= 200) {
+          setData({ ...temporaryData, comment: data })
+        }
+        break;
+      case "utr":
+        if (data.length <= 20) {
+          let checked = data.replace(/[^0-9\s]/g, "");
           setData({ ...temporaryData, utr: checked });
+          if (data.length > 10) {
+            utrValidation();
+          }
         }
         break;
-      case 'vat':
-        if (data.length <= 12) {
-          if (data === 'GB') {
+      case "vat":
+        if (data.length <= 23) {
+          if (data === "GB") {
             setData({ ...temporaryData, vat: `${data} ` });
             break;
           }
+          if (data.length > 12) {
+            vatValidation();
+          }
           let checked = data.slice(3);
-          checked = checked.replace(/[^0-9]/g, '');
-          setData({ ...temporaryData, vat: `${checked}` });
+          checked = checked.replace(/[^0-9]/g, "");
+          setData({ ...temporaryData, vat: `GB ${checked}` });
         }
         break;
       case 'nino':
-        if (data.length <= 9) {
-          setData({...temporaryData, nino: data})
+        if (data.length <= 20) {
+          for (var i=0; i<data.length; i++) {
+            if (isUpperCase(data[i]) === false) {
+              ninoValidation()
+            }
+          }
+          setData({...temporaryData, nino: data});
         }
-      break;
+        break;
 
       case 'phone':
-      case 'phoneScnd':   
-        if (data.length <= 13) {
-          if (data === '+4') {
-            setData({ ...temporaryData, [fieldName]: '+44' });
-            break;
-          }
+      case 'phoneScnd':
+        if (data.length <= 23) {
+          // if (data === '+4') {
+          //   setData({ ...temporaryData, [fieldName]: '+44' });
+          //   break;
+          // }
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, '');
           setData({ ...temporaryData, [fieldName]: `+44${checked}` });
@@ -246,10 +312,43 @@ const EditCreate = props => {
         }
         break;;
 
-      case 'account':
-      case 'sortCode': 
       case 'city':
+        if(data.length <= 100) {
+          setData({ ...temporaryData, city: data });
+        }
+        break;
       case 'zipCode':
+        if(data.length <= 10) {
+          setData({ ...temporaryData, zipCode: data });
+        }
+        break;
+      case 'account':
+        if (data.length <= 10) {
+          for (var i=0; i<data.length; i++) {
+            if (isNaN(data[i]) === true) {
+              accountValidation()
+            }
+          }
+          setData({ ...temporaryData, account: data });
+        }
+        break;
+      case 'sortCode':
+        if(data.length <= 8) {
+          for (var i=0; i<data.length; i++) {
+            if (isNaN(data[i]) === false || data[i] === '-') {
+              if(data.length === 2 && data[0] !== '-' && data[1] !== '-') {
+                data = data + '-'
+              }
+              if(data.length === 5 && data[0] !== '-' && data[1] !== '-' && data[3] !== '-' && data[4] !== '-') {
+                data = data + '-'
+              }
+            } else {
+              sortCodeValidation()
+            }
+          }
+          setData({ ...temporaryData, [fieldName]: data });
+        }
+        break;
       case 'uniqueID':
         setData({ ...temporaryData, [fieldName]: data })
         break
@@ -290,16 +389,14 @@ const EditCreate = props => {
             <Typography>Company Name</Typography>
               <Tooltip
                 open={companyNameError}
-                title='Company name must contain at least 6 symbols'
+                title='The Company Name must contain at least 3 symbols'
                 classes={{ tooltip: classes.errorTooltip }}
                 placement='top'
               >
                 <FormControl error={companyNameError}>
                   <Input
                     value={temporaryData.companyName}
-                    onChange={e => {
-                      setData({ ...temporaryData, companyName: e.target.value });
-                    }}
+                    onChange={e => inputHandler(e.target.value, 'company')}
                   />
               </FormControl>
             </Tooltip>
@@ -315,8 +412,8 @@ const EditCreate = props => {
             </FormControl>
           </Grid>
         </div>
-        
-        <div></div> 
+
+        <div></div>
 
         <Grid className='uid-wr'>
           <Typography>Unique ID</Typography>
@@ -324,17 +421,17 @@ const EditCreate = props => {
               <Input
                 value={temporaryData.uniqueID}
                 classes={{ input: classes.input }}
-                onChange={e => inputHadnler(e.target.value, 'uniqueID')}
+                onChange={e => inputHandler(e.target.value, 'uniqueID')}
               />
           </FormControl>
         </Grid>
-        
+
         <Grid className='switcher'>
             <Typography>Person</Typography>
             <Switch
               classes={{ root: classes.switch }}
               checked={temporaryData.type === 'physical' ? false : true}
-              onChange={e => inputHadnler(e.target.checked, 'type')}
+              onChange={e => inputHandler(e.target.checked, 'type')}
             />
             <Typography>Company</Typography>
           </Grid>
@@ -360,7 +457,7 @@ const EditCreate = props => {
                     <Input
                       value={temporaryData.firstname}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'firstname')}
+                      onChange={e => inputHandler(e.target.value, 'firstname')}
                     />
                   </FormControl>
                 </Tooltip>
@@ -380,7 +477,7 @@ const EditCreate = props => {
                     <Input
                       value={temporaryData.lastname}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'lastname')}
+                      onChange={e => inputHandler(e.target.value, 'lastname')}
                     />
                   </FormControl>
                 </Tooltip>
@@ -390,12 +487,12 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }}>
               <Grid>
               <Typography>Phone Number</Typography>
-                <Tooltip open={phoneError} title='Please provide valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <Tooltip open={phoneError} title='Please provide a valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
                   <FormControl  error={phoneError}>
                     <Input
                       value={temporaryData.phone}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'phone')}
+                      onChange={e => inputHandler(e.target.value, 'phone')}
                     />
                   </FormControl>
                 </Tooltip>
@@ -410,7 +507,7 @@ const EditCreate = props => {
                     <Input
                       value={temporaryData.phoneScnd}
                       classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'phoneScnd')}
+                      onChange={e => inputHandler(e.target.value, 'phoneScnd')}
                     />
                   </FormControl>
                 </Tooltip>
@@ -420,7 +517,7 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }}>
               <Grid>
                 <Typography>Email</Typography>
-                <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <Tooltip open={emailError} title='Please provide a valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
                   <FormControl  error={emailError}>
                     <Input
                       value={temporaryData.email}
@@ -452,19 +549,17 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }} className='comment' >
               <Grid>
                 <Typography>Comment</Typography>
-                <Tooltip open={emailError} title='Please provide valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
                   <FormControl  error={emailError}>
                     <Input
                       value={temporaryData.comment}
                       classes={{ input: classes.input }}
-                      onChange={e => setData({ ...temporaryData, comment: e.target.value })}
+                      onChange={e => inputHandler(e.target.value, 'comment')}
                     />
                   </FormControl>
-                </Tooltip>
               </Grid>
             </Grid>
         </div>
-            
+
         <div className="content-info">
         <Grid classes={{ root: classes.inputContainer }}>
           <Grid>
@@ -473,27 +568,27 @@ const EditCreate = props => {
                 <Input
                   value={temporaryData.firstPost}
                   classes={{ input: classes.input }}
-                  onChange={e => setData({ ...temporaryData, firstPost: e.target.value })}
+                  onChange={e => inputHandler(e.target.value, 'address1')}
                 />
               </FormControl>
           </Grid>
         </Grid>
-        
+
         <Grid classes={{ root: classes.inputContainer }}>
           <Grid>
           <Typography>Uniq Taxpayer Reference</Typography>
-            <Tooltip open={utrError} title='Please provide valid UTR' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+            <Tooltip open={utrError} title='Warning: UTR has to have 10 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl  error={utrError}>
                 <Input
                   value={temporaryData.utr}
                   classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'utr')}
+                  onChange={e => inputHandler(e.target.value, 'utr')}
                 />
               </FormControl>
             </Tooltip>
           </Grid>
         </Grid>
-        
+
         <Grid classes={{ root: classes.inputContainer }}>
           <Grid>
           <Typography>Adress 2</Typography>
@@ -501,7 +596,7 @@ const EditCreate = props => {
               <Input
                 value={temporaryData.secondPost}
                 classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, secondPost: e.target.value })}
+                onChange={e => inputHandler(e.target.value, 'address2')}
               />
             </FormControl>
           </Grid>
@@ -510,12 +605,12 @@ const EditCreate = props => {
         <Grid classes={{ root: classes.inputContainer }} className={ temporaryData.type === 'company' ? '' : 'none' }>
           <Grid>
           <Typography>VAT Number</Typography>
-            <Tooltip open={vatError} title='Please provide valid VAT Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+            <Tooltip open={vatError} title='Warning: VAT Number has to have 9 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl  error={vatError}>
                 <Input
                   value={temporaryData.vat}
                   classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'vat')}
+                  onChange={e => inputHandler(e.target.value, 'vat')}
                 />
               </FormControl>
             </Tooltip>
@@ -526,12 +621,12 @@ const EditCreate = props => {
         <Grid classes={{ root: classes.inputContainer }} className={ temporaryData.type === 'company' ? 'none' : '' }>
           <Grid>
           <Typography>NINO</Typography>
-            <Tooltip open={ninoError} title='Please provide valid NINO' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+            <Tooltip open={ninoError} title='Warning: NINO has to have 9 characters! Digits and CAPITAL letters!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
               <FormControl  error={ninoError}>
                 <Input
                   value={temporaryData.nino}
                   classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'nino')}
+                  onChange={e => inputHandler(e.target.value, 'nino')}
                 />
               </FormControl>
             </Tooltip>
@@ -546,26 +641,28 @@ const EditCreate = props => {
               <Input
                 value={temporaryData.city}
                 classes={{ input: classes.input }}
-                onChange={e => setData({ ...temporaryData, city: e.target.value })}
+                onChange={e => inputHandler(e.target.value, 'city')}
               />
             </FormControl>
           </Grid>
         </Grid>
 
-          
+
 
         {/* ACCOUNT INFORMATION */}
 
           <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
             <Typography>Account Number</Typography>
-              <FormControl >
-                <Input
-                  value={temporaryData.account}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'account')}
-                />
-              </FormControl>
+              <Tooltip open={accountError} title='Warning: Account has to have 10 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={accountError}>
+                  <Input
+                    value={temporaryData.account}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHandler(e.target.value, 'account')}
+                  />
+                </FormControl>
+              </Tooltip>
             </Grid>
           </Grid>
 
@@ -576,7 +673,7 @@ const EditCreate = props => {
                 <Input
                   value={temporaryData.zipCode}
                   classes={{ input: classes.input }}
-                  onChange={e => setData({ ...temporaryData, zipCode: e.target.value })}
+                  onChange={e => inputHandler(e.target.value , 'zipCode')}
                 />
               </FormControl>
             </Grid>
@@ -585,18 +682,20 @@ const EditCreate = props => {
           <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
             <Typography>Sort Code</Typography>
-              <FormControl >
-                <Input
-                  value={temporaryData.sortCode}
-                  classes={{ input: classes.input }}
-                  onChange={e => inputHadnler(e.target.value, 'sortCode')}
-                />
-              </FormControl>
+              <Tooltip open={sortCodeError} title='Warning: Sort Code has to have 6 digits!' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={sortCodeError}>
+                  <Input
+                    value={temporaryData.sortCode}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHandler(e.target.value, 'sortCode')}
+                  />
+                </FormControl>
+              </Tooltip>
             </Grid>
           </Grid>
-        </div>  
-      </Grid>  
-    
+        </div>
+      </Grid>
+
 
 
         <Grid className='trades-list'>
@@ -607,13 +706,13 @@ const EditCreate = props => {
             })}
           </Grid>
         </Grid>
-        
+
         <Grid className='tickets-wr'>
           <Grid >
             <Typography>Add Ticket</Typography>
             <FormControl className='tickets-dropdown'>
-            <Select 
-              value={ticket} 
+            <Select
+              value={ticket}
               onChange={e => {
                 setTicket(e.target.value)
                 let newTickets = [...temporaryData.tickets]
@@ -650,7 +749,7 @@ const EditCreate = props => {
                       <div className='delete-btn' onClick={ e=> deleteTicket(data) } >X</div> 
                   </div>
               })}
-              
+
           </Grid>
         </Grid>   
       </Grid>
@@ -690,4 +789,3 @@ const EditCreate = props => {
 };
 
 export default EditCreate;
-
