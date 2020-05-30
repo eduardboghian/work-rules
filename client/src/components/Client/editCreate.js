@@ -42,6 +42,7 @@ const EditCreate = props => {
   const [clientId, setCliId] = useState('')
   const [categoryError, setCategoryError] = useState(false);
   const [ninoError, setNinoError] = useState(false);
+  const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
   const [newSite, setNewSite] = useState({
     status: 'Active'
   })
@@ -385,6 +386,34 @@ const EditCreate = props => {
     .catch(err => console.log(err))
   }
 
+  const editSite = async (siteId) => {
+    console.log(siteId)
+    setSiteButton('Save Changes')
+    axios.get('/site/get', {
+      params: {
+        id: siteId
+      }
+    })
+    .then( site => {
+      console.log(site.data[0])
+      setNewSite(site.data[0]) 
+    })
+    .catch(err => console.log(err))
+  }
+
+  const saveSiteChanges = () => {
+    axios.post('/site/add', {
+      action: 'edit',
+      data: newSite   
+    }, {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+    .then(res => setNewSite({ }))
+    .catch(err => console.log(err))
+  }
+
   const classes = useStyles();
 
   return (
@@ -677,9 +706,15 @@ const EditCreate = props => {
             <Typography>Site</Typography>
           </Grid>
           <Grid>
-            <Button className='save-btn' onClick={async () => {createNewSite()}}>
-              Save New Site
-            </Button>
+            { editCreateSiteButton === 'Save New Site' ?
+              <Button className='save-btn' onClick={async () => {createNewSite()}}>
+                Save New Site
+              </Button>:
+
+              <Button className='save-btn' onClick={async () => {saveSiteChanges()}}>
+                Save Changes
+              </Button>
+            }
           </Grid>
         </Grid>
 
@@ -770,13 +805,23 @@ const EditCreate = props => {
           <div className='sites-table'>
             <Grid className='active-sites'>
               <Grid>
-                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'active'} />
+                <SitesTable 
+                  sites={temporaryData.sites} 
+                  clinetId={clientId} 
+                  editSite={editSite} 
+                  type={'active'} 
+                />
               </Grid>
             </Grid>
 
             <Grid className='inactive-sites'>
               <Grid>
-                <SitesTable sites={temporaryData.sites} clinetId={clientId} deleteSite={deleteSite} type={'inactive'} />
+                <SitesTable 
+                  sites={temporaryData.sites} 
+                  clinetId={clientId} 
+                  deleteSite={deleteSite} 
+                  type={'inactive'} 
+                />
               </Grid>
             </Grid>
           </div>
