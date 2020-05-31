@@ -25,9 +25,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "proxy": "http://localhost:3001",
   "browserslist": {
     "production": [
@@ -42,6 +39,7 @@
     ]
   },
   "devDependencies": {
-    "redux-devtools": "^3.5.0"
+    "redux-devtools": "^3.5.0",
+    "webpack-dev-middleware": "^3.7.2"
   }
 }

@@ -30,11 +30,14 @@
 .search-field-wr input {
     width: 1000px !important;
 }   
-.search-field-wr .MuiInputBase-root {
-    width: 1000px !important;
+.search-field-wr .MuiInputBase-input, .search-field-wr .MuiInputBase-root {
+    width: 100% !important;
+}
+.search-field-wr input {
+    width: 100% !important;
 }
 .search-field-wr .MuiInput-underline {
-    width: 1000px !important;
+    width: 100% !important;
 }
 
 .avatar {

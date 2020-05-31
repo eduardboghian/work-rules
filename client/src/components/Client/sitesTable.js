@@ -52,24 +52,7 @@ const SitesTable = props => {
 
   }, [props])
   
-  const updateStatusDB = (value, site) => {
-    axios.put('/site/update-status', {
-      id: site._id,
-      value
-    })
-    .then(res => {})
-    .catch(err => console.error(err))
-
-
-    axios.put('/client/site-status', {
-      clientId: clientId,
-      siteId: site._id,
-      value
-    })
-    .then(res => {})
-    .catch(err => console.error(err))
-    window.location.reload(true)
-  }
+  
 
   return (
     <TableContainer>
@@ -101,14 +84,14 @@ const SitesTable = props => {
                 </TableCell>:
 
                 <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
-                  <img src={PowerButton} onClick={ e => updateStatusDB( 'Active', site ) }  className='edit-icon' />
+                  <img src={PowerButton} onClick={ e => props.updateStatusDB( 'Active', site ) }  className='edit-icon' />
                 </TableCell>
 
               }
 
               <TableCell classes={{ root: classes.cell }}>
               {props.type === 'active' ? 
-                <DeleteIcon onClick={ e => updateStatusDB( 'Not Active', site) } />:
+                <DeleteIcon onClick={ e => props.updateStatusDB( 'Not Active', site) } />:
                 <DeleteIcon onClick={ e => props.deleteSite(site._id) } />
               }  
               </TableCell>

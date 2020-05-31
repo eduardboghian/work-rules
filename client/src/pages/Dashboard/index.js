@@ -34,7 +34,7 @@ class Dashboard extends React.Component {
     pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1)
     this.setState({ currentPage: pageName, drawer: false });
   };
-  
+
   componentDidMount() {
     let token = localStorage.getItem('token');
     let role = localStorage.getItem('role');
@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler);
   }
-  
+
   render() {
     const styles = {
       navbarButtons: {
@@ -65,14 +65,14 @@ class Dashboard extends React.Component {
         <AppBar
           // classes={{ root: classes.navbar }}
           style={
-               { transition: '0.5s', backgroundColor: 'orange', position: 'fixed', top: 0 }
+            { transition: '0.5s', backgroundColor: 'orange', position: 'fixed', top: 0 }
           }
         >
           <Toolbar>
             <MenuIcon style={{ cursor: 'pointer' }} onClick={() => this.setState({ drawer: true })} />
             <Typography
               style={styles.currentPage}
-              // classes={{ root: classes.currentPage }}
+            // classes={{ root: classes.currentPage }}
             >
               {this.state.currentPage}
             </Typography>
@@ -92,7 +92,7 @@ class Dashboard extends React.Component {
               <>
                 <Typography
                   style={styles.navbarButtons}
-                  // classes={{ root: classes.navbarButtons }}
+                // classes={{ root: classes.navbarButtons }}
                 >
                   <Link to='/agent-sourcer'>Agent Sourcer</Link>
                 </Typography>
@@ -103,38 +103,38 @@ class Dashboard extends React.Component {
               <>
                 <Typography
                   style={styles.navbarButtons}
-                  // classes={{ root: classes.navbarButtons }}
+                // classes={{ root: classes.navbarButtons }}
                 >
-                  <Link to='/client'>Client</Link>
+                  <Link to='/clients'>Client</Link>
                 </Typography>
               </>
             ) : null}
             <Divider />
             {localStorage.getItem('role') === 'superuser' ||
-            localStorage.getItem('role') === 'agent' ||
-            localStorage.getItem('role') === 'sourcer' ? (
-              <>
-                <Typography
-                  style={styles.navbarButtons}
+              localStorage.getItem('role') === 'agent' ||
+              localStorage.getItem('role') === 'sourcer' ? (
+                <>
+                  <Typography
+                    style={styles.navbarButtons}
                   // classes={{ root: classes.navbarButtons }}
-                >
-                  <Link to='/workers'>Workers</Link>
-                </Typography>
-                <Divider />
-              </>
-            ) : null}
+                  >
+                    <Link to='/workers'>Workers</Link>
+                  </Typography>
+                  <Divider />
+                </>
+              ) : null}
             <Typography
               style={styles.navbarButtons}
-              // classes={{ root: classes.navbarButtons }}
+            // classes={{ root: classes.navbarButtons }}
             >
               <Link to='/weekly-statement'>Weekly Statements</Link>
             </Typography>
             <Divider />
           </Grid>
         </Drawer>
-        <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '70px'}}>
+        <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '70px' }}>
         </Grid>
-        <img src='https://workrules.co.uk/meida/Asset%201@1.5x.png' alt='' className='wallpaper' ></img>
+        {/* <img src='https://workrules.co.uk/meida/Asset%201@1.5x.png' alt='' className='wallpaper' ></img> */}
       </>
     );
   }

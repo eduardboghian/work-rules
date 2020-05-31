@@ -6,10 +6,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Divider } from "@material-ui/core";
-import Switch from '@material-ui/core/Switch';
 import Snackbar from '@material-ui/core/Snackbar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -67,20 +65,21 @@ const Client = props => {
   const classes = useStyles();
 
   useEffect(() => {
-      loadClientData()
-  }, []);
+    console.log('it worked...')
+    loadClientData()
+  }, [dialog]);
 
 
   // FILTERS
   useEffect(() => {
-      let filteredData = [...clientData];
-      if (!archived) {
-        filteredData = filteredData.filter(item => item.status !== 'active');
-      }
-      if (!!searchedData) {
-        filteredData = filteredData.filter(item => !!searchedData.find(data => data._id === item._id));
-      }
-      setFilteredData(filteredData);
+    let filteredData = [...clientData];
+    if (!archived) {
+      filteredData = filteredData.filter(item => item.status !== 'active');
+    }
+    if (!!searchedData) {
+      filteredData = filteredData.filter(item => !!searchedData.find(data => data._id === item._id));
+    }
+    setFilteredData(filteredData);
   }, [clientData, archived, searchedData]);
 
 
@@ -91,12 +90,12 @@ const Client = props => {
 
   const loadClientData = () => {
     getClientData()
-    .then(res => {
-      console.log(res.data)
-      setCompanyId(res.data[0]._id)
-      setClientData(res.data)
-    })
-    .catch(err => console.error(err))
+      .then(res => {
+        console.log(res.data)
+        setCompanyId(res.data[0]._id)
+        setClientData(res.data)
+      })
+      .catch(err => console.error(err))
   }
 
   const openDialog = data => {
@@ -127,72 +126,72 @@ const Client = props => {
 
   return (
     <Grid className='client-wr'>
-      <Dashboard/>
+      <Dashboard />
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} companyId={companyId} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (
-        <>
-          <Grid container justify='space-between' style={{ marginTop: '20px' }} className='search-client'>
-            <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
-              <Search setSearchedData={setSearchedData} data={clientData} keys={['companyName', 'peer', 'phone', 'communicationChannel']} />
-            </Grid>
-            <Button
-              onClick={() => {
-                isDialogOpened(true);
-                setActionType('create');
-              }}
-              className='create-newclient-btn'
-            >
-              Create New Client
+          <>
+            <Grid container justify='space-between' style={{ marginTop: '20px' }} className='search-client'>
+              <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
+                <Search setSearchedData={setSearchedData} data={clientData} keys={['companyName', 'peer', 'phone', 'communicationChannel']} />
+              </Grid>
+              <Button
+                onClick={() => {
+                  isDialogOpened(true);
+                  setActionType('create');
+                }}
+                className='create-newclient-btn'
+              >
+                Create New Client
             </Button>
-          </Grid>
+            </Grid>
 
-          <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
+            <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
 
 
-          <Divider />
+            <Divider />
 
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('companyName', sort.companyName)}>
-                    <Grid container>Company Name {sort.companyName === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('companyName', sort.companyName)}>
+                      <Grid container>Company Name {sort.companyName === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('peer', sort.peer)}>
-                    <Grid container>Contact Person {sort.peer === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('peer', sort.peer)}>
+                      <Grid container>Contact Person {sort.peer === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
-                    <Grid container>Phone Number {sort.phone === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
+                      <Grid container>Phone Number {sort.phone === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell
-                    classes={{ root: classes.cellHeaderSortable }}
-                    onClick={() => sortHandler('communicationChannel', sort.communicationChannel)}
-                  >
-                    <Grid container>
-                      Preferred Communication Channel {sort.communicationChannel === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
-                    </Grid>
-                  </TableCell>
+                    <TableCell
+                      classes={{ root: classes.cellHeaderSortable }}
+                      onClick={() => sortHandler('communicationChannel', sort.communicationChannel)}
+                    >
+                      <Grid container>
+                        Preferred Communication Channel {sort.communicationChannel === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+                      </Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
-                    <Grid container>eMail {sort.email === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler('phone', sort.phone)}>
+                      <Grid container>eMail {sort.email === 'desc' ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeader }}>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredData.map((item, index) => (
-                  <ClientRow key={index} even={index % 2 !== 0} item={item}  openDialog={openDialog} setActionType={setActionType} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
+                    <TableCell classes={{ root: classes.cellHeader }}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredData.map((item, index) => (
+                    <ClientRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={snackbarState}

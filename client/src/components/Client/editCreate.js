@@ -8,7 +8,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
-import Switch from "@material-ui/core/Switch";
 import Input from "@material-ui/core/Input";
 import './style.css'
 
@@ -44,7 +43,8 @@ const EditCreate = props => {
   const [ninoError, setNinoError] = useState(false);
   const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
   const [newSite, setNewSite] = useState({
-    status: 'Active'
+    status: 'Active',
+    siteName: ''
   })
   const [siteNameError, setSiteNameError] = useState(false);
 
@@ -54,8 +54,8 @@ const EditCreate = props => {
   }, [props]);
 
   useEffect(() => {
-    console.log(temporaryData)
-  }, [temporaryData])
+    console.log(sites)
+  }, [sites])
 
   useEffect(() => {
     setCliId( props.companyId )
@@ -121,7 +121,9 @@ const EditCreate = props => {
       };
     }
     //}
-    if (newSite.siteName.length < 3 || newSite.siteName.length === 'none') {
+
+    if(newSite.siteName.length < 1){
+    } else if (newSite.siteName.length < 3 || newSite.siteName.length === 'none') {
       setSiteNameError(true);
       let timer = setTimeout(() => setSiteNameError(false), 3000);
       return () => {
@@ -349,23 +351,43 @@ const EditCreate = props => {
     }
   };
   const deleteSite = id => {
-
     let a = temporaryData.sites.filter(item => item._id !== id);
     let b = sites.filter(item => item._id !== id);
     setData({ ...temporaryData, sites: a });
     setSites(b);
 
-    axios.delete('/site/delete', {
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("token")
-      },
-      data: {
-        _id: id
-      }
+    axios.put('/site/update-status', {
+      id,
+      newStatus: 'Not Active'
     })
     .then( res=> console.log('delete site response', res))
     .catch( err => console.log(err))
+
+    axios.delete('/client/delete-site', {
+      clientId: clientId,
+      siteId: id
+    })
   };
+
+  const updateStatusDB = (value, site) => {
+    axios.put('/site/update-status', {
+      id: site._id,
+      value
+    })
+    .then(res => {
+      setData({ ...temporaryData, sites: res.data })
+    })
+    .catch(err => console.error(err))
+
+
+    axios.put('/client/site-status', {
+      clientId: clientId,
+      siteId: site._id,
+      value
+    })
+    .then(res => {})
+    .catch(err => console.error(err))
+  }
 
   const createNewSite = () => {
     let newList = temporaryData.sites;
@@ -809,6 +831,7 @@ const EditCreate = props => {
                   sites={temporaryData.sites} 
                   clinetId={clientId} 
                   editSite={editSite} 
+                  updateStatusDB={updateStatusDB}
                   type={'active'} 
                 />
               </Grid>
@@ -820,6 +843,7 @@ const EditCreate = props => {
                   sites={temporaryData.sites} 
                   clinetId={clientId} 
                   deleteSite={deleteSite} 
+                  updateStatusDB={updateStatusDB}
                   type={'inactive'} 
                 />
               </Grid>

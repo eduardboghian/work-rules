@@ -182,8 +182,8 @@ router.put('/update-status', async (req, res) => {
 
     let site = await Sites.findOneAndUpdate({ _id: req.body.id }, { status: newStatus }, { new: true })
 
-    console.log(site)
-    res.send(site)
+    let response = await Sites.find()
+    res.send(response)
 })
 
 module.exports = router;

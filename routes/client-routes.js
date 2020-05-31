@@ -30,7 +30,7 @@ router.post('/add', async (req, res) => {
             switch (req.body.action) {
                 case 'edit':
                     Clients.findOneAndUpdate({ email: req.body.data.email }, req.body.data)
-                        .then(result => res.status(200).send())
+                        .then(result => res.status(200).send('client edited successffuly...'))
                         .catch(err => res.status(400).send());
                     res.status(200);
                     break;
