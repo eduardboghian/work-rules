@@ -23,6 +23,10 @@
   justify-items: left;
 }
 
+.search-client .MuiInputBase-root {
+    width: 800px !important;
+}
+
 .create-newclient-btn {
     background-color: orange !important;
     width: 205px;

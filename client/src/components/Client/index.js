@@ -65,7 +65,6 @@ const Client = props => {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log('it worked...')
     loadClientData()
   }, [dialog]);
 
@@ -91,7 +90,6 @@ const Client = props => {
   const loadClientData = () => {
     getClientData()
       .then(res => {
-        console.log(res.data)
         setCompanyId(res.data[0]._id)
         setClientData(res.data)
       })
@@ -99,9 +97,8 @@ const Client = props => {
   }
 
   const openDialog = data => {
-    console.log(data)
-    setEditData(data);
-    isDialogOpened(true);
+    setEditData(data)
+    isDialogOpened(true)
   };
 
   const updateClientData = async () => {

@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const cluster = require('cluster')
 
-
 const app = express()
 const apiPort = process.env.PORT || 3001
 
@@ -38,7 +37,7 @@ app.use('/weekly', weekly)
 
 // PINGER
 
-app.get('/api', (req, res)=> {
+app.get('/api', (req, res) => {
     res.send('pinged')
 })
 

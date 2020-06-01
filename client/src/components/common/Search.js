@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import TextField from "@material-ui/core/TextField"
 import SearchIcon from "@material-ui/icons/Search"
 import './style.css'
@@ -16,12 +16,10 @@ const Search = props => {
     }
     let filteredData = [...props.data];
     filteredData = filteredData.filter(item => {
-      let isExist = props.keys.find(key => item[key].toLowerCase().includes(data.toLowerCase()));
-      if (typeof isExist !== "undefined") {
-        return true;
+      if (JSON.stringify(item).toLowerCase().includes(data)) {
+        return true
       }
       return false
-
     })
     props.setSearchedData(filteredData);
   }
@@ -34,7 +32,7 @@ const Search = props => {
         <SearchIcon onClick={e => clickHandler(e)} className='search-icon' />
         <TextField
           className='search-field'
-          placeholder={window.location.pathname === '/workers' ? "Search in Firstname, Lastname, Company name, Phone, Trade, Tikets, Comment, eMail, ZipCode, City, UTR, NINO" : "Search in Adauga aici"}
+          placeholder={window.location.pathname === '/workers' ? "Search in Firstname, Lastname, Company name, Phone, Trade, Tikets, Comment, eMail, ZipCode, City, UTR, NINO" : "Search in Company name, Contact person, Phone number and Email"}
           onChange={e => changeHandler(e.target.value)}
         />
       </div>

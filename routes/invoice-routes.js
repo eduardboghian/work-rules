@@ -22,31 +22,31 @@ router.post('/generate-invoice', async (req, res) => {
     let dueDate;
     let weekEnding = req.body.weekEnding;
     const invoiceStatus = [];
-  
+
     site.workers.map((item, i) => {
-        let ot = isNaN(parseFloat(item.rates.otRate)*parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate)*parseFloat(item.worker.hoursOT)
+        let ot = isNaN(parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)
         let payload = {
-            Worker: item.worker.firstname+' '+item.worker.lastname,
+            Worker: item.worker.firstname + ' ' + item.worker.lastname,
             UnitCost: parseFloat(item.rates.rateGot).toFixed(1),
-            WorkedHours:parseFloat(item.worker.hours).toFixed(1),
-            NetAmount: ( parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours) + ot ).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
-            CIS: ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2).toFixed(2),
-            VAT: ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2).toFixed(2),
+            WorkedHours: parseFloat(item.worker.hours).toFixed(1),
+            NetAmount: (parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours) + ot).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
+            CIS: ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2).toFixed(2),
+            VAT: ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2).toFixed(2),
         }
         data.push(payload)
-        totalTaxAmount = totalTaxAmount + ((parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours)) *0.2)
-        totalNetAmount = totalNetAmount + ( parseFloat(item.rates.rateGot)*parseFloat(item.worker.hours) + ot )
+        totalTaxAmount = totalTaxAmount + ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2)
+        totalNetAmount = totalNetAmount + (parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours) + ot)
 
     });
-  
+
     date = new Date(weekEnding);
     let issueDateCode = date.setDate(date.getDate() + 7)
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-    let issueDate = new Date(issueDateCode).getFullYear()+' '+monthNames[new Date(issueDateCode).getMonth()] +' '+new Date(issueDateCode).getDate()
-    
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let issueDate = new Date(issueDateCode).getFullYear() + ' ' + monthNames[new Date(issueDateCode).getMonth()] + ' ' + new Date(issueDateCode).getDate()
+
     dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
-    
-    if(req.body.type === 'site') {
+
+    if (req.body.type === 'site') {
         console.log(req.body.type, site)
         data[0].siteAddress = {
             add1: site.address1,
@@ -54,25 +54,26 @@ router.post('/generate-invoice', async (req, res) => {
             city: site.city,
             zipCode: site.zipCode
         }
-    } 
+    }
 
     data[0].Company = site.companyName
-    data[0].Address1 = client.firstPost ? client.firstPost : null ,
-    data[0].Address2 = client.secondPost ? client.secondPost : null,
-    data[0].city = client.city ? client.city : null 
-    data[0].zipCode = client.zipCode ? client.zipCode : null 
+    data[0].Address1 = client.firstPost ? client.firstPost : null,
+        data[0].Address2 = client.secondPost ? client.secondPost : null,
+        data[0].city = client.city ? client.city : null
+    data[0].zipCode = client.zipCode ? client.zipCode : null
     data[0].dueDate = dueDate;
     data[0].Week_Ending = weekEnding
-    data[0].issueDate = issueDate 
+    data[0].issueDate = issueDate
     data[0].INVOICE_NUMBER = process.env.INVOICE_NUMBER
     data[0].Site_Address = process.env.SITE_ADDRESS
     data[0].Account_Reference = process.env.ACCT_REF
     data[0].totalTaxAmount = totalTaxAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     data[0].totalNetAmount = totalNetAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
-	//console.log('data before pdf', data)
-	invoiceStatus.push(await generatePDF(data));
-	console.log(invoiceStatus)
+    //console.log('data before pdf', data)
+    invoiceStatus.push(await generatePDF(data));
+    console.log(invoiceStatus)
+    process.env.INVOICE_NUMBER = process.env.INVOICE_NUMBER + 1
     res.send(invoiceStatus);
 });
 
@@ -81,13 +82,13 @@ router.post('/generate-invoice', async (req, res) => {
 
 // HANDLEBARS AND PDF GENERATOR
 
-const compile = async function(templateName, data) {
+const compile = async function (templateName, data) {
     const filePath = path.join(process.cwd(), 'templates', `${templateName}.hbs`);
     const html = await fs.readFile(filePath, 'utf-8');
     return hbs.compile(html)(data);
 };
 
-hbs.registerHelper('dateFormat', function(value, format) {
+hbs.registerHelper('dateFormat', function (value, format) {
     return moment(value).format(format);
 });
 
@@ -120,7 +121,7 @@ const Handlebars = require('handlebars');
 
 let fstFooter = 0;
 let scndFooter = 0;
-Handlebars.registerHelper('checkIndex', function(index) {
+Handlebars.registerHelper('checkIndex', function (index) {
     if (index == 30) {
         fstFooter = index;
         return new Handlebars.SafeString('<div class="separator"></div><div class="grey"></div>');
@@ -132,7 +133,7 @@ Handlebars.registerHelper('checkIndex', function(index) {
     }
 });
 
-Handlebars.registerHelper('addFooter', function() {
+Handlebars.registerHelper('addFooter', function () {
     if (fstFooter == 30) {
         fstFooter = 0;
         return new Handlebars.SafeString(
@@ -141,7 +142,7 @@ Handlebars.registerHelper('addFooter', function() {
     }
 });
 
-Handlebars.registerHelper('scndFooter', function() {
+Handlebars.registerHelper('scndFooter', function () {
     if (scndFooter == 80) {
         scndFooter = 0;
         return new Handlebars.SafeString(
@@ -150,7 +151,7 @@ Handlebars.registerHelper('scndFooter', function() {
     }
 });
 
-Handlebars.registerHelper('logo', function() {
+Handlebars.registerHelper('logo', function () {
     return new Handlebars.SafeString(
         '<div class="logo"> <img src="https://drive.google.com/open?id=1276O8llFemH6kRwo2iKK5um0BfH9nYGl" alt="no" /> </div>'
     );
@@ -159,23 +160,23 @@ Handlebars.registerHelper('logo', function() {
 // GET WORKER'S RATES
 
 const getRates = (worker) => {
-    if (!!worker.sitesData  ) {
+    if (!!worker.sitesData) {
         let site = worker.sitesData.find(item => item._id === worker.site._id);
-        if(!!site) {
-          if(site.gotClient !== '0') {
-              rate = site.gotClient
-              otRate =  site.overtimeGot
-          } else if( site.gotClient === '0' ) {
-              let site = worker.site
-              rate = site.gotClient
-              otRate =  site.overtimeGot
-          }
-          
+        if (!!site) {
+            if (site.gotClient !== '0') {
+                rate = site.gotClient
+                otRate = site.overtimeGot
+            } else if (site.gotClient === '0') {
+                let site = worker.site
+                rate = site.gotClient
+                otRate = site.overtimeGot
+            }
+
         } else {
             let site = worker.site
             rate = site.gotClient
-            otRate =  site.overtimeGot
-        }   
+            otRate = site.overtimeGot
+        }
     }
 
     return { rate, otRate }
