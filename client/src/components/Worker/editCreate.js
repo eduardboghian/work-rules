@@ -372,9 +372,10 @@ const EditCreate = props => {
       doc
     })
   }
+
   const confirmDelete = () => {
     return (
-      <div className = 'confirm-delete'> Are u sure?</div>
+      <div className='confirm-delete'> Are u sure?</div>
     )
   }
   const classes = useStyles();
@@ -747,9 +748,9 @@ const EditCreate = props => {
                 <div className='ticket'> {data} </div>
                 <div className='delete-btn' onClick={e => setPopStyle1('')} >X</div>
                 <section className={`${popStyle1} pop-out`}>
-                    Do you want DELETE<br /> {data ?  data : null}
-                    <button className='ok' onClick={e => { deleteTicket(data) }}>OK</button>
-                    <button className='cancel' onClick={ e => setPopStyle1('none') }>Cancel</button>
+                  Do you want DELETE<br /> {data ? data : null}
+                  <button className='ok' onClick={e => { deleteTicket(data) }}>OK</button>
+                  <button className='cancel' onClick={e => setPopStyle1('none')}>Cancel</button>
                 </section>
               </div>
             })}
