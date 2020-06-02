@@ -363,7 +363,6 @@ const EditCreate = props => {
     setData({ ...temporaryData, tickets: newTicketsList })
 
     setPopStyle('none')
-    setPopStyle1('none')
   }
 
   const deleteDoc = (uid, doc) => {
@@ -371,12 +370,14 @@ const EditCreate = props => {
       uid,
       doc
     })
+    let newDocumentsList = temporaryData.documents
+    let index = newTicketsList.indexOf(doc)
+
+    newDocumentsList.splice(index, 1)
+    setData({ ...temporaryData, documents: newDocumentsList })
+    setPopStyle1('none')
   }
-  const confirmDelete = () => {
-    return (
-      <div className = 'confirm-delete'> Are u sure?</div>
-    )
-  }
+
   const classes = useStyles();
   return (
     <>
@@ -745,11 +746,11 @@ const EditCreate = props => {
             {temporaryData.tickets.map((data, i) => {
               return <div key={i} className='ticket-wr'>
                 <div className='ticket'> {data} </div>
-                <div className='delete-btn' onClick={e => setPopStyle1('')} >X</div>
-                <section className={`${popStyle1} pop-out`}>
-                    Do you want DELETE<br /> {data ?  data : null}
+                <div className='delete-btn' onClick={e => setPopStyle('')} >X</div>
+                <section className={`${popStyle} pop-out`}>
+                    Do you want to DELETE<br /> {data ?  data : null} ?
                     <button className='ok' onClick={e => { deleteTicket(data) }}>OK</button>
-                    <button className='cancel' onClick={ e => setPopStyle1('none') }>Cancel</button>
+                    <button className='cancel' onClick={ e => setPopStyle('none') }>Cancel</button>
                 </section>
               </div>
             })}
@@ -769,7 +770,12 @@ const EditCreate = props => {
           {temporaryData.documents.map((data, i) => {
             return <div key={i} style={{ position: 'relative' }}>
               <Avatar path={data} />
-              <div className='delete-btn' onClick={e => { deleteDoc(temporaryData._id, data) }} >X</div>
+              <div className='delete-btn' onClick={ e => setPopStyle1('')} >X</div>
+              <section className={`${popStyle1} pop-out`}>
+                  Do you want to DELETE<br /> {data ?  data : null} ?
+                  <button className='ok' onClick={e => { deleteDoc(temporaryData._id, data) }}>OK</button>
+                  <button className='cancel' onClick={ e => setPopStyle1('none') }>Cancel</button>
+              </section>
             </div>
           })}
         </div>
