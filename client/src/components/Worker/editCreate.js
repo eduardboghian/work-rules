@@ -371,7 +371,7 @@ const EditCreate = props => {
       doc
     })
     let newDocumentsList = temporaryData.documents
-    let index = newTicketsList.indexOf(doc)
+    let index = newDocumentsList.indexOf(doc)
 
     newDocumentsList.splice(index, 1)
     setData({ ...temporaryData, documents: newDocumentsList })
