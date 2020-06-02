@@ -109,7 +109,7 @@
 
 
 /* TREADE */
-.trades-list {  
+.trades-list {
     float: left;
     width: 100% !important;
 }
@@ -159,7 +159,7 @@
     width: 75% !important;
     height: 40px;
     float: right;
-    display: flex !important; 
+    display: flex !important;
 }
 .ticket {
     float: left;
@@ -210,4 +210,40 @@
 .docs-wr .delete-btn {
     position: absolute;
     left: 82%;
+}
+
+.pop-out {
+    position: absolute;
+    text-align: center;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px 1px #7d7d7d;
+    width: 200px;
+    height: 90px;
+    padding: 10px;
+    right: 40px;
+    margin-top: -62px;
+    border-radius: 5px;
+    line-height: 25px;
+}
+
+.pop-out button {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    cursor: pointer;
+    border: none;
+    background: inherit;
+    font-size: 14px;
+    width: 50%;
+    text-align: center;
+    border-top: 2px solid #777;
+}
+.ok {
+    left: 0;
+    border-right: 2px solid #777 !important;
+    border-bottom-left-radius: 10px;
+}
+.cancel {
+    right: 0px;
+    border-bottom-right-radius: 10px;
 }
