@@ -2,13 +2,13 @@ const router = require('express').Router()
 const fs = require('fs')
 const WeeklyStatements = require('../models/weeklyStatement')
 
-router.get('/get/:id', async (req, res)=> {
+router.get('/get/:id', async (req, res) => {
     let data = await WeeklyStatements.find({ _id: req.params.id })
 
     res.send(data)
 })
 
-router.get('/get-all', async (req, res)=> {
+router.get('/get-all', async (req, res) => {
     let data = await WeeklyStatements.find()
     data = data.slice().sort((a, b) => b.date - a.date)
 
@@ -17,7 +17,7 @@ router.get('/get-all', async (req, res)=> {
 
 router.post('/add', async (req, res) => {
     let check = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
-    if(check) return res.send('Already Stored!')
+    if (check) return res.send('Already Stored!')
 
     let data = new WeeklyStatements(req.body)
     data = await data.save()
@@ -27,11 +27,11 @@ router.post('/add', async (req, res) => {
 
 router.put('/add-hours', async (req, res) => {
     let we = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
-    if(!we) return res.send('no site with this id was found')
+    if (!we) return res.send('no site with this id was found')
     let site = we[0].data.find(item => item._id == req.body.siteId)
     let siteIndex = we[0].data.indexOf(site)
 
-    let worker = site.workers.find( item => item.worker._id === req.body.id )
+    let worker = site.workers.find(item => item.worker._id === req.body.id)
     let index = site.workers.indexOf(worker)
     worker.worker.hours = req.body.hours
     worker.worker.hoursOT = req.body.hoursOT
@@ -46,11 +46,11 @@ router.put('/add-hours', async (req, res) => {
 
 router.put('/update-rates', async (req, res) => {
     let we = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
-    if(!we) return res.send('no site with this id was found')
+    if (!we) return res.send('no site with this id was found')
     let site = we[0].data.find(item => item._id == req.body.siteId)
     let siteIndex = we[0].data.indexOf(site)
 
-    let worker = site.workers.find( item => item.worker._id === req.body.id )
+    let worker = site.workers.find(item => item.worker._id === req.body.id)
     let index = site.workers.indexOf(worker)
     worker.rates = req.body.ratesData
 
@@ -63,8 +63,9 @@ router.put('/update-rates', async (req, res) => {
 })
 
 router.put('/add-worker', async (req, res) => {
-    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
-    if(!we) return res.send('no site with this id was found')
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
+    if (!we) return res.send('no site with this id was found')
+    console.log(we, req.body)
     let site = we[0].data.find(item => item._id == req.body.siteId)
     let siteIndex = we[0].data.indexOf(site)
 
@@ -80,21 +81,21 @@ router.put('/add-worker', async (req, res) => {
 })
 
 router.put('/add-site', async (req, res) => {
-    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
-    if(!we) return res.send('no site with this id was found')
-     we[0].data.push(req.body.newSite)
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
+    if (!we) return res.send('no site with this id was found')
+    we[0].data.push(req.body.newSite)
 
     let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
     res.send(response)
 })
 
 router.put('/remove-worker', async (req, res) => {
-    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding }`})
-    if(!we) return res.send('no site with this id was found')
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
+    if (!we) return res.send('no site with this id was found')
     let site = we[0].data.find(item => item._id == req.body.siteId)
     let siteIndex = we[0].data.indexOf(site)
 
-    let worker = site.workers.find( item => item.worker._id === req.body.uid )
+    let worker = site.workers.find(item => item.worker._id === req.body.uid)
     let index = site.workers.indexOf(worker)
     site.workers.splice(index, 1)
 

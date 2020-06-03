@@ -6,6 +6,9 @@
     position: absolute;
     left: 10px;
 }
+.grey div {
+    background-color: rgb(234, 234, 234) !important;
+}
 
 .topbar-btns div{
     background-color: rgb(251, 179, 46);
@@ -31,7 +34,7 @@
     margin: auto;
 }
 .topbar-wr ul div, .worker-wr ul div {
-    border: 1.5px solid #aaa;
+    border: 1px solid rgba(224, 224, 224, 1);
     border-right: none ;
     text-align: center;
     padding: 5px 1px;
@@ -40,11 +43,10 @@
     color: #171166;
     font-weight: bolder;
     height: 50px;
-    background-color: #fafafa;
     display: grid;
 }
 .last-cell {
-    border-right: 1.5px solid #aaa !important;
+    border-right: 1px solid rgba(224, 224, 224, 1) !important;
 }
 
 .test div {
@@ -54,10 +56,10 @@
     padding: 5px 1px;
     font-size: 16px;
     line-height: 16px;
-    height: 30px !important;
     color: #000 !important;
+    height: 35px !important;
     font-weight: 100 !important;
-    background-color: #fff !important;
+    background-color: #fff ;
 }
 .test div li {
     font-size: 15px !important;
@@ -138,7 +140,7 @@
 
 
 .site-name {
-    border: 1.5px solid #aaa;
+    border: 1px solid rgba(224, 224, 224, 1);
     border-top: none;
     padding: 5px 1px;
     font-size: 14px;
@@ -179,6 +181,7 @@
 .remove-btn-wr {
     border: none !important;
     position: relative;
+    background-color: #fff !important;
 }
 
 .pop-out {
@@ -350,7 +353,7 @@
 .first-row-element {
     margin: 4px 20px 0;
     cursor: pointer;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid rgb(224, 224, 224);
     padding: 0 5px;
 }
 
@@ -358,7 +361,7 @@
     margin: 0 !important;
     padding: 0 !important ;
     width: 100% !important;
-    border-bottom: 1.5px solild #aaa !important;
+    border-bottom: 1px solild rgba(224, 224, 224, 1) !important;
 }
 .select-trade div {
     border: none !important;
@@ -369,5 +372,5 @@
 .test .MuiSelect-root {
     line-height: 30px !important ;  
     font-weight: 500 !important ; 
-    border-bottom: 1.5px solild #aaa !important;
+    border-bottom: 1px solild rgba(224, 224, 224, 1)  !important;
 }

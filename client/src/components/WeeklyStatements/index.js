@@ -123,7 +123,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
             <TopBar site={site} />
             {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div> : null}
             {site.workers.map((worker, i) => {
-              return worker.rates ? <Worker key={i} worker={worker} site={site} /> : undefined
+              return worker.rates ? <Worker key={i} worker={worker} site={site} rowNumber={i} /> : undefined
             })}
           </div>
         })}
