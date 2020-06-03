@@ -93,25 +93,7 @@ const EditCreate = props => {
 
   const validation = async () => {
     console.log(temporaryData)
-    // if (temporaryData.type === 'physical') {
-    //   if (temporaryData.firstname.length > 100) {
-    //     setFirstnameError(true);
-    //     let timer = setTimeout(() => setFirstnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }
-    //   if (temporaryData.lastname.length > 100) {
-    //     setLastnameError(true);
-    //     let timer = setTimeout(() => setLastnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }}
-
-    //if (temporaryData.type === 'company') {
+    //if (temporaryData.type === 'physical') {
     if (temporaryData.companyName.length < 3) {
       setCompanyNameError(true);
       let timer = setTimeout(() => setCompanyNameError(false), 3000);
@@ -120,6 +102,24 @@ const EditCreate = props => {
         return false;
       };
     }
+    if (temporaryData.name.length < 1) {
+      setFirstnameError(true);
+      let timer = setTimeout(() => setFirstnameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
+    if (temporaryData.lastName.length < 1) {
+      setLastnameError(true);
+      let timer = setTimeout(() => setLastnameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }//}
+
+    //if (temporaryData.type === 'company') {
     //}
 
 
@@ -498,19 +498,19 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }}>
                   <Grid>
                     <Typography>First Name</Typography>
-                    <Tooltip
-                      open={firstnameError}
-                      title='First name should have maximum 100 symbols in length'
-                      classes={{ tooltip: classes.errorTooltip }}
-                      placement='top'
-                  >
-                    <FormControl  error={firstnameError}>
-                      <Input
-                        value={temporaryData.name}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'name')}
-                      />
-                    </FormControl>
+                      <Tooltip
+                        open={firstnameError}
+                        title='Please introduce a First Name!'
+                        classes={{ tooltip: classes.errorTooltip }}
+                        placement='top'
+                        >
+                      <FormControl  error={firstnameError}>
+                        <Input
+                          value={temporaryData.name}
+                          classes={{ input: classes.input }}
+                          onChange={e => inputHadnler(e.target.value, 'name')}
+                        />
+                      </FormControl>
                   </Tooltip>
                 </Grid>
               </Grid>
@@ -520,7 +520,7 @@ const EditCreate = props => {
                   <Typography>Last Name</Typography>
                   <Tooltip
                     open={lastnameError}
-                    title='Last name should have maximum 100 symbols in length'
+                    title='Please introduce a Last Name!'
                     classes={{ tooltip: classes.errorTooltip }}
                     placement='top'
                   >
