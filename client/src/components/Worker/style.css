@@ -247,3 +247,17 @@
     right: 0px;
     border-bottom-right-radius: 10px;
 }
+
+input[type="file"] {
+    display: none;
+}
+
+
+.custom-file-upload {
+    padding: 4px 20px;
+    color: #fff;
+    background-color: rgb(16, 214, 65);
+    border-radius: 4px;
+    position: absolute;
+    margin-top: 10px;
+}

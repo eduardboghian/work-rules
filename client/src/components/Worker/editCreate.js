@@ -38,7 +38,6 @@ const EditCreate = props => {
   const [popStyle, setPopStyle] = useState('none')
   const [popStyle1, setPopStyle1] = useState('none')
 
-
   useEffect(() => {
     let sum = +temporaryData.gotClient - +temporaryData.paidWorker;
     setData({ ...temporaryData, margin: sum });
@@ -55,7 +54,7 @@ const EditCreate = props => {
     props.setEditData({
       type: 'physical',
       peer: '',
-      companyName:'',
+      companyName: '',
       firstname: '',
       lastname: '',
       uniqueID: '',
@@ -102,30 +101,30 @@ const EditCreate = props => {
         };
       }
     } else {
-        if (temporaryData.companyName.length < 3) {
-          setCompanyNameError(true);
-          let timer = setTimeout(() => setCompanyNameError(false), 3000);
-          return () => {
-            clearTimeout(timer);
-            return false;
-          };
-        }
-        if (temporaryData.firstname.length < 1) {
-          setFirstnameError(true);
-          let timer = setTimeout(() => setFirstnameError(false), 3000);
-          return () => {
-            clearTimeout(timer);
-            return false;
-          };
-        }
-        if (temporaryData.lastname.length < 1) {
-          setLastnameError(true);
-          let timer = setTimeout(() => setLastnameError(false), 3000);
-          return () => {
-            clearTimeout(timer);
-            return false;
-          };
-        }
+      if (temporaryData.companyName.length < 3) {
+        setCompanyNameError(true);
+        let timer = setTimeout(() => setCompanyNameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
+      if (temporaryData.firstname.length < 1) {
+        setFirstnameError(true);
+        let timer = setTimeout(() => setFirstnameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
+      if (temporaryData.lastname.length < 1) {
+        setLastnameError(true);
+        let timer = setTimeout(() => setLastnameError(false), 3000);
+        return () => {
+          clearTimeout(timer);
+          return false;
+        };
+      }
       // if (temporaryData.peer.length < 3) {
       //   setPeerError(true);
       //   let timer = setTimeout(() => setPeerError(false), 3000);
@@ -365,7 +364,7 @@ const EditCreate = props => {
         }
         break;
       case 'uniqueID':
-        if(data.length <= 50) {
+        if (data.length <= 50) {
           setData({ ...temporaryData, [fieldName]: data })
         }
         break
@@ -397,6 +396,8 @@ const EditCreate = props => {
     setData({ ...temporaryData, documents: newDocumentsList })
     setPopStyle1('none')
   }
+
+
 
   const classes = useStyles();
   return (
@@ -781,9 +782,15 @@ const EditCreate = props => {
 
       <div className="display-docs">
         <div className='form-wr'>
-          <form action={`/worker/upload-document/${temporaryData._id}`} method="post" encType="multipart/form-data">
-            <input type="file" name="avatar" className='tests' />
-            <button type='submit' >Send Picture</button>
+          <form action={`/worker/upload-document/${temporaryData._id}`} method="post" className='form' encType="multipart/form-data">
+            <label htmlFor="file-upload" className="custom-file-upload">
+              Upload Image
+            </label>
+            <input type="file" id="file-upload" name="avatar" className='doc-input' onChange={e => {
+              e.preventDefault()
+              document.getElementById('submit-doc').click()
+            }} />
+            <button type='submit' id='submit-doc' className='none' >Send Picture</button>
           </form>
         </div>
         <div className='docs-wr'>

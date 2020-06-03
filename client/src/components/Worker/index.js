@@ -36,7 +36,7 @@ const Worker = props => {
   const [editData, setEditData] = useState({
     type: "physical",
     peer: "",
-    companyName:"",
+    companyName: "",
     firstname: "",
     lastname: "",
     uniqueID: "",
@@ -71,7 +71,13 @@ const Worker = props => {
   const classes = useStyles();
   useEffect(() => {
     const updateClientData = async () => {
-      let data = await getWorkers();
+      let data
+      try {
+        data = await getWorkers();
+      }
+      catch (err) {
+        window.location.reload(true)
+      }
       setWorkersData(data.data);
     };
 
@@ -125,68 +131,68 @@ const Worker = props => {
   };
   return (
     <Grid className='worker-wr'>
-      <Dashboard/>
+      <Dashboard />
       {dialog ? (
         <EditCreate isDialogOpened={isDialogOpened} data={editData} setEditData={setEditData} actionType={actionType} update={updateClientData} />
       ) : (
-        <>
-          <Grid container justify="space-between" style={{ marginTop: '20px' }}>
-            <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
-              <Search setSearchedData={setSearchedData} data={workersData} keys={["firstname", "lastname", "communicationChannel", "utr", "nino"]} />
-            </Grid>
-            <Button
-              onClick={() => {
-                isDialogOpened(true);
-                setActionType("create");
-              }}
-              className='create-btn'
-            >
-              Create New Worker
+          <>
+            <Grid container justify="space-between" style={{ marginTop: '20px' }}>
+              <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
+                <Search setSearchedData={setSearchedData} data={workersData} keys={["firstname", "lastname", "communicationChannel", "utr", "nino"]} />
+              </Grid>
+              <Button
+                onClick={() => {
+                  isDialogOpened(true);
+                  setActionType("create");
+                }}
+                className='create-btn'
+              >
+                Create New Worker
             </Button>
-          </Grid>
-          <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
+            </Grid>
+            <Divider style={{ backgroundColor: "inherit", marginBottom: '40px' }} />
 
 
-          <Divider />
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
+            <Divider />
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("firstname", sort.firstname)}>
-                    <Grid container>Name {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("firstname", sort.firstname)}>
+                      <Grid container>Name {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
-                    <Grid container>Phone Number {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
+                      <Grid container>Phone Number {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
-                    <Grid container>Trade {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
+                      <Grid container>Trade {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
 
-                  <TableCell
-                    classes={{ root: classes.cellHeaderSortable }}
-                    onClick={() => sortHandler("communicationChannel", sort.communicationChannel)}
-                  >
-                    <Grid container>
-                     Tickets {sort.communicationChannel === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
-                    </Grid>
-                  </TableCell>
+                    <TableCell
+                      classes={{ root: classes.cellHeaderSortable }}
+                      onClick={() => sortHandler("communicationChannel", sort.communicationChannel)}
+                    >
+                      <Grid container>
+                        Tickets {sort.communicationChannel === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+                      </Grid>
+                    </TableCell>
 
-                  <TableCell classes={{ root: classes.cellHeader }}>Comments</TableCell>
+                    <TableCell classes={{ root: classes.cellHeader }}>Comments</TableCell>
 
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredData.map((item, index) => (
-                  <WorkerRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredData.map((item, index) => (
+                    <WorkerRow key={index} even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         open={snackbarState}
