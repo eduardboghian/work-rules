@@ -53,17 +53,17 @@ const ClientRow = props => {
 
   return (
     <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
-      <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.companyName}</Typography>
-      </TableCell>
       <TableCell
         classes={{ root: classes.cell }}
         onClick={() => {
           setActionType("edit");
           openDialog(data);
         }}
-      >
-        <Typography classes={{ root: classes.link }}>{item.name+ ' '+item.lastName}</Typography>
+        >
+        <Typography classes={{ root: classes.link }}>{item.companyName}</Typography>
+      </TableCell>
+      <TableCell classes={{ root: classes.cell }}>
+        <Typography>{item.name+ ' '+item.lastName}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.phone}</Typography>
