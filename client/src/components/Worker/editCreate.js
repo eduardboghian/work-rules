@@ -55,6 +55,7 @@ const EditCreate = props => {
     props.setEditData({
       type: 'physical',
       peer: '',
+      companyName:'',
       firstname: '',
       lastname: '',
       uniqueID: '',
@@ -83,41 +84,56 @@ const EditCreate = props => {
   // VALIDATION FUNCTION
 
   const validation = async () => {
-    // if (temporaryData.type === 'physical') {
-    //   if (temporaryData.firstname.length < 3) {
-    //     setFirstnameError(true);
-    //     let timer = setTimeout(() => setFirstnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }
-    //   if (temporaryData.lastname.length < 3) {
-    //     setLastnameError(true);
-    //     let timer = setTimeout(() => setLastnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }
-    // }
-    if (temporaryData.type === 'company') {
-      if (temporaryData.companyName.length < 3) {
-        setCompanyNameError(true);
-        let timer = setTimeout(() => setCompanyNameError(false), 3000);
+    if (temporaryData.type === 'physical') {
+      if (temporaryData.firstname.length < 1) {
+        setFirstnameError(true);
+        let timer = setTimeout(() => setFirstnameError(false), 3000);
         return () => {
           clearTimeout(timer);
           return false;
         };
       }
-      if (temporaryData.peer.length < 3) {
-        setPeerError(true);
-        let timer = setTimeout(() => setPeerError(false), 3000);
+      if (temporaryData.lastname.length < 1) {
+        setLastnameError(true);
+        let timer = setTimeout(() => setLastnameError(false), 3000);
         return () => {
           clearTimeout(timer);
           return false;
         };
       }
+    } else {
+        if (temporaryData.companyName.length < 3) {
+          setCompanyNameError(true);
+          let timer = setTimeout(() => setCompanyNameError(false), 3000);
+          return () => {
+            clearTimeout(timer);
+            return false;
+          };
+        }
+        if (temporaryData.firstname.length < 1) {
+          setFirstnameError(true);
+          let timer = setTimeout(() => setFirstnameError(false), 3000);
+          return () => {
+            clearTimeout(timer);
+            return false;
+          };
+        }
+        if (temporaryData.lastname.length < 1) {
+          setLastnameError(true);
+          let timer = setTimeout(() => setLastnameError(false), 3000);
+          return () => {
+            clearTimeout(timer);
+            return false;
+          };
+        }
+      // if (temporaryData.peer.length < 3) {
+      //   setPeerError(true);
+      //   let timer = setTimeout(() => setPeerError(false), 3000);
+      //   return () => {
+      //     clearTimeout(timer);
+      //     return false;
+      //   };
+      // }
     }
 
     // if (temporaryData.utr.length === 0) {
@@ -245,9 +261,10 @@ const EditCreate = props => {
         }
         break;
       case 'company':
-        if (data.length <= 10) {
+        if (data.length <= 100) {
           setData({ ...temporaryData, companyName: data })
         }
+        break;
       case 'peer':
       case 'firstname':
       case 'lastname':
@@ -348,7 +365,9 @@ const EditCreate = props => {
         }
         break;
       case 'uniqueID':
-        setData({ ...temporaryData, [fieldName]: data })
+        if(data.length <= 50) {
+          setData({ ...temporaryData, [fieldName]: data })
+        }
         break
       default:
         break;
@@ -418,7 +437,7 @@ const EditCreate = props => {
 
         <Grid className='uid-wr'>
           <Typography>Unique ID</Typography>
-          <FormControl error={firstnameError}>
+          <FormControl>
             <Input
               value={temporaryData.uniqueID}
               classes={{ input: classes.input }}
@@ -450,7 +469,7 @@ const EditCreate = props => {
               <Typography>Firstname</Typography>
               <Tooltip
                 open={firstnameError}
-                title='Firstname should be at least 3 symbols length'
+                title='Please introduce a First Name!'
                 classes={{ tooltip: classes.errorTooltip }}
                 placement='top'
               >
@@ -470,7 +489,7 @@ const EditCreate = props => {
               <Typography>Lastname</Typography>
               <Tooltip
                 open={lastnameError}
-                title='Lastname should be at least 3 symbols length'
+                title='Please introduce a Last Name!'
                 classes={{ tooltip: classes.errorTooltip }}
                 placement='top'
               >
@@ -550,7 +569,7 @@ const EditCreate = props => {
           <Grid classes={{ root: classes.inputContainer }} className='comment' >
             <Grid>
               <Typography>Comment</Typography>
-              <FormControl error={emailError}>
+              <FormControl>
                 <Input
                   value={temporaryData.comment}
                   classes={{ input: classes.input }}

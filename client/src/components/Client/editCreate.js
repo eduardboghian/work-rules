@@ -93,25 +93,7 @@ const EditCreate = props => {
 
   const validation = async () => {
     console.log(temporaryData)
-    // if (temporaryData.type === 'physical') {
-    //   if (temporaryData.firstname.length > 100) {
-    //     setFirstnameError(true);
-    //     let timer = setTimeout(() => setFirstnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }
-    //   if (temporaryData.lastname.length > 100) {
-    //     setLastnameError(true);
-    //     let timer = setTimeout(() => setLastnameError(false), 3000);
-    //     return () => {
-    //       clearTimeout(timer);
-    //       return false;
-    //     };
-    //   }}
-
-    //if (temporaryData.type === 'company') {
+    //if (temporaryData.type === 'physical') {
     if (temporaryData.companyName.length < 3) {
       setCompanyNameError(true);
       let timer = setTimeout(() => setCompanyNameError(false), 3000);
@@ -120,17 +102,27 @@ const EditCreate = props => {
         return false;
       };
     }
-    //}
-
-    if(newSite.siteName.length < 1){
-    } else if (newSite.siteName.length < 3 || newSite.siteName.length === 'none') {
-      setSiteNameError(true);
-      let timer = setTimeout(() => setSiteNameError(false), 3000);
+    if (temporaryData.name.length < 1) {
+      setFirstnameError(true);
+      let timer = setTimeout(() => setFirstnameError(false), 3000);
       return () => {
         clearTimeout(timer);
         return false;
       };
     }
+    if (temporaryData.lastName.length < 1) {
+      setLastnameError(true);
+      let timer = setTimeout(() => setLastnameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }//}
+
+    //if (temporaryData.type === 'company') {
+    //}
+
+
 
     if (temporaryData.utr.length === 0) {
     }
@@ -390,22 +382,32 @@ const EditCreate = props => {
   }
 
   const createNewSite = () => {
-    let newList = temporaryData.sites;
-    newList.push(newSite)
+    if (newSite.siteName.length < 3) {
+      setSiteNameError(true);
+      let timer = setTimeout(() => setSiteNameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
+    else {
+      let newList = temporaryData.sites;
+      newList.push(newSite)
 
-    setData({ ...temporaryData, sites: newList });
-    setSites(newList);
+      setData({ ...temporaryData, sites: newList });
+      setSites(newList);
 
-    axios.post('/site/add', {
-      action: 'create',
-      data: newSite
-    }, {
-      headers: {
-        authorization: 'Bearer ' + localStorage.getItem('token')
-      }
-    })
-    .then(res => console.log(sites))
-    .catch(err => console.log(err))
+      axios.post('/site/add', {
+        action: 'create',
+        data: newSite
+      }, {
+        headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then(res => console.log(sites))
+      .catch(err => console.log(err))
+    }
   }
 
   const editSite = async (siteId) => {
@@ -418,7 +420,7 @@ const EditCreate = props => {
     })
     .then( site => {
       console.log(site.data[0])
-      setNewSite(site.data[0]) 
+      setNewSite(site.data[0])
     })
     .catch(err => console.log(err))
   }
@@ -426,7 +428,7 @@ const EditCreate = props => {
   const saveSiteChanges = () => {
     axios.post('/site/add', {
       action: 'edit',
-      data: newSite   
+      data: newSite
     }, {
       headers: {
         authorization: 'Bearer ' + localStorage.getItem('token')
@@ -496,19 +498,19 @@ const EditCreate = props => {
             <Grid classes={{ root: classes.inputContainer }}>
                   <Grid>
                     <Typography>First Name</Typography>
-                    <Tooltip
-                      open={firstnameError}
-                      title='First name should have maximum 100 symbols in length'
-                      classes={{ tooltip: classes.errorTooltip }}
-                      placement='top'
-                  >
-                    <FormControl  error={firstnameError}>
-                      <Input
-                        value={temporaryData.name}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'name')}
-                      />
-                    </FormControl>
+                      <Tooltip
+                        open={firstnameError}
+                        title='Please introduce a First Name!'
+                        classes={{ tooltip: classes.errorTooltip }}
+                        placement='top'
+                        >
+                      <FormControl  error={firstnameError}>
+                        <Input
+                          value={temporaryData.name}
+                          classes={{ input: classes.input }}
+                          onChange={e => inputHadnler(e.target.value, 'name')}
+                        />
+                      </FormControl>
                   </Tooltip>
                 </Grid>
               </Grid>
@@ -518,7 +520,7 @@ const EditCreate = props => {
                   <Typography>Last Name</Typography>
                   <Tooltip
                     open={lastnameError}
-                    title='Last name should have maximum 100 symbols in length'
+                    title='Please introduce a Last Name!'
                     classes={{ tooltip: classes.errorTooltip }}
                     placement='top'
                   >
@@ -827,24 +829,24 @@ const EditCreate = props => {
           <div className='sites-table'>
             <Grid className='active-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  editSite={editSite} 
+                <SitesTable
+                  sites={temporaryData.sites}
+                  clinetId={clientId}
+                  editSite={editSite}
                   updateStatusDB={updateStatusDB}
-                  type={'active'} 
+                  type={'active'}
                 />
               </Grid>
             </Grid>
 
             <Grid className='inactive-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  deleteSite={deleteSite} 
+                <SitesTable
+                  sites={temporaryData.sites}
+                  clinetId={clientId}
+                  deleteSite={deleteSite}
                   updateStatusDB={updateStatusDB}
-                  type={'inactive'} 
+                  type={'inactive'}
                 />
               </Grid>
             </Grid>

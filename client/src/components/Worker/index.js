@@ -36,6 +36,7 @@ const Worker = props => {
   const [editData, setEditData] = useState({
     type: "physical",
     peer: "",
+    companyName:"",
     firstname: "",
     lastname: "",
     uniqueID: "",
