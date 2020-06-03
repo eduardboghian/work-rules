@@ -110,14 +110,14 @@ const EditCreate = props => {
           return false;
         };
       }
-      if (temporaryData.peer.length < 3) {
-        setPeerError(true);
-        let timer = setTimeout(() => setPeerError(false), 3000);
-        return () => {
-          clearTimeout(timer);
-          return false;
-        };
-      }
+      // if (temporaryData.peer.length < 3) {
+      //   setPeerError(true);
+      //   let timer = setTimeout(() => setPeerError(false), 3000);
+      //   return () => {
+      //     clearTimeout(timer);
+      //     return false;
+      //   };
+      // }
     }
 
     // if (temporaryData.utr.length === 0) {
@@ -348,7 +348,9 @@ const EditCreate = props => {
         }
         break;
       case 'uniqueID':
-        setData({ ...temporaryData, [fieldName]: data })
+        if(data.length <= 50) {
+          setData({ ...temporaryData, [fieldName]: data })
+        }
         break
       default:
         break;

@@ -122,15 +122,7 @@ const EditCreate = props => {
     }
     //}
 
-    if(newSite.siteName.length < 1){
-    } else if (newSite.siteName.length < 3 || newSite.siteName.length === 'none') {
-      setSiteNameError(true);
-      let timer = setTimeout(() => setSiteNameError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
-    }
+
 
     if (temporaryData.utr.length === 0) {
     }
@@ -390,22 +382,32 @@ const EditCreate = props => {
   }
 
   const createNewSite = () => {
-    let newList = temporaryData.sites;
-    newList.push(newSite)
+    if (newSite.siteName.length < 3) {
+      setSiteNameError(true);
+      let timer = setTimeout(() => setSiteNameError(false), 3000);
+      return () => {
+        clearTimeout(timer);
+        return false;
+      };
+    }
+    else {
+      let newList = temporaryData.sites;
+      newList.push(newSite)
 
-    setData({ ...temporaryData, sites: newList });
-    setSites(newList);
+      setData({ ...temporaryData, sites: newList });
+      setSites(newList);
 
-    axios.post('/site/add', {
-      action: 'create',
-      data: newSite
-    }, {
-      headers: {
-        authorization: 'Bearer ' + localStorage.getItem('token')
-      }
-    })
-    .then(res => console.log(sites))
-    .catch(err => console.log(err))
+      axios.post('/site/add', {
+        action: 'create',
+        data: newSite
+      }, {
+        headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then(res => console.log(sites))
+      .catch(err => console.log(err))
+    }
   }
 
   const editSite = async (siteId) => {
@@ -418,7 +420,7 @@ const EditCreate = props => {
     })
     .then( site => {
       console.log(site.data[0])
-      setNewSite(site.data[0]) 
+      setNewSite(site.data[0])
     })
     .catch(err => console.log(err))
   }
@@ -426,7 +428,7 @@ const EditCreate = props => {
   const saveSiteChanges = () => {
     axios.post('/site/add', {
       action: 'edit',
-      data: newSite   
+      data: newSite
     }, {
       headers: {
         authorization: 'Bearer ' + localStorage.getItem('token')
@@ -827,24 +829,24 @@ const EditCreate = props => {
           <div className='sites-table'>
             <Grid className='active-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  editSite={editSite} 
+                <SitesTable
+                  sites={temporaryData.sites}
+                  clinetId={clientId}
+                  editSite={editSite}
                   updateStatusDB={updateStatusDB}
-                  type={'active'} 
+                  type={'active'}
                 />
               </Grid>
             </Grid>
 
             <Grid className='inactive-sites'>
               <Grid>
-                <SitesTable 
-                  sites={temporaryData.sites} 
-                  clinetId={clientId} 
-                  deleteSite={deleteSite} 
+                <SitesTable
+                  sites={temporaryData.sites}
+                  clinetId={clientId}
+                  deleteSite={deleteSite}
                   updateStatusDB={updateStatusDB}
-                  type={'inactive'} 
+                  type={'inactive'}
                 />
               </Grid>
             </Grid>
