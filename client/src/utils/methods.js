@@ -1,44 +1,41 @@
 export const multiSort = (array, sortObject = {}) => {
-  const sortKeys = Object.keys(sortObject);
   let objectCopy = { ...sortObject };
+  const sortKey = Object.keys(sortObject);
+
   // Return array if no sort object is supplied.
-  if (!sortKeys.length) {
-    return array;
+  let lista2 = []
+  for (let i in array) {
+    lista2.push(array[i][sortKey])
   }
-
-  // Change the values of the sortObject keys to -1, 0, or 1.
-  for (let key in objectCopy) {
-    objectCopy[key] = objectCopy[key] === "desc" || objectCopy[key] === -1 ? -1 : objectCopy[key] === "skip" || objectCopy[key] === 0 ? 0 : 1;
-  }
-
-  const keySort = (a, b, direction) => {
-    direction = direction !== null ? direction : 1;
-
-    if (a === b) {
-      // If the values are the same, do not switch positions.
-      return 0;
-    }
-
-    // If b > a, multiply by -1 to get the reverse direction.
-    return a > b ? direction : -1 * direction;
-  };
-
-  return array.sort((a, b) => {
-    let sorted = 0;
-    let index = 0;
-
-    // Loop until sorted (-1 or 1) or until the sort keys have been processed.
-    while (sorted === 0 && index < sortKeys.length) {
-      const key = sortKeys[index];
-
-      if (key) {
-        const direction = objectCopy[key];
-
-        sorted = keySort(a[key], b[key], direction);
-        index++;
+  if(sortObject[sortKey] === 'desc') {
+    for (let i=0; i<lista2.length-1; i++) {
+      for (let j=i+1; j<lista2.length; j++) {
+        if (lista2[i].toLowerCase() < lista2[j].toLowerCase()) {
+          let aux = lista2[i]
+          lista2[i] = lista2[j]
+          lista2[j] = aux
+        }
       }
     }
+  } else {
+      for (let i=0; i<lista2.length-1; i++) {
+        for (let j=i+1; j<lista2.length; j++) {
+          if (lista2[i].toLowerCase() > lista2[j].toLowerCase()) {
+            let aux = lista2[i]
+            lista2[i] = lista2[j]
+            lista2[j] = aux
+          }
+        }
+      }
+  }
+  let lista3 = []
+  for (let i in lista2) {
+    for (let j in array) {
+      if (array[j][sortKey] === lista2[i]) {
+        lista3.push(array[j])
+      }
+    }
+  }
+  return lista3
 
-    return sorted;
-  });
-};
+}
