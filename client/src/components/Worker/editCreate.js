@@ -457,9 +457,12 @@ const EditCreate = props => {
           <Typography>Company</Typography>
         </Grid>
 
-        <Button className='create-btn' onClick={closePage}>
+        <Button className='create-btn' onClick={async e => {
+          validation();
+          setPending(false);
+        }}>
           Back
-          </Button>
+        </Button>
       </Grid>
 
       <Grid className='content-wr' >
@@ -808,7 +811,7 @@ const EditCreate = props => {
         </div>
       </div>
 
-      <Grid container justify='space-around'>
+      {/* <Grid container justify='space-around'>
         <Button
           style={{ marginTop: '20px' }}
           classes={{ root: classes.button }}
@@ -820,7 +823,7 @@ const EditCreate = props => {
         >
           SAVE
         </Button>
-      </Grid>
+      </Grid> */}
     </>
   );
 };

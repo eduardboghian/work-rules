@@ -16,7 +16,7 @@ const Search = props => {
     }
     let filteredData = [...props.data];
     filteredData = filteredData.filter(item => {
-      if (JSON.stringify(item).toLowerCase().includes(data)) {
+      if (JSON.stringify(item).toLowerCase().includes(data.toLowerCase())) {
         return true
       }
       return false
