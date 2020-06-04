@@ -126,7 +126,7 @@ export default function AddWorker({ formClass, close, siteId, weekEnding }) {
             <Select
               style={{ width: '80%' }}
               renderValue={() => {
-                return newWorker.firstname + ' ' + newWorker.lastname
+                return newWorker ? newWorker.firstname + ' ' + newWorker.lastname : ''
               }}
               defaultValue={'John'}
               onChange={e => {
