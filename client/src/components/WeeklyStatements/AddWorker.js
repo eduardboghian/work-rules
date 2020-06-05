@@ -49,7 +49,7 @@ export default function AddWorker({ formClass, close, siteId, weekEnding }) {
   }
 
   const addWorker = () => {
-    let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
     console.log(date, weekEnding)
 
     if (weekEnding.weekEnding === date) {

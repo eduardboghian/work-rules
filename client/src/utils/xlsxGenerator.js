@@ -99,7 +99,7 @@ const newJoiners = (sites) => {
             let dif = moment(worker.worker.date, "YYYYMMDD").fromNow()
 
             if (worker.worker.date) {
-                if (parseFloat(dif) < 7) {
+                if (parseFloat(dif) < 7 || dif.includes('hours')) {
                     status = 'New Joiner'
                 } else { status = 'Old' }
             } else { status = 'Old' }

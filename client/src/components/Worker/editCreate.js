@@ -460,6 +460,7 @@ const EditCreate = props => {
         <Button className='create-btn' onClick={async e => {
           validation();
           setPending(false);
+          window.location.reload(true)
         }}>
           Back
         </Button>

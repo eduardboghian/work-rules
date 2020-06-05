@@ -29,11 +29,11 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     setData(worker.rates)
     console.log(worker.worker.category)
     setTrade(worker.worker.category)
-    console.log(new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD'))
+    console.log(new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD'))
   }, [worker])
 
   useEffect(() => {
-    let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
       if (worker.hours !== hours || worker.hoursOT !== hoursOT) {
@@ -66,10 +66,11 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }, [hours, hoursOT])
 
   useEffect(() => {
-    let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
-
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
     if (weekEnding === date) {
       if (ratesData.rateGot !== 0 && ratesData.ratePaid) {
+        console.log('the updater', weekEnding, date)
+
         axios.put('/site/update-rates', {
           siteId: site._id,
           id: worker.worker._id,
@@ -119,6 +120,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }
 
   const updateRates = async (value, worker, field) => {
+    console.log('updateing rates...')
     switch (field) {
       case 'hours':
         if (value === undefined) value = 0
@@ -150,7 +152,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }
 
   const removeWorkerFromSite = (siteId, uid) => {
-    let date = new Date().getDay() === 0 ? moment().day(-7).format('YYYY MMMM DD') : moment().day(0).format('YYYY MMMM DD')
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
       axios.post('/site/remove-worker', {
