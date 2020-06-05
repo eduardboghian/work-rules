@@ -84,6 +84,41 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       .catch(err => console.error(err))
   }
 
+  const dataToState = () => {
+    let sitesRes = new Promise((resolve, reject) => {
+      axios.get('/site/all', {
+        headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }
+      )
+        .then(res => {
+          let activeSites = res.data.filter(site => site.status === 'Active')
+          setNewSite(activeSites[0])
+          setMenu(activeSites)
+          dispatch(addSites(activeSites))
+          resolve(res.data)
+        })
+        .catch(error => {
+          reject(error)
+          window.location.reload(true)
+        })
+    })
+
+    axios.get('/weekly/get-all')
+      .then(async res => {
+        let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+
+        let currentWE = {
+          weekEnding: date,
+          data: await sitesRes
+        }
+
+        res.data.unshift(currentWE)
+        setWEs(res.data)
+      })
+      .catch(err => console.log(err))
+  }
 
 
   return (
@@ -102,7 +137,12 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
                   onChange={e => {
                     let currentWE = we.find(item => item.weekEnding === e.target.value);
                     dispatch(setWeekEnding(currentWE.weekEnding))
-                    dispatch(addSites(currentWE.data))
+                    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+                    if (e.target.value === date) {
+                      dataToState()
+                    } else {
+                      dispatch(addSites(currentWE.data))
+                    }
                   }}
                 >
 

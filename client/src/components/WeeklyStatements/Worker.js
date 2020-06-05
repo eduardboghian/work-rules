@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { updateSites, updateHours, updateRatesAction } from '../../actions/siteActions'
+import { updateSites, updateHours, updateRatesAction, addSites } from '../../actions/siteActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
@@ -159,16 +159,18 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         siteId,
         uid
       })
-        .then(res => console.log(res))
+        .then(res => {
+          console.log(res.data)
+          dispatch(addSites([res.data]))
+        })
         .catch(err => console.log(err))
-      window.location.reload(true)
     } else {
       axios.put('/weekly/remove-worker', {
         siteId,
         uid,
         weekEnding
       })
-        .then(res => window.location.reload(true))
+        .then(res => dispatch(addSites(res.data.data)))
         .catch(err => console.log(err))
     }
 

@@ -102,7 +102,7 @@ router.put('/remove-worker', async (req, res) => {
     we[0].data[siteIndex] = site
 
     let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
-    res.send('Removed Successfully!')
+    res.send(response)
 })
 
 module.exports = router

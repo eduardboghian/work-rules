@@ -25,17 +25,20 @@ router.post('/generate-invoice', async (req, res) => {
 
     site.workers.map((item, i) => {
         let ot = isNaN(parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)
+        let rateGot = isNaN(parseFloat(item.rates.rateGot)) ? 0 : parseFloat(item.rates.rateGot).toFixed(1)
+        let hours = isNaN(parseFloat(item.worker.hours)) ? 0 : parseFloat(item.worker.hours).toFixed(1)
+
         let payload = {
             Worker: item.worker.firstname + ' ' + item.worker.lastname,
-            UnitCost: parseFloat(item.rates.rateGot).toFixed(1),
-            WorkedHours: parseFloat(item.worker.hours).toFixed(1),
-            NetAmount: (parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours) + ot).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
-            CIS: ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2).toFixed(2),
-            VAT: ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2).toFixed(2),
+            UnitCost: rateGot,
+            WorkedHours: hours,
+            NetAmount: (rateGot * hours + ot).toFixed(2), //+ worker.overtimeGot*worker.hoursOT,
+            CIS: ((rateGot * hours) * 0.2).toFixed(2),
+            VAT: ((rateGot * hours) * 0.2).toFixed(2),
         }
         data.push(payload)
-        totalTaxAmount = totalTaxAmount + ((parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours)) * 0.2)
-        totalNetAmount = totalNetAmount + (parseFloat(item.rates.rateGot) * parseFloat(item.worker.hours) + ot)
+        totalTaxAmount = totalTaxAmount + ((rateGot * hours) * 0.2)
+        totalNetAmount = totalNetAmount + (rateGot * hours + ot)
 
     });
 

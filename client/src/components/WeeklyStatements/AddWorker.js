@@ -11,8 +11,10 @@ import Input from '@material-ui/core/Input';
 import moment from 'moment'
 import axios from 'axios'
 import './css/index.css'
+import { connect } from 'react-redux';
+import { addSites } from '../../actions/siteActions';
 
-export default function AddWorker({ formClass, close, siteId, weekEnding }) {
+const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const useStyles = makeStyles(editCreateStyles);
   const classes = useStyles();
   const [workers, setWorkers] = useState([])
@@ -65,7 +67,8 @@ export default function AddWorker({ formClass, close, siteId, weekEnding }) {
       })
         .then(res => {
           if (res.data !== 'worker already on this site') {
-            window.location.reload(true)
+            console.log(res.data)
+            dispatch(addSites([res.data]))
           } else {
             alert('The worker is already on this site!')
           }
@@ -85,7 +88,8 @@ export default function AddWorker({ formClass, close, siteId, weekEnding }) {
       })
         .then(res => {
           if (res.data !== 'worker already on this site') {
-            window.location.reload(true)
+            console.log(res.data.data)
+            dispatch(addSites(res.data.data))
           } else {
             alert('The worker is already on this site!')
           }
@@ -146,3 +150,11 @@ export default function AddWorker({ formClass, close, siteId, weekEnding }) {
     </div>
   )
 }
+
+const mapStateToProps = state => {
+  return {
+    sites: state.siteReducers.sites
+  }
+}
+
+export default connect(mapStateToProps)(AddWorker)

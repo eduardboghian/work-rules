@@ -7,8 +7,8 @@ const Sites = require('../models/sites')
 const router = express.Router();
 
 router.get('/get', async (req, res) => {
-    
-    let site = await Sites.find({ _id : req.query.id })
+
+    let site = await Sites.find({ _id: req.query.id })
     res.send(site)
 });
 
@@ -46,7 +46,7 @@ router.post('/add', (req, res) => {
                     item.save()
                         .then(result => res.status(200).send(result))
                         .catch(err => res.status(400).send());
-                    res.send('site created...')    
+                    res.send('site created...')
                     break;
                 default:
                     break;
@@ -57,21 +57,25 @@ router.post('/add', (req, res) => {
     });
 });
 
-router.put('/add-worker', async (req, res)=> {
-    const site = await Sites.findById({_id: req.body.siteId})
-    if(!site)return res.status(500).send('Somthing went wrong! Please try again!')
+router.put('/add-worker', async (req, res) => {
+    const site = await Sites.findById({ _id: req.body.siteId })
+    if (!site) return res.status(500).send('Somthing went wrong! Please try again!')
 
-    let worker = site.workers.find( item => item.worker._id === req.body.newWorker._id )
+    let worker = site.workers.find(item => item.worker._id === req.body.newWorker._id)
     console.log(worker)
     if (!worker) {
-      let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId },{ '$push': { 'workers': {
-          worker: req.body.newWorker,
-          rates: req.body.rates
-      } } },{ new: true })
+        let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId }, {
+            '$push': {
+                'workers': {
+                    worker: req.body.newWorker,
+                    rates: req.body.rates
+                }
+            }
+        }, { new: true })
 
-      res.send(response)
-    }else {
-      res.send('worker already on this site')
+        res.send(response)
+    } else {
+        res.send('worker already on this site')
     }
 })
 
@@ -83,12 +87,12 @@ router.delete('/delete', async (req, res) => {
             res.sendStatus(403);
         }
         if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
-            let site = await Sites.findOne({_id: req.body._id})
+            let site = await Sites.findOne({ _id: req.body._id })
             if (site) {
                 site.remove()
                 site.save()
                 res.status(200).send('site deleted')
-            }else {
+            } else {
                 res.send('no site was found')
             }
 
@@ -100,10 +104,10 @@ router.delete('/delete', async (req, res) => {
 
 router.put('/add-hours', async (req, res) => {
     let site = await Sites.find({ _id: req.body.siteId })
-    if(!site) return res.send('no site with this id was found')
+    if (!site) return res.send('no site with this id was found')
     let newWorkers = site[0].workers
 
-    let worker = site[0].workers.find( item => item.worker._id === req.body.id )
+    let worker = site[0].workers.find(item => item.worker._id === req.body.id)
     let index = site[0].workers.indexOf(worker)
     worker.worker.hours = req.body.hours
     worker.worker.hoursOT = req.body.hoursOT
@@ -117,10 +121,10 @@ router.put('/add-hours', async (req, res) => {
 
 router.put('/add-category', async (req, res) => {
     let site = await Sites.find({ _id: req.body.siteId })
-    if(!site) return res.send('no site with this id was found')
+    if (!site) return res.send('no site with this id was found')
     let newWorkers = site[0].workers
 
-    let worker = site[0].workers.find( item => item.worker._id === req.body.uid )
+    let worker = site[0].workers.find(item => item.worker._id === req.body.uid)
     let index = site[0].workers.indexOf(worker)
     worker.worker.category = req.body.category
 
@@ -133,7 +137,7 @@ router.put('/add-category', async (req, res) => {
 
 router.put('/update-rates', async (req, res) => {
     let site = await Sites.find({ _id: req.body.siteId })
-    if(!site) return res.send('nope')
+    if (!site) return res.send('nope')
     let newWorkers = site[0].workers
 
     let worker = site[0].workers.find(item => item.worker._id === req.body.id)
@@ -142,17 +146,17 @@ router.put('/update-rates', async (req, res) => {
 
     newWorkers[index] = worker
 
-    let response = await Sites.findOneAndUpdate({_id: req.body.siteId}, {workers: newWorkers}, {new: true})
+    let response = await Sites.findOneAndUpdate({ _id: req.body.siteId }, { workers: newWorkers }, { new: true })
 
     res.send(response)
 })
 
 router.put('/payment-status', async (req, res) => {
     let site = await Sites.find({ _id: req.body.siteId })
-    if(!site) return res.send('no site with this id was found')
+    if (!site) return res.send('no site with this id was found')
     let newWorkers = site[0].workers
 
-    let worker = site[0].workers.find( item => item.worker._id === req.body.id )
+    let worker = site[0].workers.find(item => item.worker._id === req.body.id)
     let index = site[0].workers.indexOf(worker)
     worker.worker.paymentStatus = 'Yes'
 
@@ -164,17 +168,17 @@ router.put('/payment-status', async (req, res) => {
 })
 
 router.post('/remove-worker', async (req, res) => {
-    const site = await Sites.find({_id: req.body.siteId})
-    if(!site)return res.status(500).send('Somthing went wrong! Please try again!')
+    const site = await Sites.find({ _id: req.body.siteId })
+    if (!site) return res.status(500).send('Somthing went wrong! Please try again!')
 
-    let worker = site[0].workers.find( item => item.worker._id === req.body.uid )
+    let worker = site[0].workers.find(item => item.worker._id === req.body.uid)
     let index = site[0].workers.indexOf(worker)
 
     site[0].workers.splice(index, 1)
 
-    await Sites.findByIdAndUpdate({ _id: req.body.siteId },site[0] ,{ new: true })
+    let response = await Sites.findByIdAndUpdate({ _id: req.body.siteId }, site[0], { new: true })
 
-    res.send('Removed Successfully!')
+    res.send(response)
 })
 
 router.put('/update-status', async (req, res) => {
