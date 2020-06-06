@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { updateSites, updateHours, updateRatesAction, addSites } from '../../actions/siteActions'
+import { updateHours, updateRatesAction, addSites } from '../../actions/siteActions'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import './css/index.css'
@@ -8,8 +8,8 @@ import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Typography from '@material-ui/core/Typography';
+
+import { addWr, removeWr } from '../../actions/listActions'
 
 function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   const [ratesData, setData] = useState({
@@ -27,9 +27,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     setHours(worker.worker.hours)
     setOT(worker.worker.hoursOT)
     setData(worker.rates)
-    console.log(worker.worker.category)
     setTrade(worker.worker.category)
-    console.log(new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD'))
   }, [worker])
 
   useEffect(() => {
@@ -218,6 +216,15 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     return false
   }
 
+  const updateSelected = (e, siteId, worker) => {
+    if (e.target.checked) {
+      dispatch(addWr(siteId, worker))
+    }
+    else {
+      dispatch(removeWr(siteId, worker.worker.weId))
+    }
+  }
+
   return (
     <div className={`worker-wr`}>
       <ul className={`${even(rowNumber) ? '' : 'grey'} test`}>
@@ -278,7 +285,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
 
         <div><li><input value={ratesData.otGot} onChange={e => updateRates(e.target.value, worker, 'otGot')} /></li></div>
         <div><li><input value={ratesData.otPaid} onChange={e => updateRates(e.target.value, worker, 'otPaid')} /></li></div>
-        <div><li>{ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0}</li></div>
+        {/* <div><li>{ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0}</li></div> */}
         <div><li><input value={hoursOT ? hoursOT : 0} onChange={e => updateRates(e.target.value, worker, 'hoursOT')} /></li></div>
 
         {/* AMOUNTS AND OTHERS */}
@@ -292,6 +299,10 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
           <button className='ok' onClick={e => removeWorkerFromSite(site._id, worker.worker._id, worker.worker.weId)}>OK</button>
           <button className='cancel' onClick={e => setPopStyle('none')}>Cancel</button>
         </section>
+        <label className="container">
+          <input type="checkbox" defaultChecked onChange={e => updateSelected(e, site._id, worker)} />
+          <span className="checkmark"></span>
+        </label>
       </ul>
     </div>
   )

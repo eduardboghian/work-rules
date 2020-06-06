@@ -20,8 +20,8 @@ export const weekEnding = {
   SET_WEEK_ENDING: 'SET_WEEK_ENDING'
 }
 
-export const payslipTypes = {
-  LOAD_WORKERS: 'LOAD_WORKERS',
-  ADD_WORKER: 'ADD_WORKER',
-  REMOVE_WORKER: 'REMOVE_WORKER'
-}
+export const listTypes = {
+  LOAD_DATA: 'LOAD_DATA',
+  ADD_WR: 'ADD_WR',
+  REMOVE_WR: 'REMOVE_WR'
+} 

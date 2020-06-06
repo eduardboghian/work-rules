@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import './css/index.css'
 import axios from 'axios'
 import { addSites } from '../../actions/siteActions'
+import { loadData } from '../../actions/listActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'
 import { generateXlsx } from '../../utils/xlsxGenerator'
@@ -37,11 +38,13 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
             setNewSite(activeSites[0])
             setMenu(activeSites)
             dispatch(addSites(activeSites))
+            dispatch(loadData(activeSites))
             resolve(res.data)
           })
           .catch(error => {
+            console.log(error)
             reject(error)
-            window.location.reload(true)
+            // window.location.reload(true)
           })
       })
 
