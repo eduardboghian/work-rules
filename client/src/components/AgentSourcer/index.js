@@ -40,13 +40,15 @@ const AgentSourcer = props => {
   const classes = useStyles();
 
 
-  useEffect(() => { getData() }, []);
+  useEffect(() => { getData() }, []) // eslint-disable-next-line
   useEffect(() => agSoFilter(), [data, archived, searchedData]);
   useEffect(() => {
     let sortedData = multiSort(filteredData, sort);
     setFilteredData(sortedData);
-  }, [sort]);
-  
+
+    // eslint-disable-next-line
+  }, [sort])
+
   const getData = async () => {
     let data = await getAgentsSourcersData();
     setData(data.data);
@@ -80,7 +82,7 @@ const AgentSourcer = props => {
   };
   return (
     <Box marginRight="-1px">
-      <Dashboard/>
+      <Dashboard />
       {dialog ? (
         <EditCreate
           isDialogOpened={isDialogOpened}
@@ -91,64 +93,64 @@ const AgentSourcer = props => {
           update={getData}
         />
       ) : (
-        <>
-          <Grid container justify="space-between" classes={{ root: classes.pageHeader }}>
-            <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
-              <Typography style={{ paddingRight: "10px" }}>Agent Sourcer</Typography>
-              <Search setSearchedData={setSearchedData} data={data} keys={["role", "firstname", "lastname"]} />
-            </Grid>
-            <Button
-              onClick={() => {
-                isDialogOpened(true);
-                setActionType("create");
-              }}
-              classes={{ root: classes.pageHeaderButton }}
-            >
-              Create
+          <>
+            <Grid container justify="space-between" classes={{ root: classes.pageHeader }}>
+              <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
+                <Typography style={{ paddingRight: "10px" }}>Agent Sourcer</Typography>
+                <Search setSearchedData={setSearchedData} data={data} keys={["role", "firstname", "lastname"]} />
+              </Grid>
+              <Button
+                onClick={() => {
+                  isDialogOpened(true);
+                  setActionType("create");
+                }}
+                classes={{ root: classes.pageHeaderButton }}
+              >
+                Create
             </Button>
-            <Typography>
-              Active
+              <Typography>
+                Active
               <Switch checked={archived} onChange={isArchived.bind(null, !archived)} />
               Archived
             </Typography>
-          </Grid>
-          <TableContainer>
-            <Table style={{ margin: 0 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("role", sort.role)}>
-                    <Grid container>Role {sort.role === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+            </Grid>
+            <TableContainer>
+              <Table style={{ margin: 0 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("role", sort.role)}>
+                      <Grid container>Role {sort.role === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
+                    <TableCell
+                      classes={{ root: classes.cellHeaderSortable }}
+                      onClick={() => {
+                        sortHandler("firstname", sort.firstname);
+                      }}
+                    >
+                      <Grid container> Firstname + Lastname {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
+                    {/* <TableCell classes={{ root: classes.cellHeader }}>Email/Login</TableCell> */}
+                    <TableCell align="center" classes={{ root: classes.cellHeader }}>
+                      Status
                   </TableCell>
-                  <TableCell
-                    classes={{ root: classes.cellHeaderSortable }}
-                    onClick={() => {
-                      sortHandler("firstname", sort.firstname);
-                    }}
-                  >
-                    <Grid container> Firstname + Lastname {sort.firstname === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
-                  </TableCell>
-                  {/* <TableCell classes={{ root: classes.cellHeader }}>Email/Login</TableCell> */}
-                  <TableCell align="center" classes={{ root: classes.cellHeader }}>
-                    Status
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredData.map((item, index) => (
-                  <AgentSourcerRow even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            open={snackbarState}
-            autoHideDuration={5000}
-            onClose={snackbarClose}
-            message={actionType === "edit" ? "Client updated" : "Client created"}
-          />
-        </>
-      )}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredData.map((item, index) => (
+                    <AgentSourcerRow even={index % 2 !== 0} item={item} openDialog={openDialog} setActionType={setActionType} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              open={snackbarState}
+              autoHideDuration={5000}
+              onClose={snackbarClose}
+              message={actionType === "edit" ? "Client updated" : "Client created"}
+            />
+          </>
+        )}
     </Box>
   );
 };

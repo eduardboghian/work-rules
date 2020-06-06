@@ -40,7 +40,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         if (hours !== 0 || hoursOT !== 0) {
           axios.put('/site/add-hours', {
             siteId: site._id,
-            id: worker.worker._id,
+            id: worker.worker.weId,
             hours,
             hoursOT
           })
@@ -53,7 +53,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         if (hours !== 0 || hoursOT !== 0) {
           axios.put('/weekly/add-hours', {
             siteId: site._id,
-            id: worker.worker._id,
+            id: worker.worker.weId,
             hours,
             hoursOT,
             weekEnding
@@ -73,7 +73,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
 
         axios.put('/site/update-rates', {
           siteId: site._id,
-          id: worker.worker._id,
+          id: worker.worker.weId,
           ratesData
         })
           .then(res => { })
@@ -84,7 +84,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
 
         axios.put('/weekly/update-rates', {
           siteId: site._id,
-          id: worker.worker._id,
+          id: worker.worker.weId,
           ratesData,
           weekEnding
         })
@@ -151,13 +151,14 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     }
   }
 
-  const removeWorkerFromSite = (siteId, uid) => {
+  const removeWorkerFromSite = (siteId, uid, weId) => {
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
       axios.post('/site/remove-worker', {
         siteId,
-        uid
+        uid,
+        weId
       })
         .then(res => {
           console.log(res.data)
@@ -168,30 +169,48 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
       axios.put('/weekly/remove-worker', {
         siteId,
         uid,
-        weekEnding
+        weekEnding,
+        weId
       })
         .then(res => dispatch(addSites(res.data.data)))
         .catch(err => console.log(err))
     }
 
+    setPopStyle('none')
   }
 
-  const updateTrade = (trade, siteId, uid) => {
-    axios.put('/site/add-category', {
-      category: trade,
-      siteId,
-      uid
-    })
-      .then(res => console.log(res))
-      .catch(err => console.error(err))
+  const updateTrade = (trade, siteId, uid, weId) => {
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    axios.put('/worker/add-trade', {
-      trade,
-      siteId,
-      uid
-    })
-      .then(res => console.log(res))
-      .catch(err => console.error(err))
+    if (weekEnding === date) {
+      axios.put('/site/add-category', {
+        category: trade,
+        siteId,
+        uid,
+        weId
+      })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+
+      axios.put('/worker/add-trade', {
+        trade,
+        siteId,
+        uid,
+        weId
+      })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+    } else {
+      axios.put('/weekly/add-category', {
+        weekEnding,
+        category: trade,
+        siteId,
+        uid,
+        weId
+      })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+    }
   }
 
   const even = (nr) => {
@@ -212,7 +231,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
             placeholder='Choose percentage tax paid '
             value={trade}
             onChange={e => {
-              updateTrade(e.target.value, site._id, worker.worker._id)
+              updateTrade(e.target.value, site._id, worker.worker._id, worker.worker.weId)
               setTrade(e.target.value)
             }}
           >
@@ -270,7 +289,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         <section className={`remove-btn-wr`}> <li className='remove-btn' onClick={e => setPopStyle('')}>X</li> </section>
         <section className={`${popStyle} pop-out`}>
           Do you want DELETE<br /> {worker ? worker.worker.firstname + ' ' + worker.worker.lastname : null}
-          <button className='ok' onClick={e => removeWorkerFromSite(site._id, worker.worker._id)}>OK</button>
+          <button className='ok' onClick={e => removeWorkerFromSite(site._id, worker.worker._id, worker.worker.weId)}>OK</button>
           <button className='cancel' onClick={e => setPopStyle('none')}>Cancel</button>
         </section>
       </ul>

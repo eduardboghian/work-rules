@@ -5,14 +5,17 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
-import { editCreateStyles } from '../../utils/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
+
+import { editCreateStyles } from '../../utils/styles';
+import { connect } from 'react-redux';
+import { addSites } from '../../actions/siteActions';
+
 import moment from 'moment'
 import axios from 'axios'
 import './css/index.css'
-import { connect } from 'react-redux';
-import { addSites } from '../../actions/siteActions';
+
 
 const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const useStyles = makeStyles(editCreateStyles);
@@ -66,12 +69,8 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
         }
       })
         .then(res => {
-          if (res.data !== 'worker already on this site') {
-            console.log(res.data)
-            dispatch(addSites([res.data]))
-          } else {
-            alert('The worker is already on this site!')
-          }
+          console.log('this is the answer', res.data)
+          dispatch(addSites([res.data]))
         })
         .catch(error => console.log(error))
     } else {
@@ -87,12 +86,9 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
         }
       })
         .then(res => {
-          if (res.data !== 'worker already on this site') {
-            console.log(res.data.data)
-            dispatch(addSites(res.data.data))
-          } else {
-            alert('The worker is already on this site!')
-          }
+          console.log(res.data.data)
+          dispatch(addSites(res.data.data))
+
         })
         .catch(error => console.log(error))
     }
