@@ -9,23 +9,24 @@ const listReducers = (state = stateInitial, action) => {
 
     case listTypes.ADD_WR:
       let list = [...state.list]
-
       let site = list.find(item => item._id === action.payload.siteId)
       let siteIndex = list.indexOf(site)
 
-      list[siteIndex].workers.push(action.payload.worker)
+      let worker1 = site.workers.find(item => item.worker.weId === action.payload.worker.worker.weId)
+      let workerIndex1 = site.workers.indexOf(worker1)
+
+      list[siteIndex].workers[workerIndex1].worker.selectd = true
       return { ...state, list }
 
     case listTypes.REMOVE_WR:
       let list2 = [...state.list]
-
       let site2 = list2.find(item => item._id === action.payload.siteId)
       let siteIndex2 = list2.indexOf(site2)
 
-      let worker = site2.workers.find(item => item.worker.weId === action.payload.workerId)
+      let worker = site2.workers.find(item => item.worker.weId === action.payload.worker.worker.weId)
       let workerIndex = site2.workers.indexOf(worker)
 
-      list2[siteIndex2].workers.splice(workerIndex, 1)
+      list2[siteIndex2].workers[workerIndex].worker.selected = false
       return { ...state, list: list2 }
 
     default:

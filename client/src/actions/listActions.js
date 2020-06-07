@@ -17,12 +17,12 @@ export const addWr = (siteId, worker) => {
   }
 }
 
-export const removeWr = (siteId, workerId) => {
+export const removeWr = (siteId, worker) => {
   return {
     type: listTypes.REMOVE_WR,
     payload: {
       siteId,
-      workerId
+      worker
     }
   }
 }

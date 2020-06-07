@@ -9,9 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { addWr, removeWr } from '../../actions/listActions'
+import { removeWr, addWr } from '../../actions/listActions'
 
-function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
+function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }) {
   const [ratesData, setData] = useState({
     rateGot: 0,
     ratePaid: 0,
@@ -221,7 +221,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
       dispatch(addWr(siteId, worker))
     }
     else {
-      dispatch(removeWr(siteId, worker.worker.weId))
+      dispatch(removeWr(siteId, worker))
     }
   }
 
@@ -283,10 +283,10 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         <div><li>{ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null}</li></div>
         <div><li><input value={hours ? hours : 0} onChange={e => updateRates(e.target.value, worker, 'hours')} /></li></div>
 
-        <div><li><input value={ratesData.otGot} onChange={e => updateRates(e.target.value, worker, 'otGot')} /></li></div>
+        {/* <div><li><input value={ratesData.otGot} onChange={e => updateRates(e.target.value, worker, 'otGot')} /></li></div>
         <div><li><input value={ratesData.otPaid} onChange={e => updateRates(e.target.value, worker, 'otPaid')} /></li></div>
-        {/* <div><li>{ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0}</li></div> */}
-        <div><li><input value={hoursOT ? hoursOT : 0} onChange={e => updateRates(e.target.value, worker, 'hoursOT')} /></li></div>
+        <div><li>{ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0}</li></div>
+        <div><li><input value={hoursOT ? hoursOT : 0} onChange={e => updateRates(e.target.value, worker, 'hoursOT')} /></li></div> */}
 
         {/* AMOUNTS AND OTHERS */}
         <div><li>{worker ? invoiced(worker.worker) === NaN ? null : invoiced(worker.worker) : null}</li></div>

@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import './css/index.css'
 import axios from 'axios'
 import { addSites } from '../../actions/siteActions'
-import { loadData } from '../../actions/listActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'
 import { generateXlsx } from '../../utils/xlsxGenerator'
@@ -17,8 +16,9 @@ import TopBar from './TopBar'
 import Worker from './Worker'
 import moment from 'moment'
 import Dashboard from '../../pages/Dashboard'
+import { loadData } from '../../actions/listActions';
 
-const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
+const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   const [we, setWEs] = useState([])
   const [sitesMenu, setMenu] = useState([])
   const [newSite, setNewSite] = useState({})
@@ -36,15 +36,15 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           .then(res => {
             let activeSites = res.data.filter(site => site.status === 'Active')
             setNewSite(activeSites[0])
-            setMenu(activeSites)
-            dispatch(addSites(activeSites))
-            dispatch(loadData(activeSites))
+            dispatch(loadData([...activeSites]))
+            setMenu([...activeSites])
+            dispatch(addSites([...activeSites]))
             resolve(res.data)
           })
           .catch(error => {
             console.log(error)
             reject(error)
-            // window.location.reload(true)
+            window.location.reload(true)
           })
       })
 
@@ -74,7 +74,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       dispatch(setWeekEnding(date))
     }
 
-
   }, [])
 
   const selectSite = () => {
@@ -100,6 +99,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           setNewSite(activeSites[0])
           setMenu(activeSites)
           dispatch(addSites(activeSites))
+          dispatch(loadData([...activeSites]))
           resolve(res.data)
         })
         .catch(error => {
@@ -157,8 +157,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
             </Grid>
           </Grid>
 
-          <div onClick={e => generateXlsx(sites, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
-          <div onClick={e => generateXlsx(sites, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
+          <div onClick={e => generateXlsx(list, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
+          <div onClick={e => generateXlsx(list, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
         </div>
 
         {sites.map((site, i) => {
@@ -166,7 +166,12 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
             <TopBar site={site} />
             {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div> : null}
             {site.workers.map((worker, i) => {
-              return worker.rates ? <Worker key={i} worker={worker} site={site} rowNumber={i} /> : undefined
+              return worker.rates ? <Worker
+                key={i}
+                worker={worker}
+                site={site}
+                rowNumber={i}
+              /> : undefined
             })}
           </div>
         })}
@@ -207,7 +212,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
 const mapStateToProps = state => {
   return {
     sites: state.siteReducers.sites,
-    weekEnding: state.weekEndingReducers.weekEnding
+    weekEnding: state.weekEndingReducers.weekEnding,
+    list: state.listReducers.list
   }
 }
 

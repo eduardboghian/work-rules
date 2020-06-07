@@ -2,23 +2,22 @@ import { siteTypes } from '../actions/actionTypes'
 
 let stateInit = { sites: [] }
 
-const sitesReducer = (state= stateInit, action) => {
+const sitesReducer = (state = stateInit, action) => {
     let sites, site, siteIndex, worker, workerIndex
 
-    switch(action.type) {
+    switch (action.type) {
         case siteTypes.ADD_SITES:
             return { ...state, sites: action.payload }
 
-        case siteTypes.UPDATE_AVANS: 
+        case siteTypes.UPDATE_AVANS:
             sites = [...state.sites];
-            
             site = state.sites.find(item => item._id === action.payload.siteId);
             siteIndex = state.sites.indexOf(site);
-            
+
             worker = site.workers.find(item => item.worker._id === action.payload.workerId);
             workerIndex = site.workers.indexOf(worker);
 
-            sites[siteIndex].workers[workerIndex].worker.others = action.payload.value ; 
+            sites[siteIndex].workers[workerIndex].worker.others = action.payload.value;
 
             return { ...state, sites };
         case siteTypes.UPDATE_RATES:
@@ -26,7 +25,7 @@ const sitesReducer = (state= stateInit, action) => {
 
             site = state.sites.find(item => item._id === action.payload.siteId);
             siteIndex = state.sites.indexOf(site);
-            
+
             worker = site.workers.find(item => item.worker._id === action.payload.workerId);
             workerIndex = site.workers.indexOf(worker);
 
@@ -34,7 +33,7 @@ const sitesReducer = (state= stateInit, action) => {
 
             return { ...state, sites };
 
-        case siteTypes.UPDATE_HOURS: 
+        case siteTypes.UPDATE_HOURS:
             sites = [...state.sites];
 
             site = state.sites.find(item => item._id === action.payload.siteId);
