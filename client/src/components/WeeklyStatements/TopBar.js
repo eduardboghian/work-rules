@@ -104,12 +104,6 @@ const TopBar = ({ site, weekEnding, sites, selectedList }) => {
         <div><li>Rate paid</li></div>
         <div><li>Margin</li></div>
         <div><li>Hours</li></div>
-
-        {/* <div><li>OT Got</li></div>
-        <div><li>OT Paid</li></div>
-        <div><li>Margin</li></div>
-        <div><li>OT Hours</li></div> */}
-
         <div><li>Invoiced</li></div>
         <div><li>Margin</li></div>
         <div className='last-cell'><li>Worker</li></div>
