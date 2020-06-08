@@ -16,7 +16,7 @@ const listReducers = (state = stateInitial, action) => {
       let workerIndex1 = site.workers.indexOf(worker1)
       console.log(list, workerIndex1)
 
-      list[siteIndex].workers[workerIndex1].worker.selectd = true
+      list[siteIndex].workers[workerIndex1].worker.selected = true
       return { ...state, list }
 
     case listTypes.REMOVE_WR:

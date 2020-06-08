@@ -6,7 +6,8 @@ const moment = require('moment')
 // [x] SET NAMES OF SHEETS
 
 const generateXlsx = async (list, type, weekEnding) => {
-  let sites = [...list]
+  console.log(list)
+  let sites = JSON.parse(JSON.stringify(list))
 
   for (let i = 0; i < sites.length; i++) {
     let newWorkersList = []
