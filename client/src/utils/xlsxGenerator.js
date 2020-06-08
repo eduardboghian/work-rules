@@ -70,7 +70,7 @@ const generateXlsx = async (list, type, weekEnding) => {
   link.remove()
 }
 
-module.exports.generateXlsx = generateXlsx
+export default generateXlsx
 
 const weeklyStatement = (sites) => {
   let excelData = []

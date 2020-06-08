@@ -10,7 +10,7 @@ import axios from 'axios'
 import { addSites } from '../../actions/siteActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'
-import { generateXlsx } from '../../utils/xlsxGenerator'
+import generateXlsx from '../../utils/xlsxGenerator'
 
 import TopBar from './TopBar'
 import Worker from './Worker'
