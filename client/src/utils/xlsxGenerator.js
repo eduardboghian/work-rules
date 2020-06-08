@@ -6,7 +6,6 @@ const moment = require('moment')
 // [x] SET NAMES OF SHEETS
 
 const generateXlsx = async (list, type, weekEnding) => {
-  console.log(list)
   let sites = JSON.parse(JSON.stringify(list))
 
   for (let i = 0; i < sites.length; i++) {
@@ -19,8 +18,6 @@ const generateXlsx = async (list, type, weekEnding) => {
     sites[i].workers = newWorkersList
   }
 
-  console.log(sites)
-
   let wb = XLSX.utils.book_new();
   wb.Props = {
     Title: "WorkRules",
@@ -31,10 +28,14 @@ const generateXlsx = async (list, type, weekEnding) => {
 
   // IMPORT FIRST SHEET
   wb.SheetNames.push('Weekly statement');
-  let ws_data = weeklyStatement(sites);
+  let ws_data = weeklyStatement(sites, weekEnding);
 
-  let ws = XLSX.utils.json_to_sheet(ws_data);
+  let ws = XLSX.utils.json_to_sheet(ws_data, { origin: "A2" });
+  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }]
   wb.Sheets['Weekly statement'] = ws;
+  let editSheet = wb.Sheets['Weekly statement']
+  editSheet['A1'] = { t: 's', v: `${title(weekEnding)}` }
+
 
   //IMPORT SECOND SHEET
   wb.SheetNames.push('New Joiners')
@@ -75,31 +76,22 @@ const generateXlsx = async (list, type, weekEnding) => {
 
 export default generateXlsx
 
-const weeklyStatement = (sites) => {
+const weeklyStatement = (sites, weekEnding) => {
   let excelData = []
   sites.map((site, i) => {
     site.workers.map(worker => {
+      let rateGot = isNaN(parseFloat(worker.rates.rateGot)) ? '0.00' : parseFloat(worker.rates.rateGot).toFixed(2)
+      let hours = isNaN(parseFloat(worker.worker.hours)) ? '0.0' : parseFloat(worker.worker.hours).toFixed(1)
+
       excelData.push({
         Name: worker.worker.lastname + ' ' + worker.worker.firstname,
         'Unique ID': worker.worker.uniqueId,
         NINO: worker.worker.nino,
         Trade: worker.worker.category,
-        Hours: worker.worker.hours,
-        Rate: worker.rates.rateGot,
+        Hours: hours,
+        Rate: rateGot,
         TotalSum: totalSum(worker)
       })
-
-      if (worker.worker.hoursOT > 0) {
-        excelData.push({
-          Name: worker.worker.lastname + ' ' + worker.worker.firstname,
-          'Unique ID': worker.worker.uniqueId,
-          NINO: worker.worker.nino,
-          Trade: worker.worker.category,
-          Hours: worker.worker.hoursOT,
-          Rate: worker.rates.otGot,
-          TotalSum: totalSumOt(worker)
-        })
-      }
     })
   })
 
@@ -109,7 +101,9 @@ const weeklyStatement = (sites) => {
 const newJoiners = (sites) => {
   let excelData = []
   sites.map((site, i) => {
+    let idList = []
     site.workers.map(worker => {
+      if (idList.find(item => item === worker.worker._id)) return
       let status
       let dif = moment(worker.worker.date, "YYYYMMDD").fromNow()
 
@@ -125,6 +119,7 @@ const newJoiners = (sites) => {
         Phone: worker.worker.phone,
         Status: status
       })
+      idList.push(worker.worker._id)
       return true
     })
   })
@@ -134,13 +129,9 @@ const newJoiners = (sites) => {
 
 const totalSum = (worker) => {
   const sum = worker.rates.rateGot * worker.worker.hours
-  return parseFloat(sum) * 0.8
+  return isNaN(parseFloat(sum)) ? '0.00' : (parseFloat(sum) * 0.8).toFixed(2)
 }
 
-const totalSumOt = (worker) => {
-  const sum = worker.rates.otGot * worker.worker.hoursOT
-  return parseFloat(sum) * 0.8
-}
 
 const fileName = (type, weekEnding) => {
   let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MM DD')
@@ -150,4 +141,10 @@ const fileName = (type, weekEnding) => {
   } else {
     return `WorkRules_HHC_WeeklyStatement-${currentTime}-weekending-${weekEnding}.xlsx`
   }
+}
+
+const title = (weekEnding) => {
+  let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MM DD')
+
+  return `Invoice issued ${currentTime} ----- Week Ending ${weekEnding}`
 }

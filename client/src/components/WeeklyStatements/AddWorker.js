@@ -11,6 +11,7 @@ import Input from '@material-ui/core/Input';
 import { editCreateStyles } from '../../utils/styles';
 import { connect } from 'react-redux';
 import { addSites } from '../../actions/siteActions';
+import { loadData } from '../../actions/listActions'
 
 import moment from 'moment'
 import axios from 'axios'
@@ -88,6 +89,7 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
         .then(res => {
           console.log(res.data.data)
           dispatch(addSites(res.data.data))
+          dispatch(loadData(res.data.data))
 
         })
         .catch(error => console.log(error))

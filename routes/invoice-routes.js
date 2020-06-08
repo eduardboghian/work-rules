@@ -26,7 +26,7 @@ router.post('/generate-invoice', async (req, res) => {
     site.workers.map((item, i) => {
         let ot = isNaN(parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)
         let rateGot = isNaN(parseFloat(item.rates.rateGot)) ? 0 : parseFloat(item.rates.rateGot).toFixed(1)
-        let hours = isNaN(parseFloat(item.worker.hours)) ? 0 : parseFloat(item.worker.hours).toFixed(1)
+        let hours = isNaN(parseFloat(item.worker.hours)) ? '0.0' : parseFloat(item.worker.hours).toFixed(1)
 
         let payload = {
             Worker: item.worker.firstname + ' ' + item.worker.lastname,

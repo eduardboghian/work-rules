@@ -13,24 +13,29 @@ const TopBar = ({ site, weekEnding, sites, selectedList }) => {
 
   // GENERATE INVOICE FOR SITE FUNCTION
 
-  const generateInvoice = (sites, type) => {
+  const generateInvoice = (list, type) => {
     let site
     if (type === 'site') {
+      let sites = JSON.parse(JSON.stringify(list))
+      let newWorkersList = []
       for (let j = 0; j < sites.workers.length; j++) {
-        if (sites.workers[j].worker.selected === false) {
-          sites.workers.splice(j, 1)
+        if (sites.workers[j].worker.selected !== false) {
+          newWorkersList.push(sites.workers[j])
         }
       }
+      sites.workers = newWorkersList
       site = sites
     } else {
+      let sites = JSON.parse(JSON.stringify(list))
+
       for (let i = 0; i < sites.length; i++) {
+        let newWorkersList = []
         for (let j = 0; j < sites[i].workers.length; j++) {
-          if (sites[i].workers) {
-            if (sites[i].workers[j].worker.selected === false) {
-              sites[i].workers.splice(j, 1)
-            }
+          if (sites[i].workers[j].worker.selected !== false) {
+            newWorkersList.push(sites[i].workers[j])
           }
         }
+        sites[i].workers = newWorkersList
       }
 
       let sitesOfClient = sites.filter(site => site.companyName === workersForCompany)

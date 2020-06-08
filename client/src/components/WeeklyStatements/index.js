@@ -22,11 +22,9 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   const [we, setWEs] = useState([])
   const [sitesMenu, setMenu] = useState([])
   const [newSite, setNewSite] = useState({})
+  const [removedSite, setRemovedSite] = useState({})
   const [styleStatus, setStyle] = useState('none')
-
-  useEffect(() => {
-    console.log(list)
-  }, [list])
+  const [styleStatus2, setStyle2] = useState('none')
 
   useEffect(() => {
     const addDataToState = () => {
@@ -86,7 +84,24 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
       weekEnding: weekEnding,
       newSite
     })
-      .then(res => window.location.reload(true))
+      .then(res => {
+        dispatch(loadData(res.data.data))
+        dispatch(addSites(res.data.data))
+        setStyle2('none')
+      })
+      .catch(err => console.error(err))
+  }
+
+  const removeSite = () => {
+    axios.put('/weekly/remove-site', {
+      weekEnding: weekEnding,
+      removedSite
+    })
+      .then(res => {
+        dispatch(loadData(res.data.data))
+        dispatch(addSites(res.data.data))
+        setStyle2('none')
+      })
       .catch(err => console.error(err))
   }
 
@@ -182,8 +197,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
         })}
 
         <div className="add-site-wr">
-          {weekEnding !== moment().day(+7).format('YYYY MMMM DD') ? <div className='add-site-btn' onClick={e => setStyle('')}>Add Site</div> : null}
-          <div className={`${styleStatus}`}>
+          {weekEnding !== moment().day(+7).format('YYYY MMMM DD') ? <div className='add-site-btn' onClick={e => setStyle2('')}>Add Site</div> : null}
+          <div className={`${styleStatus2}`}>
             <Grid container direction='row' style={{ width: '450px' }}>
               <Grid item xs={9}>
                 <FormControl fullWidth >
@@ -205,6 +220,34 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
                 </FormControl>
               </Grid>
               <button className="ok-btn" onClick={e => selectSite()}>OK</button>
+            </Grid>
+          </div>
+        </div>
+
+        <div className="remove-site-wr">
+          {weekEnding !== moment().day(+7).format('YYYY MMMM DD') ? <div className='add-site-btn' onClick={e => setStyle('')}>Remove Site</div> : null}
+          <div className={`${styleStatus}`}>
+            <Grid container direction='row' style={{ width: '450px' }}>
+              <Grid item xs={9}>
+                <FormControl fullWidth >
+                  <Select
+                    style={{ width: '80%' }}
+                    renderValue={() => {
+                      return newSite.companyName + ' ' + newSite.siteName
+                    }}
+                    defaultValue={'John'}
+                    onChange={e => {
+                      let site = sitesMenu.find(site => site._id === e.target.value);
+                      setRemovedSite(site)
+                    }}
+                  >
+                    {sitesMenu.map((site, i) => (
+                      <MenuItem key={i} value={site._id}>{site.companyName + ' ' + site.siteName}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <button className="ok-btn" onClick={e => removeSite()}>OK</button>
             </Grid>
           </div>
         </div>

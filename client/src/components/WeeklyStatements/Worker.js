@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { removeWr, addWr } from '../../actions/listActions'
+import { removeWr, addWr, loadData } from '../../actions/listActions'
 
 function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }) {
   const [ratesData, setData] = useState({
@@ -161,6 +161,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
         .then(res => {
           console.log(res.data)
           dispatch(addSites([res.data]))
+          dispatch(loadData([res.data]))
         })
         .catch(err => console.log(err))
     } else {
@@ -282,11 +283,6 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
         <div><li><input value={ratesData.ratePaid} onChange={e => updateRates(e.target.value, worker, 'ratePaid')} /></li></div>
         <div><li>{ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null}</li></div>
         <div><li><input value={hours ? hours : 0} onChange={e => updateRates(e.target.value, worker, 'hours')} /></li></div>
-
-        {/* <div><li><input value={ratesData.otGot} onChange={e => updateRates(e.target.value, worker, 'otGot')} /></li></div>
-        <div><li><input value={ratesData.otPaid} onChange={e => updateRates(e.target.value, worker, 'otPaid')} /></li></div>
-        <div><li>{ratesData.otGot ? makeFloat(ratesData.otGot) - makeFloat(ratesData.otPaid) : 0}</li></div>
-        <div><li><input value={hoursOT ? hoursOT : 0} onChange={e => updateRates(e.target.value, worker, 'hoursOT')} /></li></div> */}
 
         {/* AMOUNTS AND OTHERS */}
         <div><li>{worker ? invoiced(worker.worker) === NaN ? null : invoiced(worker.worker) : null}</li></div>
