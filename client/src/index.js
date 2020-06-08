@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import './index.css';
+import './index.css'
 
 import rootReducer from './reducers/rootReducer';
 

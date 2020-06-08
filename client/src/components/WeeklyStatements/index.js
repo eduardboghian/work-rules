@@ -25,6 +25,10 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   const [styleStatus, setStyle] = useState('none')
 
   useEffect(() => {
+    console.log(list)
+  }, [list])
+
+  useEffect(() => {
     const addDataToState = () => {
       let sitesRes = new Promise((resolve, reject) => {
         axios.get('/site/all', {
@@ -156,6 +160,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
               </FormControl>
             </Grid>
           </Grid>
+
 
           <div onClick={e => generateXlsx(list, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
           <div onClick={e => generateXlsx(list, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
