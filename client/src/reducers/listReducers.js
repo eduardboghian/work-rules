@@ -14,6 +14,7 @@ const listReducers = (state = stateInitial, action) => {
 
       let worker1 = site.workers.find(item => item.worker.weId === action.payload.worker.worker.weId)
       let workerIndex1 = site.workers.indexOf(worker1)
+      console.log(list, workerIndex1)
 
       list[siteIndex].workers[workerIndex1].worker.selectd = true
       return { ...state, list }

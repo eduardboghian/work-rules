@@ -99,7 +99,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
           setNewSite(activeSites[0])
           setMenu(activeSites)
           dispatch(addSites(activeSites))
-          dispatch(loadData([...activeSites]))
           resolve(res.data)
         })
         .catch(error => {
@@ -144,6 +143,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
                     if (e.target.value === date) {
                       dataToState()
                     } else {
+                      dispatch(loadData(currentWE.data))
                       dispatch(addSites(currentWE.data))
                     }
                   }}

@@ -9,14 +9,16 @@ const generateXlsx = async (list, type, weekEnding) => {
   let sites = [...list]
 
   for (let i = 0; i < sites.length; i++) {
+    let newWorkersList = []
     for (let j = 0; j < sites[i].workers.length; j++) {
-      if (sites[i].workers) {
-        if (sites[i].workers[j].worker.selected === false) {
-          sites[i].workers.splice(j, 1)
-        }
+      if (sites[i].workers[j].worker.selected !== false) {
+        newWorkersList.push(sites[i].workers[j])
       }
     }
+    sites[i].workers = newWorkersList
   }
+
+  console.log(sites)
 
   let wb = XLSX.utils.book_new();
   wb.Props = {
