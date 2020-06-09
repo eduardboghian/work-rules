@@ -179,6 +179,33 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
 
           <div onClick={e => generateXlsx(list, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
           <div onClick={e => generateXlsx(list, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
+          <div className="add-site-wr">
+            <div className='add-site-top' onClick={e => setStyle2('')}>Add New Site</div>
+            <div className={`${styleStatus2}`}>
+              <Grid container direction='row' style={{ width: '450px' }}>
+                <Grid item xs={9}>
+                  <FormControl fullWidth >
+                    <Select
+                      style={{ width: '80%' }}
+                      renderValue={() => {
+                        return newSite.companyName + ' ' + newSite.siteName
+                      }}
+                      defaultValue={'John'}
+                      onChange={e => {
+                        let site = sitesMenu.find(site => site._id === e.target.value);
+                        setNewSite(site)
+                      }}
+                    >
+                      {sitesMenu.map((site, i) => (
+                        <MenuItem key={i} value={site._id}>{site.companyName + ' ' + site.siteName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <button className="ok-btn" onClick={e => selectSite()}>OK</button>
+              </Grid>
+            </div>
+          </div>
         </div>
 
         {sites.map((site, i) => {
@@ -195,62 +222,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
             })}
           </div>
         })}
-
-        <div className="add-site-wr">
-          {weekEnding !== moment().day(+7).format('YYYY MMMM DD') ? <div className='add-site-btn' onClick={e => setStyle2('')}>Add Site</div> : null}
-          <div className={`${styleStatus2}`}>
-            <Grid container direction='row' style={{ width: '450px' }}>
-              <Grid item xs={9}>
-                <FormControl fullWidth >
-                  <Select
-                    style={{ width: '80%' }}
-                    renderValue={() => {
-                      return newSite.companyName + ' ' + newSite.siteName
-                    }}
-                    defaultValue={'John'}
-                    onChange={e => {
-                      let site = sitesMenu.find(site => site._id === e.target.value);
-                      setNewSite(site)
-                    }}
-                  >
-                    {sitesMenu.map((site, i) => (
-                      <MenuItem key={i} value={site._id}>{site.companyName + ' ' + site.siteName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <button className="ok-btn" onClick={e => selectSite()}>OK</button>
-            </Grid>
-          </div>
-        </div>
-
-        <div className="remove-site-wr">
-          {weekEnding !== moment().day(+7).format('YYYY MMMM DD') ? <div className='add-site-btn' onClick={e => setStyle('')}>Remove Site</div> : null}
-          <div className={`${styleStatus}`}>
-            <Grid container direction='row' style={{ width: '450px' }}>
-              <Grid item xs={9}>
-                <FormControl fullWidth >
-                  <Select
-                    style={{ width: '80%' }}
-                    renderValue={() => {
-                      return newSite.companyName + ' ' + newSite.siteName
-                    }}
-                    defaultValue={'John'}
-                    onChange={e => {
-                      let site = sitesMenu.find(site => site._id === e.target.value);
-                      setRemovedSite(site)
-                    }}
-                  >
-                    {sitesMenu.map((site, i) => (
-                      <MenuItem key={i} value={site._id}>{site.companyName + ' ' + site.siteName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <button className="ok-btn" onClick={e => removeSite()}>OK</button>
-            </Grid>
-          </div>
-        </div>
 
       </div>
     </div>
