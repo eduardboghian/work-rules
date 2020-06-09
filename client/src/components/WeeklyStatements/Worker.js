@@ -41,41 +41,37 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
-      if (worker.hours !== hours || worker.hoursOT !== hoursOT) {
-        if (hours !== 0 || hoursOT !== 0) {
-          axios.put('/site/add-hours', {
-            siteId: site._id,
-            id: worker.worker.weId,
-            hours,
-            hoursOT
-          })
-            .then(res => { })
-            .catch(err => console.log(err))
-        }
+      if (worker.hours !== hours) {
+        axios.put('/site/add-hours', {
+          siteId: site._id,
+          id: worker.worker.weId,
+          hours,
+          hoursOT
+        })
+          .then(res => { })
+          .catch(err => console.log(err))
+
       }
     } else {
-      if (worker.hours !== hours || worker.hoursOT !== hoursOT) {
-        if (hours !== 0 || hoursOT !== 0) {
-          axios.put('/weekly/add-hours', {
-            siteId: site._id,
-            id: worker.worker.weId,
-            hours,
-            hoursOT,
-            weekEnding
-          })
-            .then(res => { })
-            .catch(err => console.log(err))
-        }
+      if (worker.hours !== hours) {
+        axios.put('/weekly/add-hours', {
+          siteId: site._id,
+          id: worker.worker.weId,
+          hours,
+          hoursOT,
+          weekEnding
+        })
+          .then(res => { })
+          .catch(err => console.log(err))
+
       }
     }
-  }, [hours, hoursOT])
+  }, [hours])
 
   useEffect(() => {
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
     if (weekEnding === date) {
-      if (ratesData.rateGot !== 0 && ratesData.ratePaid) {
-        console.log('the updater', weekEnding, date)
-
+      if (ratesData.rateGot && ratesData.ratePaid) {
         axios.put('/site/update-rates', {
           siteId: site._id,
           id: worker.worker.weId,
@@ -85,8 +81,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
           .catch(err => console.log(err))
       }
     } else {
-      if (ratesData.rateGot !== 0 && ratesData.ratePaid) {
-
+      if (ratesData.rateGot && ratesData.ratePaid) {
         axios.put('/weekly/update-rates', {
           siteId: site._id,
           id: worker.worker.weId,

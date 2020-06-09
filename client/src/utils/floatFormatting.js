@@ -1,6 +1,6 @@
 
 export const floatFormat = (number, type) => {
-  let nr = number.toString()
+  let nr = number ? number.toString() : 0
   let count = 0
   let string1 = ''
   for (let i = 0; i < nr.length; i++) {

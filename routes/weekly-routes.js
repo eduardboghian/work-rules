@@ -102,6 +102,7 @@ router.put('/add-worker', async (req, res) => {
 router.put('/add-site', async (req, res) => {
     let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
     if (!we) return res.send('no site with this id was found')
+    req.body.newSite.workers = []
     we[0].data.push(req.body.newSite)
 
     let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
@@ -109,15 +110,16 @@ router.put('/add-site', async (req, res) => {
 })
 
 router.put('/remove-site', async (req, res) => {
-    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
+    let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding.weekEnding}` })
     if (!we) return res.send('no site with this id was found')
     //we[0].data.push(req.body.newSite)
+    console.log(req.body, we)
     let site = we[0].data.filter(site => site._id === req.body.removedSite._id)
     let siteIndex = we[0].data.indexOf(site)
 
     we[0].data.splice(siteIndex, 1)
 
-    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
+    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding.weekEnding }, we[0], { new: true })
     res.send(response)
 })
 
