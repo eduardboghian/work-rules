@@ -95,11 +95,14 @@ const TopBar = ({ site, weekEnding, sites, selectedList }) => {
   return (
     <div className='topbar-wr'>
       <div className='topbar-btns'>
-        <div><li>{site ? site.companyName ? site.companyName : null : null}</li></div>
-        <div><li>{site ? site.siteName ? site.siteName : null : null}</li></div>
-        <div onClick={e => generateInvoice(site, 'site')}>Generate Invoice for Site</div>
-        <div onClick={e => generateInvoice(sites, 'client')}>Generate Invoice for Client</div>
-        <div onClick={e => addWorkerToSite()}>Add Worker</div>
+        <div className='company-name'>
+          <li>{site ? site.companyName ? site.companyName : null : null} -</li>
+          <li>{site ? site.siteName ? site.siteName : null : null}</li>
+        </div>
+        <div className='generator1' onClick={e => generateInvoice(site, 'site')}>Generate Invoice for Site</div>
+        <div className='generator2' onClick={e => generateInvoice(sites, 'client')}>Generate Invoice for Client</div>
+        <div className='add-worker' onClick={e => addWorkerToSite()}>Add Worker</div>
+        <div className='remove-site' >Remove this Site</div>
       </div>
       <ul>
         <div><li>Worker Name</li></div>
