@@ -9,17 +9,21 @@
 .grey div {
     background-color: rgb(234, 234, 234) !important;
 }
-
+.topbar-btns {
+    position: relative;
+    width: 96%;
+}
 .topbar-btns div{
-    background-color: rgb(251, 179, 46);
-    border-radius: 8px ;
-    height: 30px;
-    margin: 1px 50px 3px 0;
-    padding: 0 20px;
+    height: 20px;
     text-align: center;
-    line-height: 30px;
+    line-height: 20px;
     cursor: pointer;
     display: inline-block;
+    margin-bottom: 10px;
+}
+.company-name li {
+    display: inline-block;
+    font-weight: bold;
 }
 
 .topbar-wr{
@@ -27,7 +31,7 @@
 }
 .topbar-wr ul, .worker-wr ul  {
     display: grid;
-    grid-template-columns: 18% 12% 8% 5% 5% 5% 5% 5% 5% 5% 5% 7% 5% 6% 4%;
+    grid-template-columns: 18% 12% 10% 8% 8% 8% 8% 8% 8% 8% 2% 2%;
 }
 .topbar-wr li, .worker-wr li {
     text-align: center !important;
@@ -160,6 +164,7 @@
     text-align: center;
     float: right;
     cursor: pointer;
+    
 }
 
 .remove-btn {
@@ -168,14 +173,15 @@
     background-color:  rgb(245, 21, 21) !important;
     color: #fff !important;
     border-radius: 4px !important;
-    line-height: 25px !important;
+    line-height: 28px !important;
     text-align: center !important;
     float: right !important;
     cursor: pointer !important;
     border: none !important;
     position: absolute;
     left: 5px;
-    top: 2px
+    top: 3px;
+    font-weight: bold;
 }
 
 .remove-btn-wr {
@@ -311,6 +317,7 @@
 .container {
   display: block;
   position: relative;
+  top: 3px;
   padding-left: 35px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -366,7 +373,7 @@
 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 9px;
+  left: 7px;
   top: 5px;
   width: 5px;
   height: 10px;
@@ -375,4 +382,32 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+
+.generator1 {
+    margin: 0 10px;
+    color: blue;
+    border-bottom: 1px solid blue;
+    position: absolute;
+    right: 28%;
+}
+.generator2 {
+    margin: 0 10px;
+    color: blue;
+    border-bottom: 1px solid blue;
+    position: absolute;
+    right: 15%;
+}
+.add-worker {
+    color: rgb(18, 204, 18);
+    border-bottom: 1px solid rgb(18, 204, 18);
+    position: absolute;
+    right: 9%;
+}
+.remove-site {
+    color: red;
+    border-bottom: 1px solid red;
+    position: absolute;
+    right: 0;
 }
