@@ -177,10 +177,12 @@ router.post('/remove-worker', async (req, res) => {
 })
 
 router.put('/update-status', async (req, res) => {
+  console.log(req.body)
   let newStatus = req.body.value
-
   let site = await Sites.findOneAndUpdate({ _id: req.body.id }, { status: newStatus }, { new: true })
 
+
+  console.log(site)
   let response = await Sites.find()
   res.send(response)
 })

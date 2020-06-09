@@ -39,7 +39,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
             let activeSites = res.data.filter(site => site.status === 'Active')
             setNewSite(activeSites[0])
             dispatch(loadData([...activeSites]))
-            setMenu([...activeSites])
+            setMenu([...res.data])
             dispatch(addSites([...activeSites]))
             resolve(res.data)
           })
@@ -79,30 +79,31 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   }, [])
 
   const selectSite = () => {
-    newSite.workers = []
-    axios.put('/weekly/add-site', {
-      weekEnding: weekEnding,
-      newSite
-    })
-      .then(res => {
-        dispatch(loadData(res.data.data))
-        dispatch(addSites(res.data.data))
-        setStyle2('none')
-      })
-      .catch(err => console.error(err))
-  }
+    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-  const removeSite = () => {
-    axios.put('/weekly/remove-site', {
-      weekEnding: weekEnding,
-      removedSite
-    })
-      .then(res => {
-        dispatch(loadData(res.data.data))
-        dispatch(addSites(res.data.data))
-        setStyle2('none')
+    if (weekEnding === date) {
+      axios.put('/site/update-status', {
+        id: newSite._id,
+        value: "Active"
       })
-      .catch(err => console.error(err))
+        .then(res => {
+          console.log(res.data)
+          let activeSites = res.data.filter(site => site.status === 'Active')
+          dispatch(addSites(activeSites))
+        })
+        .catch(err => console.log(err))
+    } else {
+      axios.put('/weekly/add-site', {
+        weekEnding: weekEnding,
+        newSite
+      })
+        .then(res => {
+          dispatch(loadData(res.data.data))
+          dispatch(addSites(res.data.data))
+          setStyle2('none')
+        })
+        .catch(err => console.error(err))
+    }
   }
 
   const dataToState = () => {
@@ -210,7 +211,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
 
         {sites.map((site, i) => {
           return <div key={i}>
-            <TopBar site={site} />
+            <TopBar site={site} clientId={''} />
             {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div> : null}
             {site.workers.map((worker, i) => {
               return worker.rates ? <Worker
