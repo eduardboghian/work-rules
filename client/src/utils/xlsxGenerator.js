@@ -36,6 +36,14 @@ const generateXlsx = async (list, type, weekEnding) => {
   let editSheet = wb.Sheets['Weekly statement']
   editSheet['A1'] = { t: 's', v: `${title(weekEnding)}` }
 
+
+  //IMPORT SECOND SHEET
+  wb.SheetNames.push('New Joiners')
+  ws_data = newJoiners(sites)
+
+  ws = XLSX.utils.json_to_sheet(ws_data)
+  wb.Sheets['New Joiners'] = ws
+
   let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
 
   function s2ab(s) {
@@ -64,52 +72,6 @@ const generateXlsx = async (list, type, weekEnding) => {
   document.body.appendChild(link);
   link.click()
   link.remove()
-
-
-
-  //IMPORT SECOND SHEET
-  let wb2 = XLSX.utils.book_new()
-  wb2.Props = {
-    Title: "WorkRules",
-    Subject: "New Joiners",
-    Author: "WorkRules",
-    CreatedDate: moment().format('YYYY MM DD')
-  }
-
-  wb2.SheetNames.push('New Joiners')
-  ws_data = newJoiners(sites)
-
-  ws = XLSX.utils.json_to_sheet(ws_data)
-  wb2.Sheets['New Joiners'] = ws
-
-  wbout = XLSX.write(wb2, { bookType: 'xlsx', type: 'binary' });
-
-  function s2ab(s) {
-    let buf = new ArrayBuffer(s.length);
-    let view = new Uint8Array(buf);
-    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-    return buf;
-  }
-
-  function arrayBufferToBase64(buffer) {
-    let binary = '';
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-  }
-  b64 = arrayBufferToBase64(s2ab(wbout))
-
-  // Insert a link that allows the user to download the PDF file
-  link = document.createElement('a');
-  link.innerHTML = 'Download PDF file';
-  link.download = `WorkRules New Joiners - Weekending ${moment(weekEnding).format('YYYY MMMM DD')}.xlsx`;
-  link.href = 'data:application/octet-stream;base64,' + b64;
-  document.body.appendChild(link);
-  link.click()
-  link.remove()
 }
 
 export default generateXlsx
@@ -123,7 +85,7 @@ const weeklyStatement = (sites, weekEnding) => {
 
       excelData.push({
         Name: worker.worker.lastname + ' ' + worker.worker.firstname,
-        'Unique ID': worker.worker.uniqueID,
+        'Unique ID': worker.worker.uniqueId,
         NINO: worker.worker.nino,
         Trade: worker.worker.category,
         Hours: hours,
@@ -172,14 +134,17 @@ const totalSum = (worker) => {
 
 
 const fileName = (type, weekEnding) => {
-  let currentTime = moment(weekEnding).add(12, 'days').format('YYYY MMMM DD')
+  let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MM DD')
 
-  return `Weekending-${moment(weekEnding).format('YYYY MMMM DD')} - Payrates to be paid ${currentTime}.xlsx`
+  if (type === 'Matt') {
+    return `WorkRules_CompuPay_WeeklyStatement-${currentTime}-weekending-${weekEnding}.xlsx`
+  } else {
+    return `WorkRules_HHC_WeeklyStatement-${currentTime}-weekending-${weekEnding}.xlsx`
+  }
 }
 
-
 const title = (weekEnding) => {
-  let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MMMM DD')
+  let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MM DD')
 
   return `Invoice issued ${currentTime} ----- Week Ending ${weekEnding}`
 }
