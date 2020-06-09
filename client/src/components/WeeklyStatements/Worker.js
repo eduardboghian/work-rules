@@ -11,12 +11,19 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { removeWr, addWr, loadData } from '../../actions/listActions'
 
+import { floatFormat } from '../../utils/floatFormatting'
+
 function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }) {
   const [ratesData, setData] = useState({
     rateGot: 0,
     ratePaid: 0,
     otGot: 0,
     otPaid: 0
+  })
+  const [focuse, setFocuse] = useState({
+    rateGot: false,
+    ratePaid: false,
+    hours: false
   })
   const [hours, setHours] = useState(0)
   const [hoursOT, setOT] = useState(0)
@@ -278,16 +285,30 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
 
         <div><li className='small-text'>upload timesheet</li></div>
 
-        {/* RATES */}
-        <div><li><input value={ratesData.rateGot} onChange={e => updateRates(e.target.value, worker, 'rateGot')} /></li></div>
-        <div><li><input value={ratesData.ratePaid} onChange={e => updateRates(e.target.value, worker, 'ratePaid')} /></li></div>
-        <div><li>{ratesData ? `${makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid)}` : null}</li></div>
-        <div><li><input value={hours ? hours : 0} onChange={e => updateRates(e.target.value, worker, 'hours')} /></li></div>
+        {/* RATES  floatFormat(ratesData.rateGot, '')*/}
+        <div><li><input
+          value={focuse.rateGot === false ? floatFormat(ratesData.rateGot, '') : ratesData.rateGot}
+          onFocus={e => setFocuse({ ...focuse, rateGot: true })}
+          onBlur={e => setFocuse({ ...focuse, rateGot: false })}
+          onChange={e => updateRates(e.target.value, worker, 'rateGot')}
+        /></li></div>
+        <div><li><input
+          value={focuse.ratePaid === false ? floatFormat(ratesData.ratePaid) : ratesData.ratePaid}
+          onFocus={e => setFocuse({ ...focuse, ratePaid: true })}
+          onBlur={e => setFocuse({ ...focuse, ratePaid: false })}
+          onChange={e => updateRates(e.target.value, worker, 'ratePaid')}
+        /></li></div>
+        <div><li>{ratesData ? `${floatFormat(makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid), ' ')}` : null}</li></div>
+        <div><li><input
+          value={focuse.hours === false ? floatFormat(hours, 'hours') : hours}
+          onFocus={e => setFocuse({ ...focuse, hours: true })}
+          onBlur={e => setFocuse({ ...focuse, hours: false })}
+          onChange={e => updateRates(e.target.value, worker, 'hours')} /></li></div>
 
         {/* AMOUNTS AND OTHERS */}
-        <div><li>{worker ? invoiced(worker.worker) === NaN ? null : invoiced(worker.worker) : null}</li></div>
-        <div><li>{worker ? getMargin() : null}</li></div>
-        <div className='last-cell'><li>{worker ? workerAmount(worker) === NaN ? null : workerAmount(worker.worker) : null}</li></div>
+        <div><li>{worker ? invoiced(worker.worker) === NaN ? null : floatFormat(invoiced(worker.worker), ' ') : null}</li></div>
+        <div><li>{worker ? floatFormat(getMargin(), ' ') : null}</li></div>
+        <div className='last-cell'><li>{worker ? workerAmount(worker) === NaN ? null : floatFormat(workerAmount(worker.worker), '') : null}</li></div>
 
         <section className={`remove-btn-wr`}> <li className='remove-btn' onClick={e => setPopStyle('')}>X</li> </section>
         <section className={`${popStyle} pop-out`}>
