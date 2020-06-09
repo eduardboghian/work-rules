@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import axios from 'axios'
 import AddWorker from './AddWorker'
+import { addSites } from '../../actions/siteActions'
 
-const TopBar = ({ site, weekEnding, sites, selectedList }) => {
+const TopBar = ({ dispatch, site, weekEnding, sites, selectedList }) => {
   const [workersForCompany, setWrC] = useState([])
   const [formClass, setClass] = useState('none')
 
@@ -83,6 +84,27 @@ const TopBar = ({ site, weekEnding, sites, selectedList }) => {
       .catch(err => console.log(err))
   }
 
+  const deleteSite = id => {
+    // axios.put('/client/site-status', {
+    //   clientId: clientId,
+    //   siteId: id,
+    //   value: 'Not Active' 
+    // })
+    // .then(res => {})
+    // .catch(err => console.error(err))
+
+    axios.put('/site/update-status', {
+      id,
+      value: 'Not Active'
+    })
+      .then(res => {
+        let activeSites = res.data.filter(site => site.status === 'Active')
+        dispatch(addSites(activeSites))
+      })
+      .catch(err => console.log(err))
+
+  };
+
 
   const addWorkerToSite = () => {
     setClass('')
@@ -102,7 +124,7 @@ const TopBar = ({ site, weekEnding, sites, selectedList }) => {
         <div className='generator1' onClick={e => generateInvoice(site, 'site')}>Generate Invoice for Site</div>
         <div className='generator2' onClick={e => generateInvoice(sites, 'client')}>Generate Invoice for Client</div>
         <div className='add-worker' onClick={e => addWorkerToSite()}>Add Worker</div>
-        <div className='remove-site' >Remove this Site</div>
+        <div className='remove-site' onClick={e => deleteSite(site._id)}>Remove this Site</div>
       </div>
       <ul>
         <div><li>Worker Name</li></div>
