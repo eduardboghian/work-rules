@@ -726,7 +726,7 @@ const EditCreate = props => {
       <Grid className='trades-list'>
         <p>Trade</p>
         <Grid className='trades-wr'>
-          {temporaryData.trades.map((trade, i) => {
+          {temporaryData.trades.slice(0).reverse().map((trade, i) => {
             return <div key={i} className='trades-elements'>{trade}</div>
           })}
         </Grid>
