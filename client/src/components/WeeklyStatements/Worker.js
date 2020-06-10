@@ -13,26 +13,17 @@ import { removeWr, addWr, loadData } from '../../actions/listActions'
 
 import { floatFormat } from '../../utils/floatFormatting'
 
-function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }) {
+function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   const [ratesData, setData] = useState({
-    rateGot: 0,
-    ratePaid: 0,
-    otGot: 0,
-    otPaid: 0
+    rateGot: '',
+    ratePaid: ''
   })
-  const [focuse, setFocuse] = useState({
-    rateGot: false,
-    ratePaid: false,
-    hours: false
-  })
-  const [hours, setHours] = useState(0)
-  const [hoursOT, setOT] = useState(0)
+  const [hours, setHours] = useState('')
   const [trade, setTrade] = useState('')
   const [popStyle, setPopStyle] = useState('none')
 
   useEffect(() => {
     setHours(worker.worker.hours)
-    setOT(worker.worker.hoursOT)
     setData(worker.rates)
     setTrade(worker.worker.category)
   }, [worker])
@@ -41,24 +32,23 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
-      if (worker.hours !== hours) {
+      if (hours.includes(',')) {
         axios.put('/site/add-hours', {
           siteId: site._id,
           id: worker.worker.weId,
           hours,
-          hoursOT
+
         })
           .then(res => { })
           .catch(err => console.log(err))
 
       }
     } else {
-      if (worker.hours !== hours) {
+      if (hours.includes(',')) {
         axios.put('/weekly/add-hours', {
           siteId: site._id,
           id: worker.worker.weId,
           hours,
-          hoursOT,
           weekEnding
         })
           .then(res => { })
@@ -95,19 +85,33 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
   }, [ratesData])
 
   const makeFloat = (nr) => {
-    return parseFloat(nr).toFixed(1)
+    let test = nr.split('.').join('')
+    test = test.replace('\,', '.')
+
+    return test
   }
 
-  const invoiced = (worker) => {
-    let ot = ratesData.otGot * hoursOT ? ratesData.otGot * hoursOT : 0
-    let res = (ratesData.rateGot * hours + ot) * 0.8
+  const invoiced = () => {
+    let rate = ratesData.rateGot.replace(/\./, '');
+    rate = rate.replace('\,', '.')
+    rate = parseFloat(rate)
+
+    let hr = hours.replace('\,', '.')
+    hr = parseFloat(hr)
+
+    let res = (rate * hr) * 0.8
     res = isNaN(res) ? 0 : res.toFixed(1)
     return res
   }
-  const workerAmount = (worker) => {
-    let ot = ratesData.otPaid * hoursOT ? ratesData.otPaid * hoursOT : 0
+  const workerAmount = () => {
+    let rate = ratesData.ratePaid.replace(/\./, '');
+    rate = rate.replace('\,', '.')
+    rate = parseFloat(rate)
 
-    let res = (ratesData.ratePaid * hours + ot) * 0.8
+    let hr = hours.replace('\,', '.')
+    hr = parseFloat(hr)
+
+    let res = (rate * hr) * 0.8
     res = isNaN(res) ? 0 : res.toFixed(1)
     return res
   }
@@ -120,31 +124,26 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
   }
 
   const updateRates = async (value, worker, field) => {
-    console.log('updateing rates...')
     switch (field) {
       case 'hours':
+        value = value.toString().replace(/[^0-9\,]/g, "")
         if (value === undefined) value = 0
         setHours(value)
         console.log(await hours)
         worker[field] = value
-        dispatch(updateHours(site._id, worker.worker._id, value, hoursOT))
-        break
-
-      case 'hoursOT':
-        if (value === undefined) value = 0
-        setOT(value)
-        console.log(await hoursOT)
-
-        dispatch(updateHours(site._id, worker.worker._id, hours, value))
+        dispatch(updateHours(site._id, worker.worker._id, value))
         break
 
       case 'rateGot':
       case 'ratePaid':
-      case 'otGot':
-      case 'otPaid':
         if (value === undefined) value = 0
-        value = value.replace(/[^0-9\.]/g, "")
-        console.log(value)
+        value = value.toString().replace(/[^0-9\,\.]/g, "")
+        //value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+
+        // const parts = value.split(",");
+        // const result = `${parts[0]},${parts[1][0] || "0"}`;
+        // value = result
+
         setData({ ...ratesData, [field]: value })
         dispatch(updateRatesAction(site._id, worker.worker._id, { ...ratesData, [field]: value }))
         break
@@ -230,6 +229,23 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
     }
   }
 
+  const updateOnBlur = (value) => {
+    if (value.length === 0) value = '0'
+    value = value.split('.').join("")
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+
+    if (!value.includes(',')) {
+      return value.concat(',0')
+    } else {
+      let arr = value.split(',')
+      let val
+
+      val = arr[0].concat(`,${arr[1].charAt(0)}`)
+      console.log('teeest', val)
+      return val
+    }
+  }
+
   return (
     <div className={`worker-wr`}>
       <ul className={`${even(rowNumber) ? '' : 'grey'} test`}>
@@ -284,23 +300,33 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
 
         {/* RATES  floatFormat(ratesData.rateGot, '')*/}
         <div><li><input
-          value={focuse.rateGot === false ? floatFormat(ratesData.rateGot, 'hours') : ratesData.rateGot}
-          onFocus={e => setFocuse({ ...focuse, rateGot: true })}
-          onBlur={e => setFocuse({ ...focuse, rateGot: false })}
-          onChange={e => updateRates(e.target.value, worker, 'rateGot')}
+          value={ratesData.rateGot}
+          onBlur={e => {
+            let newVal = updateOnBlur(e.target.value)
+            updateRates(newVal, worker, 'rateGot')
+          }}
+          onChange={e => { updateRates(e.target.value, worker, 'rateGot') }}
         /></li></div>
+
         <div><li><input
-          value={focuse.ratePaid === false ? floatFormat(ratesData.ratePaid, 'hours') : ratesData.ratePaid}
-          onFocus={e => setFocuse({ ...focuse, ratePaid: true })}
-          onBlur={e => setFocuse({ ...focuse, ratePaid: false })}
+          value={ratesData.ratePaid}
+          onBlur={e => {
+            let newVal = updateOnBlur(e.target.value)
+            updateRates(newVal, worker, 'ratePaid')
+          }}
           onChange={e => updateRates(e.target.value, worker, 'ratePaid')}
         /></li></div>
-        <div><li>{ratesData ? `${floatFormat(makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid), ' ')}` : null}</li></div>
+
+        <div><li>{ratesData ? `${floatFormat(makeFloat(ratesData.rateGot) - makeFloat(ratesData.ratePaid), 'one')}` : null}</li></div>
+
         <div><li><input
-          value={focuse.hours === false ? floatFormat(hours, 'hours') : hours}
-          onFocus={e => setFocuse({ ...focuse, hours: true })}
-          onBlur={e => setFocuse({ ...focuse, hours: false })}
-          onChange={e => updateRates(e.target.value, worker, 'hours')} /></li></div>
+          value={hours}
+          onBlur={e => {
+            let newVal = updateOnBlur(e.target.value)
+            updateRates(newVal, worker, 'hours')
+          }}
+          onChange={e => { updateRates(e.target.value, worker, 'hours') }}
+        /></li></div>
 
         {/* AMOUNTS AND OTHERS */}
         <div><li>{worker ? invoiced(worker.worker) === NaN ? null : floatFormat(invoiced(worker.worker), ' ') : null}</li></div>

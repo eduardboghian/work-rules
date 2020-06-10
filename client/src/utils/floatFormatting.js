@@ -1,6 +1,8 @@
 
 export const floatFormat = (number, type) => {
-  if (type === 'hours') {
+  number = replaceDot(number)
+
+  if (type === 'one') {
     let nr = new Intl.NumberFormat('de-DE', {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
@@ -15,3 +17,7 @@ export const floatFormat = (number, type) => {
   return nr
 }
 
+const replaceDot = (value) => {
+  let newValue = value.toString().replace(/,/g, '.')
+  return newValue
+}

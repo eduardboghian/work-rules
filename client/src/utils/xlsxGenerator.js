@@ -36,6 +36,7 @@ const generateXlsx = async (list, type, weekEnding) => {
   let editSheet = wb.Sheets['Weekly statement']
   editSheet['A1'] = { t: 's', v: `${title(weekEnding)}` }
 
+  editSheet['G4'] = { s: { sz: '232' } }
   let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
 
   function s2ab(s) {
