@@ -143,6 +143,8 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
       case 'otGot':
       case 'otPaid':
         if (value === undefined) value = 0
+        value = value.replace(/[^0-9\.]/g, "")
+        console.log(value)
         setData({ ...ratesData, [field]: value })
         dispatch(updateRatesAction(site._id, worker.worker._id, { ...ratesData, [field]: value }))
         break
@@ -282,13 +284,13 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber, list, setList }
 
         {/* RATES  floatFormat(ratesData.rateGot, '')*/}
         <div><li><input
-          value={focuse.rateGot === false ? floatFormat(ratesData.rateGot, '') : ratesData.rateGot}
+          value={focuse.rateGot === false ? floatFormat(ratesData.rateGot, 'hours') : ratesData.rateGot}
           onFocus={e => setFocuse({ ...focuse, rateGot: true })}
           onBlur={e => setFocuse({ ...focuse, rateGot: false })}
           onChange={e => updateRates(e.target.value, worker, 'rateGot')}
         /></li></div>
         <div><li><input
-          value={focuse.ratePaid === false ? floatFormat(ratesData.ratePaid) : ratesData.ratePaid}
+          value={focuse.ratePaid === false ? floatFormat(ratesData.ratePaid, 'hours') : ratesData.ratePaid}
           onFocus={e => setFocuse({ ...focuse, ratePaid: true })}
           onBlur={e => setFocuse({ ...focuse, ratePaid: false })}
           onChange={e => updateRates(e.target.value, worker, 'ratePaid')}
