@@ -178,8 +178,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
           </Grid>
 
 
-          <div onClick={e => generateXlsx(list, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
-          <div onClick={e => generateXlsx(list, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
+          <div onClick={e => generateXlsx(sites, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
+          <div onClick={e => generateXlsx(sites, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
           <div className="add-site-wr">
             <div className='add-site-top' onClick={e => setStyle2('')}>Add New Site</div>
             <div className={`${styleStatus2}`}>

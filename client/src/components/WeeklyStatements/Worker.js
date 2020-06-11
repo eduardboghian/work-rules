@@ -191,7 +191,10 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         uid,
         weId
       })
-        .then(res => console.log(res))
+        .then(res => {
+          dispatch(addSites([res.data]))
+          dispatch(loadData([res.data]))
+        })
         .catch(err => console.error(err))
 
       axios.put('/worker/add-trade', {
@@ -210,7 +213,9 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         uid,
         weId
       })
-        .then(res => console.log(res))
+        .then(res => {
+          dispatch(addSites(res.data.data))
+        })
         .catch(err => console.error(err))
     }
   }

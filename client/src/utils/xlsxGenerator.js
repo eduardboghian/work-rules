@@ -35,8 +35,6 @@ const generateXlsx = async (list, type, weekEnding) => {
   wb.Sheets['Weekly statement'] = ws;
   let editSheet = wb.Sheets['Weekly statement']
   editSheet['A1'] = { t: 's', v: `${title(weekEnding)}` }
-
-  editSheet['G4'] = { s: { sz: '232' } }
   let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
 
   function s2ab(s) {
@@ -119,16 +117,16 @@ const weeklyStatement = (sites, weekEnding) => {
   let excelData = []
   sites.map((site, i) => {
     site.workers.map(worker => {
-      let rateGot = isNaN(parseFloat(worker.rates.rateGot)) ? '0.00' : parseFloat(worker.rates.rateGot).toFixed(2)
-      let hours = isNaN(parseFloat(worker.worker.hours)) ? '0.0' : parseFloat(worker.worker.hours).toFixed(1)
+      let rateGot = worker.rates.rateGot.length === 0 ? '0.00' : worker.rates.rateGot
+      let hours = worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours
 
       excelData.push({
         Name: worker.worker.lastname + ' ' + worker.worker.firstname,
         'Unique ID': worker.worker.uniqueID,
         NINO: worker.worker.nino,
         Trade: worker.worker.category,
-        Hours: hours,
-        Rate: rateGot,
+        Hours: makeFloat(hours),
+        Rate: makeFloat(rateGot),
         TotalSum: totalSum(worker)
       })
     })
@@ -167,8 +165,8 @@ const newJoiners = (sites) => {
 }
 
 const totalSum = (worker) => {
-  const sum = worker.rates.rateGot * worker.worker.hours
-  return isNaN(parseFloat(sum)) ? '0.00' : (parseFloat(sum) * 0.8).toFixed(2)
+  const sum = makeFloat(worker.rates.rateGot) * makeFloat(worker.worker.hours)
+  return sum.toFixed(2)
 }
 
 
@@ -183,4 +181,11 @@ const title = (weekEnding) => {
   let currentTime = moment(weekEnding).add(7, 'days').format('YYYY MMMM DD')
 
   return `Invoice issued ${currentTime} ----- Week Ending ${weekEnding}`
+}
+
+const makeFloat = (nr) => {
+  let test = nr.split('.').join('')
+  test = test.replace('\,', '.')
+
+  return parseFloat(test).toFixed(1)
 }
