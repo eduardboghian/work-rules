@@ -38,9 +38,9 @@ const xlsxG = async (list, type, weekEnding) => {
   ]
 
   //FORMATS
-  sheet.getColumn('G').numFmt = '#,##0.00;"-";[Magenta]@'
-  sheet.getColumn('F').numFmt = '#,##0.00;"-";[Magenta]@'
-  sheet.getColumn('E').numFmt = '##.0;"-";[Magenta]@'
+  sheet.getColumn('G').numFmt = '#,##0.00;"-"'
+  sheet.getColumn('F').numFmt = '#,##0.00;"-"'
+  sheet.getColumn('E').numFmt = '##.0;"-"'
 
   //DATA
   sheet.mergeCells('A1:G1')
