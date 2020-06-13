@@ -138,12 +138,6 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
       case 'ratePaid':
         if (value === undefined) value = 0
         value = value.toString().replace(/[^0-9\,\.]/g, "")
-        //value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-        // const parts = value.split(",");
-        // const result = `${parts[0]},${parts[1][0] || "0"}`;
-        // value = result
-
         setData({ ...ratesData, [field]: value })
         dispatch(updateRatesAction(site._id, worker.worker._id, { ...ratesData, [field]: value }))
         break

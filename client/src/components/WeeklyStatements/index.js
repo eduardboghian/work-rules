@@ -80,15 +80,31 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   }, [])
 
   const selectSite = () => {
+
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
     if (weekEnding === date) {
+      axios.post('/client/get-by-name', {
+        companyName: newSite.companyName
+      })
+        .then(res => {
+          console.log(res.data[0])
+          axios.put('/client/site-status', {
+            clientId: res.data[0]._id,
+            siteId: newSite._id,
+            value: 'Active'
+          })
+            .then(res => console.log(res))
+            .catch(err => console.error(err))
+        })
+        .catch(err => console.error(err))
+
+
       axios.put('/site/update-status', {
         id: newSite._id,
         value: "Active"
       })
         .then(res => {
-          console.log(res.data)
           let activeSites = res.data.filter(site => site.status === 'Active')
           dispatch(addSites(activeSites))
         })

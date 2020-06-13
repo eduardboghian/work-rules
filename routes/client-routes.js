@@ -19,6 +19,11 @@ router.get('/get', (req, res) => {
     });
 });
 
+router.post('/get-by-name', async (req, res) => {
+    let client = await Clients.find({ companyName: req.body.companyName })
+    res.send(client)
+})
+
 router.post('/add', async (req, res) => {
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
@@ -36,7 +41,6 @@ router.post('/add', async (req, res) => {
                     break;
                 case 'create':
                     delete req.body.data._id
-                    console.log(req.body.data)
                     const item = new Clients(req.body.data);
                     item.save()
                         .then(result => res.status(200).send(result))
@@ -44,7 +48,7 @@ router.post('/add', async (req, res) => {
                             console.log(err)
                             res.status(400).send(err)
                         });
-                    res.status(200)    
+                    res.status(200)
                     break;
                 default:
                     break;
@@ -56,9 +60,10 @@ router.post('/add', async (req, res) => {
 });
 
 router.put('/site-status', async (req, res) => {
+    console.log(req.body)
     let client = await Clients.find({ _id: req.body.clientId })
     client = client[0]
-    
+
     let site = client.sites.find(item => item._id == req.body.siteId)
     let index = client.sites
 
@@ -73,7 +78,7 @@ router.put('/site-status', async (req, res) => {
 router.delete('/delete-site', async (req, res) => {
     let client = await Clients.find({ _id: req.body.clientId })
     client = client[0]
-    
+
     let site = client.sites.find(item => item._id == req.body.siteId)
     let index = client.sites.indexOf(site)
 

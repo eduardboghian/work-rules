@@ -40,7 +40,6 @@ router.post('/add', (req, res) => {
           res.status(200);
           break;
         case 'create':
-          console.log(req.body.data)
           const item = new Sites(req.body.data);
           item.save()
             .then(result => res.status(200).send(result))
@@ -177,12 +176,9 @@ router.post('/remove-worker', async (req, res) => {
 })
 
 router.put('/update-status', async (req, res) => {
-  console.log(req.body)
   let newStatus = req.body.value
   let site = await Sites.findOneAndUpdate({ _id: req.body.id }, { status: newStatus }, { new: true })
 
-
-  console.log(site)
   let response = await Sites.find()
   res.send(response)
 })

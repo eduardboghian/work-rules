@@ -6,9 +6,18 @@ import { addSites } from '../../actions/siteActions'
 import moment from 'moment'
 import { loadData } from '../../actions/listActions'
 
-const TopBar = ({ dispatch, site, weekEnding, sites, selectedList }) => {
+const TopBar = ({ dispatch, site, weekEnding, sites }) => {
   const [workersForCompany, setWrC] = useState([])
   const [formClass, setClass] = useState('none')
+  const [client, setClient] = useState()
+
+  useEffect(() => {
+    axios.post('/client/get-by-name', {
+      companyName: site.companyName
+    })
+      .then(res => setClient(res.data[0]))
+      .catch(err => console.error(err))
+  }, [])
 
   useEffect(() => {
     setWrC(site.companyName)
@@ -89,14 +98,14 @@ const TopBar = ({ dispatch, site, weekEnding, sites, selectedList }) => {
   const deleteSite = site => {
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding === date) {
-      // axios.put('/client/site-status', {
-      //   clientId: clientId,
-      //   siteId: id,
-      //   value: 'Not Active' 
-      // })
-      // .then(res => {})
-      // .catch(err => console.error(err))
+    if (weekEnding.weekEnding === date) {
+      axios.put('/client/site-status', {
+        clientId: client._id,
+        siteId: site._id,
+        value: 'Not Active'
+      })
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
 
       axios.put('/site/update-status', {
         id: site._id,
