@@ -34,7 +34,9 @@ const generateXlsx = async (list, type, weekEnding) => {
   ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }]
   wb.Sheets['Weekly statement'] = ws;
   let editSheet = wb.Sheets['Weekly statement']
-  editSheet['A1'] = { t: 's', v: `${title(weekEnding)}` }
+  editSheet['A1'] = { t: 'e', v: `${title(weekEnding)}` }
+  editSheet['G3'] = { s: { numFmtId: "#.###,00" } }
+
   let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
 
   function s2ab(s) {
@@ -82,6 +84,15 @@ const generateXlsx = async (list, type, weekEnding) => {
   wb2.Sheets['New Joiners'] = ws
 
   wbout = XLSX.write(wb2, { bookType: 'xlsx', type: 'binary' });
+
+  let wscols = [
+    { wch: 6 },
+    { wch: 7 },
+    { wch: 10 },
+    { wch: 20 }
+  ];
+
+  ws['!cols'] = wscols;
 
   function s2ab(s) {
     let buf = new ArrayBuffer(s.length);

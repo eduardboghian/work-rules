@@ -18,6 +18,8 @@ import moment from 'moment'
 import Dashboard from '../../pages/Dashboard'
 import { loadData } from '../../actions/listActions';
 
+import xlsxG from '../../utils/xlsx2'
+
 const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
   const [we, setWEs] = useState([])
   const [sitesMenu, setMenu] = useState([])
@@ -178,8 +180,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
           </Grid>
 
 
-          <div onClick={e => generateXlsx(sites, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
-          <div onClick={e => generateXlsx(sites, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
+          <div onClick={e => xlsxG(sites, 'Matt', weekEnding)} className='first-row-element' >Generate Excel for Matt</div>
+          <div onClick={e => xlsxG(sites, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
           <div className="add-site-wr">
             <div className='add-site-top' onClick={e => setStyle2('')}>Add New Site</div>
             <div className={`${styleStatus2}`}>
