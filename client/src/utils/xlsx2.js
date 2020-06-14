@@ -133,7 +133,6 @@ export default xlsxG
 
 const newJoinersExcel = async (sites, weekEnding) => {
   let data = newJoiners(sites, weekEnding)
-  let lastRow = parseInt(data.length + 3)
 
   const workbook = new Excel.Workbook();
   workbook.creator = 'WorkRules';
@@ -205,7 +204,7 @@ const weeklyStatement = (sites, weekEnding) => {
   sites.map((site, i) => {
     site.workers.map(worker => {
       let rateGot = worker.rates.rateGot.length === 0 ? '0.00' : worker.rates.rateGot
-      let hours = worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours
+      let hours = worker.worker.hours !== undefined ? worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours : '0.0'
 
       excelData.push({
         name: worker.worker.lastname + ' ' + worker.worker.firstname,
@@ -243,6 +242,9 @@ const title = (weekEnding) => {
 }
 
 const makeFloat = (nr) => {
+  if (typeof nr === 'number') nr = nr.toString()
+  if (typeof nr === "undefined") nr = '0,0'
+  console.log(nr, typeof nr)
   let test = nr.split('.').join('')
   test = test.replace('\,', '.')
 
@@ -258,20 +260,28 @@ const netAmount = (sheet, length) => {
   return sum
 }
 
-const newJoiners = (sites) => {
+const newJoiners = (sites, weekEnding) => {
   let excelData = []
   sites.map((site, i) => {
     let idList = []
     site.workers.map(worker => {
       if (idList.find(item => item === worker.worker._id)) return
       let status
-      let dif = moment(worker.worker.date, "YYYYMMDD").fromNow()
+      // let dif = moment(worker.worker.date, "YYYYMMDD").fromNow()
 
-      if (worker.worker.date) {
-        if (parseFloat(dif) < 7 || dif.includes('hours')) {
-          status = 'New Joiner'
-        } else { status = 'Old' }
-      } else { status = 'Old' }
+      // if (worker.worker.date) {
+      //   if (parseFloat(dif) < 7 || dif.includes('hours')) {
+      //     status = 'New Joiner'
+      //   } else { status = 'Old' }
+      // } else { status = 'Old' }
+
+      console.log(weekEnding, worker)
+
+      if (weekEnding === worker.worker.added) {
+        status = 'New Joiner'
+      } else {
+        status = 'Old'
+      }
 
       excelData.push({
         last: worker.worker.lastname,

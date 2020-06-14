@@ -56,17 +56,26 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
 
   const addWorker = () => {
     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
-    console.log(date, weekEnding)
+
 
     if (weekEnding.weekEnding === date) {
+      if (newWorker.added === undefined) {
+        newWorker.added = weekEnding.weekEnding
+
+        axios.put('/worker/added', {
+          id: newWorker._id,
+          added: weekEnding.weekEnding
+        })
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
+      }
+
       axios.put('/site/add-worker', {
         siteId,
         newWorker,
         rates: {
-          rateGot: 0,
-          ratePaid: 0,
-          otGot: 0,
-          otPaid: 0
+          rateGot: '0,0',
+          ratePaid: '0,0',
         }
       })
         .then(res => {
@@ -75,15 +84,26 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
         })
         .catch(error => console.log(error))
     } else {
+      console.log(newWorker.added)
+      if (newWorker.added === undefined) {
+        console.log('should be undefined', newWorker)
+        newWorker.added = weekEnding.weekEnding
+
+        axios.put('/worker/added', {
+          id: newWorker._id,
+          added: weekEnding.weekEnding
+        })
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
+      }
+
       axios.put('/weekly/add-worker', {
         weekEnding: weekEnding.weekEnding,
         siteId,
         newWorker,
         rates: {
-          rateGot: 0,
-          ratePaid: 0,
-          otGot: 0,
-          otPaid: 0
+          rateGot: '0,0',
+          ratePaid: '0,0'
         }
       })
         .then(res => {

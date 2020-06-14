@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer')
 
 const Workers = require('../models/workers');
-const Sites = require('../models/sites');
 
 const router = express.Router();
 
@@ -127,6 +126,15 @@ router.post('/delete-document', async (req, res) => {
   docs.splice(index, 1)
 
   worker = await Workers.findOneAndUpdate({ _id: req.body.uid }, { documents: docs }, { new: true })
+  res.send(worker)
+})
+
+router.put('/added', async (req, res) => {
+  let worker = await Workers.find({ _id: req.body.uid })
+  if (worker.added !== undefined) return res.send(worker)
+
+  worker = await Workers.findOneAndUpdate({ _id: req.body.id }, { added: req.body.added }, { new: true })
+
   res.send(worker)
 })
 

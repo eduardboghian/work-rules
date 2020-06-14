@@ -15,15 +15,15 @@ import { floatFormat } from '../../utils/floatFormatting'
 
 function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   const [ratesData, setData] = useState({
-    rateGot: '',
-    ratePaid: ''
+    rateGot: '0,0',
+    ratePaid: '0,0'
   })
-  const [hours, setHours] = useState('')
+  const [hours, setHours] = useState('0,0')
   const [trade, setTrade] = useState('')
   const [popStyle, setPopStyle] = useState('none')
 
   useEffect(() => {
-    setHours(worker.worker.hours)
+    setHours(worker.worker.hours === undefined ? '0,0' : worker.worker.hours)
     setData(worker.rates)
     setTrade(worker.worker.category)
   }, [worker])
@@ -85,6 +85,8 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }, [ratesData])
 
   const makeFloat = (nr) => {
+    if (typeof nr === 'number') nr = nr.toString()
+    if (typeof nr === "undefined") nr = '0,0'
     let test = nr.split('.').join('')
     test = test.replace('\,', '.')
 

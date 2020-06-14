@@ -32,6 +32,7 @@ const Worker = new Schema({
     trades: { type: Array },
     tickets: { type: Array },
     status: { type: String },
+    added: { type: String },
     documents: { type: Array }
 });
 
