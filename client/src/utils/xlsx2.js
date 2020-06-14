@@ -244,7 +244,6 @@ const title = (weekEnding) => {
 const makeFloat = (nr) => {
   if (typeof nr === 'number') nr = nr.toString()
   if (typeof nr === "undefined") nr = '0,0'
-  console.log(nr, typeof nr)
   let test = nr.split('.').join('')
   test = test.replace('\,', '.')
 
@@ -267,15 +266,6 @@ const newJoiners = (sites, weekEnding) => {
     site.workers.map(worker => {
       if (idList.find(item => item === worker.worker._id)) return
       let status
-      // let dif = moment(worker.worker.date, "YYYYMMDD").fromNow()
-
-      // if (worker.worker.date) {
-      //   if (parseFloat(dif) < 7 || dif.includes('hours')) {
-      //     status = 'New Joiner'
-      //   } else { status = 'Old' }
-      // } else { status = 'Old' }
-
-      console.log(weekEnding, worker)
 
       if (weekEnding === worker.worker.added) {
         status = 'New Joiner'

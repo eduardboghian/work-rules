@@ -67,7 +67,7 @@ router.post('/generate-invoice', async (req, res) => {
     data[0].dueDate = dueDate;
     data[0].Week_Ending = weekEnding
     data[0].issueDate = issueDate
-    data[0].INVOICE_NUMBER = process.env.INVOICE_NUMBER
+    data[0].INVOICE_NUMBER = req.body.invoiceNumber
     data[0].Site_Address = process.env.SITE_ADDRESS
     data[0].Account_Reference = process.env.ACCT_REF
     data[0].totalTaxAmount = totalTaxAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -75,8 +75,6 @@ router.post('/generate-invoice', async (req, res) => {
 
     //console.log('data before pdf', data)
     invoiceStatus.push(await generatePDF(data));
-    console.log(invoiceStatus)
-    process.env.INVOICE_NUMBER = process.env.INVOICE_NUMBER + 1
     res.send(invoiceStatus);
 });
 

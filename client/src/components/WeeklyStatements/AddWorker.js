@@ -84,9 +84,7 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
         })
         .catch(error => console.log(error))
     } else {
-      console.log(newWorker.added)
       if (newWorker.added === undefined) {
-        console.log('should be undefined', newWorker)
         newWorker.added = weekEnding.weekEnding
 
         axios.put('/worker/added', {

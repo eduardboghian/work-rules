@@ -431,3 +431,32 @@
     cursor: pointer;
     padding: 0 3px 4px;
 }
+
+
+.invoiceNr {
+    position: absolute;
+    top: -40px;
+    left: 61%;
+    width: 170px;
+    height: 35px;
+    box-shadow: 0 0 0 1px #00000028;
+    border-radius: 5px;
+}
+
+.invoice-input {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    color: black;
+    border-radius: 5px;
+}
+
+.invoiceNr2 {
+    position: absolute;
+    top: -40px;
+    left: 73.5%;
+    width: 170px;
+    height: 35px;
+    box-shadow: 0 0 0 1px #00000028;
+    border-radius: 5px;
+}
