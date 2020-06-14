@@ -73,7 +73,6 @@ router.post('/generate-invoice', async (req, res) => {
     data[0].totalTaxAmount = totalTaxAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     data[0].totalNetAmount = totalNetAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
-    //console.log('data before pdf', data)
     invoiceStatus.push(await generatePDF(data));
     res.send(invoiceStatus);
 });

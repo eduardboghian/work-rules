@@ -19,7 +19,7 @@ import { loadData } from '../../actions/listActions';
 
 import xlsxG from '../../utils/xlsx2'
 
-const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
+const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [we, setWEs] = useState([])
   const [sitesMenu, setMenu] = useState([])
   const [newSite, setNewSite] = useState({})
@@ -47,7 +47,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
           .catch(error => {
             console.log(error)
             reject(error)
-            window.location.reload(true)
           })
       })
 
@@ -123,6 +122,37 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
     }
   }
 
+  const updateState = () => {
+    let sitesRes = new Promise((resolve, reject) => {
+      axios.get('/site/all', {
+        headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }
+      )
+        .then(res => {
+          let activeSites = res.data.filter(site => site.status === 'Active')
+          resolve(res.data)
+        })
+        .catch(error => {
+          console.log(error)
+          reject(error)
+        })
+    })
+    axios.get('/weekly/get-all')
+      .then(async res => {
+        let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+
+        let currentWE = {
+          weekEnding: date,
+          data: await sitesRes
+        }
+        res.data.unshift(currentWE)
+        setWEs(res.data)
+      })
+      .catch(err => console.log(err))
+  }
+
   const dataToState = () => {
     let sitesRes = new Promise((resolve, reject) => {
       axios.get('/site/all', {
@@ -140,7 +170,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
         })
         .catch(error => {
           reject(error)
-          window.location.reload(true)
         })
     })
 
@@ -176,7 +205,10 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
                   onChange={e => {
                     let currentWE = we.find(item => item.weekEnding === e.target.value);
                     dispatch(setWeekEnding(currentWE.weekEnding))
+                    updateState()
                     let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+
+                    console.log('test for date', e.target.value, date)
                     if (e.target.value === date) {
                       dataToState()
                     } else {
@@ -206,7 +238,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
                     <Select
                       style={{ width: '80%' }}
                       renderValue={() => {
-                        return newSite.companyName + ' ' + newSite.siteName
+                        return newSite ? newSite.companyName + ' ' + newSite.siteName : 'Please select a Site!'
                       }}
                       defaultValue={'John'}
                       onChange={e => {
@@ -226,7 +258,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
           </div>
         </div>
 
-        {sites.map((site, i) => {
+        {sites ? sites.map((site, i) => {
           return <div key={i}>
             <TopBar site={site} clientId={''} />
             {site.workers.length === 0 ? <div className='site-name'>Add worker to {site.siteName}! </div> : null}
@@ -239,7 +271,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding, list }) => {
               /> : undefined
             })}
           </div>
-        })}
+        }) : null}
 
       </div>
     </div>
