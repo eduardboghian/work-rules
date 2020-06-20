@@ -103,8 +103,12 @@ router.put('/add-hours', async (req, res) => {
 
   let worker = site[0].workers.find(item => item.worker.weId === req.body.id)
   let index = site[0].workers.indexOf(worker)
-  worker.worker.hours = req.body.hours
-  worker.worker.hoursOT = req.body.hoursOT
+
+  if (makeFloat(worker.worker.hours) > 0 && makeFloat(req.body.hours)) {
+
+  } else {
+    worker.worker.hours = req.body.hours
+  }
 
   newWorkers[index] = worker
 
@@ -136,7 +140,17 @@ router.put('/update-rates', async (req, res) => {
 
   let worker = site[0].workers.find(item => item.worker.weId === req.body.id)
   let index = site[0].workers.indexOf(worker)
-  worker.rates = req.body.ratesData
+  if (makeFloat(worker.rates.rateGot) > 0 && makeFloat(req.body.ratesData.rateGot) === 0) {
+
+  } else {
+    worker.rates.rateGot = req.body.ratesData.rateGot
+  }
+
+  if (makeFloat(worker.rates.ratePaid) > 0 && makeFloat(req.body.ratesData.ratePaid) === 0) {
+
+  } else {
+    worker.rates.ratePaid = req.body.ratesData.ratePaid
+  }
 
   newWorkers[index] = worker
 
@@ -184,3 +198,12 @@ router.put('/update-status', async (req, res) => {
 })
 
 module.exports = router;
+
+const makeFloat = (nr) => {
+  if (typeof nr === 'number') nr = nr.toString()
+  if (typeof nr === "undefined") nr = '0,0'
+  let test = nr.split('.').join('')
+  test = test.replace('\,', '.')
+
+  return test
+}
