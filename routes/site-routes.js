@@ -104,7 +104,7 @@ router.put('/add-hours', async (req, res) => {
   let worker = site[0].workers.find(item => item.worker.weId === req.body.id)
   let index = site[0].workers.indexOf(worker)
 
-  if (makeFloat(worker.worker.hours) > 0 && makeFloat(req.body.hours)) {
+  if (makeFloat(worker.worker.hours) > 0 && makeFloat(req.body.hours) === 0) {
 
   } else {
     worker.worker.hours = req.body.hours

@@ -34,12 +34,7 @@ router.put('/add-hours', async (req, res) => {
     let worker = site.workers.find(item => item.worker.weId === req.body.id)
     let index = site.workers.indexOf(worker)
 
-    if (makeFloat(worker.worker.hours) > 0 && makeFloat(req.body.hours)) {
-
-    } else {
-        worker.worker.hours = req.body.hours
-    }
-
+    worker.worker.hours = req.body.hours
     site.workers[index] = worker
 
     we[0].data[siteIndex] = site
@@ -57,17 +52,7 @@ router.put('/update-rates', async (req, res) => {
 
     let worker = site.workers.find(item => item.worker.weId === req.body.id)
     let index = site.workers.indexOf(worker)
-    if (makeFloat(worker.rates.rateGot) > 0 && makeFloat(req.body.ratesData.rateGot) === 0) {
-
-    } else {
-        worker.rates.rateGot = req.body.ratesData.rateGot
-    }
-
-    if (makeFloat(worker.rates.ratePaid) > 0 && makeFloat(req.body.ratesData.ratePaid) === 0) {
-
-    } else {
-        worker.rates.ratePaid = req.body.ratesData.ratePaid
-    }
+    worker.rates = req.body.ratesData
 
     site.workers[index] = worker
 
