@@ -150,24 +150,31 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
           <li>{site ? site.companyName ? site.companyName : null : null} -</li>
           <li>{site ? site.siteName ? site.siteName : null : null}</li>
         </div>
+
+
         <div
           className='generator1'
-          onClick={e => generateInvoice(site, 'site')}
-          onMouseEnter={() => setInvoiceNr('')}
+          onClick={e => setInvoiceNr('')}
         >Generate Invoice for Site
         </div>
-        <form className={`${invoiceNumber} invoiceNr`} onMouseLeave={() => setTimeout(() => {
-          setInvoiceNr('none')
-        }, 2000)}>
+
+
+        <form className={`${invoiceNumber} invoiceNr`}>
           <input type="text" placeholder='Invoice Number' className='invoice-input' onChange={e => setNr(e.target.value)} />
+          <div className='theSubmit' onClick={e => {
+            generateInvoice(site, 'site')
+            setInvoiceNr('none')
+          }}>Submit</div>
         </form>
 
-        <form className={`${invoiceNumber2} invoiceNr2`} onMouseLeave={() => setTimeout(() => {
-          setInvoiceNr2('none')
-        }, 2000)}>
+        <form className={`${invoiceNumber2} invoiceNr2`}>
           <input type="text" placeholder='Invoice Number' className='invoice-input' onChange={e => setNr(e.target.value)} />
+          <div className='theSubmit' onClick={e => {
+            generateInvoice(sites, 'client')
+            setInvoiceNr2('none')
+          }}>Submit</div>
         </form>
-        <div className='generator2' onClick={e => generateInvoice(sites, 'client')} onMouseEnter={() => setInvoiceNr2('')}>Generate Invoice for Client</div>
+        <div className='generator2' onClick={e => setInvoiceNr2('')}>Generate Invoice for Client</div>
         <div className='add-worker' onClick={e => addWorkerToSite()}>Add Worker</div>
         <div className='remove-site' onClick={e => deleteSite(site)}>Remove this Site</div>
       </div>

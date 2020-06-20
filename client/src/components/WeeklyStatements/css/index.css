@@ -435,16 +435,19 @@
 
 .invoiceNr {
     position: absolute;
+    background: #fff;
     top: -40px;
     left: 61%;
-    width: 170px;
+    width: 200px;
     height: 35px;
     box-shadow: 0 0 0 1px #00000028;
     border-radius: 5px;
+    display: flex;
+    flex-direction: row;
 }
 
 .invoice-input {
-    width: 100%;
+    width: 66% !important;
     height: 100%;
     background-color: #fff;
     color: black;
@@ -455,8 +458,19 @@
     position: absolute;
     top: -40px;
     left: 73.5%;
-    width: 170px;
+    width: 200px;
     height: 35px;
     box-shadow: 0 0 0 1px #00000028;
     border-radius: 5px;
+    background: #fff;
+}
+
+.theSubmit {
+    width: 34%;
+    height: 35px !important;
+    background-color: #aaa;
+    color: white;
+    font-weight: bolder;
+    border-radius: 5px;
+    line-height: 35px !important;
 }
