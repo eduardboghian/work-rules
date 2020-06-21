@@ -221,9 +221,9 @@ const totalSum = (worker) => {
 
 
 const fileName = (weekEnding) => {
-  let currentTime = moment(weekEnding).add(14, 'days').format('YYYY MMMM DD')
+  let currentTime = moment(weekEnding).add(14, 'days').format('YYYY.MM.DD')
 
-  return `Weekending - ${moment(weekEnding).format('YYYY MMMM DD')} - To be paid ${currentTime}.xlsx`
+  return `Weekending - ${moment(weekEnding).format('YYYY.MM.DD')} - To be paid ${currentTime}.xlsx`
 }
 
 

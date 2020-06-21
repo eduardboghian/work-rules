@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import { Drawer, Button, Divider } from '@material-ui/core';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import MenuIcon from '@material-ui/icons/Menu';
 
 // const useStyles = makeStyles();
@@ -19,6 +20,14 @@ class Dashboard extends React.Component {
       drawer: false
     };
   }
+
+  toggleDrawer = (anchor, open) => (event) => {
+    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    this.setState({ drawer: false })
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   scrollHandler = () => {
@@ -43,6 +52,15 @@ class Dashboard extends React.Component {
     }
     this.changePage()
     window.addEventListener('scroll', this.scrollHandler);
+    window.addEventListener('click', this.setState({ drawer: false }));
+
+
+    // let bg = document.getElementsByClassName('weekly-wr')
+    // bg = bg[0]
+    // bg.addEventListener('click', () => {
+    //   console.log('clicked')
+    //   this.setState({ drawer: false })
+    // })
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler);
@@ -78,7 +96,11 @@ class Dashboard extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Drawer open={this.state.drawer}>
+        <SwipeableDrawer
+          open={this.state.drawer}
+          onClose={this.toggleDrawer(false)}
+          onOpen={this.toggleDrawer(true)}
+          open={this.state.drawer}>
           <Grid container direction='column' justify='space-around'>
             <Button
               style={styles.navbarButtons}
@@ -131,7 +153,7 @@ class Dashboard extends React.Component {
             </Typography>
             <Divider />
           </Grid>
-        </Drawer>
+        </SwipeableDrawer>
         <Grid style={{ background: 'white', minHeight: '10vh', paddingTop: '70px' }}>
         </Grid>
         {/* <img src='https://workrules.co.uk/meida/Asset%201@1.5x.png' alt='' className='wallpaper' ></img> */}

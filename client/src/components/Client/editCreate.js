@@ -54,10 +54,6 @@ const EditCreate = props => {
   }, [props]);
 
   useEffect(() => {
-    console.log(sites)
-  }, [sites])
-
-  useEffect(() => {
     setCliId(props.companyId)
   }, [props])
 
@@ -346,22 +342,12 @@ const EditCreate = props => {
     }
   };
   const deleteSite = id => {
-    let a = temporaryData.sites.filter(item => item._id !== id);
-    let b = sites.filter(item => item._id !== id);
-    setData({ ...temporaryData, sites: a });
-    setSites(b);
-
     axios.put('/site/update-status', {
       id,
       newStatus: 'Not Active'
     })
       .then(res => console.log('delete site response', res))
       .catch(err => console.log(err))
-
-    axios.delete('/client/delete-site', {
-      clientId: clientId,
-      siteId: id
-    })
   };
 
   const updateStatusDB = (value, site) => {
@@ -394,12 +380,6 @@ const EditCreate = props => {
       };
     }
     else {
-      let newList = temporaryData.sites;
-      newList.push(newSite)
-
-      setData({ ...temporaryData, sites: newList });
-      setSites(newList);
-
       axios.post('/site/add', {
         action: 'create',
         data: newSite
@@ -408,13 +388,38 @@ const EditCreate = props => {
           authorization: 'Bearer ' + localStorage.getItem('token')
         }
       })
-        .then(res => console.log(sites))
+        .then(res => {
+          console.log(res.data)
+          let newList = temporaryData.sites;
+          newList.push(newSite)
+
+          setData({ ...temporaryData, sites: newList });
+          setSites(newList);
+          setNewSite({
+            status: 'Active',
+            siteName: '',
+            address1: '',
+            address2: '',
+            city: '',
+            zipCode: '',
+            comment: ''
+          })
+        })
         .catch(err => console.log(err))
     }
   }
 
   const editSite = async (siteId) => {
     console.log(siteId)
+    setNewSite({
+      status: 'Active',
+      siteName: '',
+      address1: '',
+      address2: '',
+      city: '',
+      zipCode: '',
+      comment: ''
+    })
     setSiteButton('Save Changes')
     axios.get('/site/get', {
       params: {
@@ -830,26 +835,12 @@ const EditCreate = props => {
 
 
         <div className='sites-table'>
-          <Grid className='active-sites'>
-            <Grid>
-              <SitesTable
-                sites={temporaryData.sites}
-                clinetId={clientId}
-                editSite={editSite}
-                updateStatusDB={updateStatusDB}
-                type={'active'}
-              />
-            </Grid>
-          </Grid>
-
           <Grid className='inactive-sites'>
             <Grid>
               <SitesTable
-                sites={temporaryData.sites}
-                clinetId={clientId}
-                deleteSite={deleteSite}
-                updateStatusDB={updateStatusDB}
-                type={'inactive'}
+                newSite={sites}
+                companyName={temporaryData.companyName}
+                editSite={editSite}
               />
             </Grid>
           </Grid>

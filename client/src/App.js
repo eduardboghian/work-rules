@@ -11,11 +11,11 @@ import WeeklyStatemnt from './components/WeeklyStatements';
 function App() {
   return (
     <Router>
-        <Route exact path='/' component={localStorage.getItem('token')!== null && localStorage.getItem('token')!== undefined ? Dashboard : SignIn} />
-        <Route exact path='/agent-sourcer' component={AgentSourcer}/>
-        <Route exact path='/clients' component={Client} />
-        <Route exact path='/workers' component={Worker}/>
-        <Route exact path='/weekly-statement' component={WeeklyStatemnt} />
+      <Route exact path='/' component={localStorage.getItem('token') !== null && localStorage.getItem('token') !== undefined ? Dashboard : SignIn} />
+      <Route exact path='/agent-sourcer' component={AgentSourcer} />
+      <Route exact path='/clients' component={Client} />
+      <Route exact path='/workers' component={Worker} />
+      <Route exact path='/weekly-statement' component={WeeklyStatemnt} />
     </Router>
   );
 }

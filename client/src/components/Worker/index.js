@@ -165,6 +165,10 @@ const Worker = props => {
                       <Grid container>Phone Number {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                     </TableCell>
 
+                    <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("uniqueID", sort.uniqueID)}>
+                      <Grid container>Unique ID {sort.uniqueID === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
+                    </TableCell>
+
                     <TableCell classes={{ root: classes.cellHeaderSortable }} onClick={() => sortHandler("phone", sort.phone)}>
                       <Grid container>Trade {sort.phone === "desc" ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}</Grid>
                     </TableCell>

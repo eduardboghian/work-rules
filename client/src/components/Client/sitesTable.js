@@ -33,73 +33,139 @@ const useStyles = makeStyles({
 
 const SitesTable = props => {
   const classes = useStyles();
-  const { sites } = props;
-  const [clientId, setCliId] = useState('')
-  const [sitesList, setSites] = useState([])
+  const [sites, setSites] = useState([])
+  const [activeSites, setActiveSites] = useState([])
+  const [sitesList, setFiltratedSites] = useState([])
+  const [reloader, setReloader] = useState()
 
   useEffect(() => {
-    setCliId( props.clinetId )
-    let filtratedSites
-    if(sites) {
-      if(props.type === 'active') {
-        filtratedSites = sites.filter(site => site.status === 'Active')
-        setSites(filtratedSites)
-      } else {
-        filtratedSites = sites.filter(site => site.status !== 'Active')
-        setSites(filtratedSites)
-      }
-    }
+    console.log(props)
+    if (props.newSite.length !== reloader) {
+      console.log('merge', props.newSite.length, reloader)
 
+      // LOAD SITES FOR THE COMPANY
+      axios.get('/site/all', {
+        headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+        .then(res => {
+          let filter = res.data.filter(site => site.companyName === props.companyName)
+          setSites(filter)
+        })
+        .catch(err => console.error(err))
+      setReloader(props.newSite.length)
+    }
   }, [props])
-  
-  
+
+  useEffect(() => {
+    // FILTER ACTIVE/ INACTIVE SITES
+    let filtratedSites
+    if (sites) {
+      filtratedSites = sites.filter(site => site.status === 'Active')
+      setActiveSites(filtratedSites)
+
+      filtratedSites = sites.filter(site => site.status !== 'Active')
+      setFiltratedSites(filtratedSites)
+
+    }
+  }, [sites])
+
+  const updateSiteStatus = (status, site) => {
+    axios.put('/site/update-status', {
+      id: site._id,
+      value: status
+    })
+      .then(res => {
+        let filter = res.data.filter(site => site.companyName === props.companyName)
+        setSites(filter)
+      })
+      .catch(err => console.error(err))
+  }
+
+  const deleteSite = (siteId) => {
+    axios.delete('/site/delete', {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('token')
+      },
+      data: {
+        _id: siteId
+      }
+    })
+      .then(res => {
+        let filter = res.data.filter(site => site.companyName === props.companyName)
+        setSites(filter)
+      })
+      .catch(err => console.error(err))
+  }
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell classes={{ root: classes.cellHeader }}>
-              {props.type === 'active' ? 
-                <Typography>Active Sites</Typography> :
-                <Typography>Closed Sites</Typography>
-              }
+    <div className='sites-prim'>
+      <TableContainer className='active-wr'>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell classes={{ root: classes.cellHeader }}>
+                <Typography>Active Sites</Typography>
               </TableCell>
-            <TableCell classes={{ root: classes.cellHeader }}></TableCell>
-          </TableRow>
-        </TableHead>
+              <TableCell classes={{ root: classes.cellHeader }}></TableCell>
+            </TableRow>
+          </TableHead>
 
 
-        <TableBody style={{ overflowY: 'scroll', height: '400px !important' }}>
-          {sitesList.map((site,i) => (
-            <TableRow key={i}>
-              <TableCell classes={{ root: classes.cell }}>
-                <Typography>{site.siteName}</Typography>
-              </TableCell>
-
-              {props.type === 'active' ?  
-              
-                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
-                  <img src={EditIcon} onClick={ e => props.editSite(site._id) } className='edit-icon' />
-                </TableCell>:
-
-                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
-                  <img src={PowerButton} onClick={ e => props.updateStatusDB( 'Active', site ) }  className='edit-icon' />
+          <TableBody style={{ overflowY: 'scroll', height: '400px !important' }}>
+            {activeSites.map((site, i) => (
+              <TableRow key={i}>
+                <TableCell classes={{ root: classes.cell }}>
+                  <Typography>{site.siteName}</Typography>
                 </TableCell>
 
-              }
+                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
+                  <img src={EditIcon} onClick={e => props.editSite(site._id)} className='edit-icon' />
+                </TableCell>
 
-              <TableCell classes={{ root: classes.cell }}>
-              {props.type === 'active' ? 
-                <DeleteIcon onClick={ e => props.updateStatusDB( 'Not Active', site) } />:
-                <DeleteIcon onClick={ e => props.deleteSite(site._id) } />
-              }  
+                <TableCell classes={{ root: classes.cell }}>
+                  <DeleteIcon onClick={e => updateSiteStatus('Not Active', site)} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <TableContainer className='inactive-wr'>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell classes={{ root: classes.cellHeader }}>
+                <Typography>Closed Sites</Typography>
               </TableCell>
+              <TableCell classes={{ root: classes.cellHeader }}></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+
+
+          <TableBody style={{ overflowY: 'scroll', height: '400px !important' }}>
+            {sitesList.map((site, i) => (
+              <TableRow key={i}>
+                <TableCell classes={{ root: classes.cell }}>
+                  <Typography>{site.siteName}</Typography>
+                </TableCell>
+
+                <TableCell style={{ width: '30px' }} classes={{ root: classes.cell }}>
+                  <img src={PowerButton} onClick={e => updateSiteStatus('Active', site)} className='edit-icon' />
+                </TableCell>
+
+                <TableCell classes={{ root: classes.cell }}>
+                  <DeleteIcon onClick={e => deleteSite(site._id)} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+
   );
 };
 

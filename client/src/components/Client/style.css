@@ -201,7 +201,8 @@
     width: 45% !important;
     padding: 5px 0 0;
     margin-bottom: 20px !important;
-
+    height: 320px;
+    
 }
 .content-site {
   background-color: #eee !important;
@@ -222,12 +223,25 @@
     width: 45%;
 }
 
-.active-sites {
-    float: left;
+.sites-prim {
+    display: flex;
+    flex-direction: row;
+    width: 42%;
+    position: absolute;
+    height: 330px;
 }
-.inactive-sites {
+
+
+.active-wr {
+    float: left;
+    overflow-y: scroll;
+    height: 100%;
+}
+.inactive-wr {
     float: right;
-    padding-left: 20px !important
+    padding-left: 20px !important;
+    overflow-y: scroll;
+    height: 100%;
 }
 
 /* SVG STYLE */

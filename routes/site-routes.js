@@ -81,11 +81,13 @@ router.delete('/delete', async (req, res) => {
       res.sendStatus(403);
     }
     if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
-      let site = await Sites.findOne({ _id: req.body._id })
+      let site = await Sites.findOneAndRemove({ _id: req.body._id })
+      console.log(site)
       if (site) {
-        site.remove()
-        site.save()
-        res.status(200).send('site deleted')
+        // site.remove()
+        // site.save()
+        let response = await Sites.find()
+        res.status(200).send(response)
       } else {
         res.send('no site was found')
       }

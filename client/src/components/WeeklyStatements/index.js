@@ -38,9 +38,22 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
         )
           .then(res => {
             let activeSites = res.data.filter(site => site.status === 'Active')
+            activeSites.sort(function (a, b) {
+              var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
+              var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+
+              // names must be equal
+              return 0;
+            });
             setNewSite(activeSites[0])
             dispatch(loadData([...activeSites]))
-            setMenu([...res.data])
+            setMenu(activeSites)
             dispatch(addSites([...activeSites]))
             resolve(res.data)
           })
@@ -163,8 +176,21 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       )
         .then(res => {
           let activeSites = res.data.filter(site => site.status === 'Active')
+          activeSites.sort(function (a, b) {
+            var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            // names must be equal
+            return 0;
+          });
           setNewSite(activeSites[0])
-          setMenu([...res.data])
+          setMenu(activeSites)
           dispatch(addSites(activeSites))
           resolve(res.data)
         })

@@ -67,6 +67,7 @@ router.post('/add', async (req, res) => {
 });
 
 router.put('/add-trade', async (req, res) => {
+  console.log('trade update', req.body)
   let worker = await Workers.find({ _id: req.body.uid })
   worker = worker[0]
   if (!worker) return res.send('Something went wrong, please try again!')
@@ -78,8 +79,11 @@ router.put('/add-trade', async (req, res) => {
     trades = worker.trades
   }
 
-  trades.push(req.body.trade)
-
+  let check = trades.filter(trade => trade === req.body.trade)
+  if (check.length > 0) { }
+  else {
+    trades.push(req.body.trade)
+  }
 
   worker = await Workers.findOneAndUpdate({ _id: req.body.uid }, { trades }, { new: true })
   res.send(worker)

@@ -29,15 +29,21 @@ const WorkerRow = props => {
           openDialog(item);
         }}
       >
-        <Typography classes={{ root: classes.link }} >{`${item.firstname} ${item.lastname}`}</Typography>
+        <Typography classes={{ root: classes.link }} >{item.type === 'company' ? item.companyName : item.firstname + ' ' + item.lastname}</Typography>
       </TableCell>
+
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.phone}</Typography>
       </TableCell>
 
       <TableCell classes={{ root: classes.cell }}>
+        <Typography>{item.uniqueID}</Typography>
+      </TableCell>
+
+      <TableCell classes={{ root: classes.cell }}>
         {item.trades.map((data, i) => {
-          return <p style={{ display: 'inline-block', margin: '0 3px', fontWeight: '500', fontSize: '16px' }} key={i}>{data}, </p>
+          if (i === 3) return
+          return <p style={{ display: 'inline-block', margin: '0 3px', fontWeight: '500', fontSize: '16px' }} key={i}>{data}{i === 2 ? null : ','} </p>
         })}
       </TableCell>
 
