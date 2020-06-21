@@ -102,6 +102,13 @@ router.put('/add-worker', async (req, res) => {
 router.put('/add-site', async (req, res) => {
     let we = await WeeklyStatements.find({ weekEnding: `${req.body.weekEnding}` })
     if (!we) return res.send('no site with this id was found')
+
+    let check = we[0].data.filter(site => site._id === req.body.newSite._id)
+    console.log('check', check)
+    let sameWe = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
+    sameWe = sameWe[0]
+
+    if (check.length > 0) return res.send(sameWe)
     req.body.newSite.workers = []
     we[0].data.push(req.body.newSite)
 

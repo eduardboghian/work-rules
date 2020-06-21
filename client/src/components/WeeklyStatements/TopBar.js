@@ -154,7 +154,11 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
 
         <div
           className='generator1'
-          onClick={e => setInvoiceNr('')}
+          onClick={e => {
+            if (invoiceNumber === 'none') {
+              setInvoiceNr('')
+            } else { setInvoiceNr('none') }
+          }}
         >Generate Invoice for Site
         </div>
 
@@ -174,7 +178,11 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
             setInvoiceNr2('none')
           }}>Submit</div>
         </form>
-        <div className='generator2' onClick={e => setInvoiceNr2('')}>Generate Invoice for Client</div>
+        <div className='generator2' onClick={e => {
+          if (invoiceNumber2 === 'none') {
+            setInvoiceNr2('')
+          } else { setInvoiceNr2('none') }
+        }}>Generate Invoice for Client</div>
         <div className='add-worker' onClick={e => addWorkerToSite()}>Add Worker</div>
         <div className='remove-site' onClick={e => deleteSite(site)}>Remove this Site</div>
       </div>
