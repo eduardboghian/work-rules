@@ -215,7 +215,7 @@ const weeklyStatement = (sites, weekEnding) => {
 
 
 const totalSum = (worker) => {
-  const sum = makeFloat(worker.rates.rateGot) * makeFloat(worker.worker.hours)
+  const sum = makeFloat(worker.rates.ratePaid) * makeFloat(worker.worker.hours)
   return sum
 }
 
