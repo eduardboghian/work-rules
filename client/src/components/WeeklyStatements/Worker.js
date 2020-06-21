@@ -269,6 +269,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
             <MenuItem value={'360 Excavator'}>360 Excavator</MenuItem>
             <MenuItem value={'Basic Groundworker'}>Basic Groundworker</MenuItem>
             <MenuItem value={'Bricklayer'}>Bricklayer</MenuItem>
+            <MenuItem value={'Carpenter'}>Carpenter</MenuItem>
             <MenuItem value={'CCDO Labourer'}>CCDO Labourer</MenuItem>
             <MenuItem value={'Cleaner'}>Cleaner</MenuItem>
             <MenuItem value={'Crane Opertor'}>Crane Opertor</MenuItem>

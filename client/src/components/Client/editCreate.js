@@ -103,7 +103,7 @@ const EditCreate = props => {
       };
     }
     if (temporaryData.name.length < 1) { }
-    else {
+    else if (temporaryData.name.length < 3) {
       setFirstnameError(true);
       let timer = setTimeout(() => setFirstnameError(false), 3000);
       return () => {
@@ -111,8 +111,9 @@ const EditCreate = props => {
         return false;
       };
     }
+
     if (temporaryData.lastName.length < 1) { }
-    else {
+    else if (temporaryData.lastName.length < 3) {
       setLastnameError(true);
       let timer = setTimeout(() => setLastnameError(false), 3000);
       return () => {
