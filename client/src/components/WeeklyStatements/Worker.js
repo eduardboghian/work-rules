@@ -277,7 +277,8 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
             <MenuItem value={'Dry Liner/Ceiling Fixer'}>Dry Liner/Ceiling Fixer</MenuItem>
             <MenuItem value={'Forklift Telehandler'}>Forklift Telehandler</MenuItem>
             <MenuItem value={'FTD/Forward Tipping Dumper'}>FTD/Forward Tipping Dumper</MenuItem>
-            <MenuItem value={'General Labourer'}>General Labourer</MenuItem>
+            <MenuItem value={'Groundworker'}>Groundworker</MenuItem>
+            <MenuItem value={'Labourer'}>Labourer</MenuItem>
             <MenuItem value={'Handyman'}>Handyman</MenuItem>
             <MenuItem value={'Nip Hand'}>Nip Hand</MenuItem>
             <MenuItem value={'Painter'}>Painter</MenuItem>
