@@ -153,21 +153,13 @@ const newJoinersExcel = async (sites, weekEnding) => {
 
 
   //DATA
-  sheet.mergeCells('A1:D1')
-  sheet.getCell('A1').value = title(weekEnding)
-  sheet.getRow('2').values = ['Firstname', 'Lastname', 'Phone', 'Status']
+  sheet.getRow('1').values = ['Firstname', 'Lastname', 'Phone', 'Status']
   sheet.addRows(data)
 
 
 
   //FONT
   sheet.getRow(1).font = {
-    bold: true,
-    color: { 'argb': '004287f5' },
-    size: '12',
-    name: 'Calibri'
-  }
-  sheet.getRow(2).font = {
     bold: true,
     name: 'Calibri'
   }
@@ -229,9 +221,9 @@ const totalSum = (worker) => {
 
 
 const fileName = (weekEnding) => {
-  let currentTime = moment(weekEnding).add(12, 'days').format('YYYY MMMM DD')
+  let currentTime = moment(weekEnding).add(14, 'days').format('YYYY MMMM DD')
 
-  return `Weekending - ${moment(weekEnding).format('YYYY MMMM DD')} - To be paid before ${currentTime}.xlsx`
+  return `Weekending - ${moment(weekEnding).format('YYYY MMMM DD')} - To be paid ${currentTime}.xlsx`
 }
 
 
@@ -282,6 +274,19 @@ const newJoiners = (sites, weekEnding) => {
       idList.push(worker.worker._id)
       return true
     })
+    excelData.sort(function (a, b) {
+      var nameA = a.status.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.status.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // names must be equal
+      return 0;
+    });
   })
 
   return excelData
