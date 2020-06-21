@@ -147,8 +147,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
     <div className='topbar-wr'>
       <div className='topbar-btns'>
         <div className='company-name'>
-          <li>{site ? site.companyName ? site.companyName : null : null} -</li>
-          <li>{site ? site.siteName ? site.siteName : null : null}</li>
+          <li>{site ? site.companyName ? site.companyName : null : null} - </li>
+          <li style={{ textIndent: '3px' }}>{site ? site.siteName ? site.siteName : null : null}</li>
         </div>
 
 

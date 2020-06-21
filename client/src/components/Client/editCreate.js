@@ -58,7 +58,7 @@ const EditCreate = props => {
   }, [sites])
 
   useEffect(() => {
-    setCliId( props.companyId )
+    setCliId(props.companyId)
   }, [props])
 
   const findSites = async () => {
@@ -102,7 +102,8 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.name.length < 1) {
+    if (temporaryData.name.length < 1) { }
+    else {
       setFirstnameError(true);
       let timer = setTimeout(() => setFirstnameError(false), 3000);
       return () => {
@@ -110,7 +111,8 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.lastName.length < 1) {
+    if (temporaryData.lastName.length < 1) { }
+    else {
       setLastnameError(true);
       let timer = setTimeout(() => setLastnameError(false), 3000);
       return () => {
@@ -134,7 +136,7 @@ const EditCreate = props => {
         return false;
       };
     }
-    if (temporaryData.vat.length < 4 ) {
+    if (temporaryData.vat.length < 4) {
 
     } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
 
@@ -167,7 +169,7 @@ const EditCreate = props => {
     //   };
     // }
 
-    if(temporaryData.email.length < 1) {}
+    if (temporaryData.email.length < 1) { }
     else if (
       /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         temporaryData.email
@@ -187,29 +189,29 @@ const EditCreate = props => {
 
   };
   const utrValidation = async () => {
-      setUtrError(true);
-      let timer = setTimeout(() => setUtrError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
+    setUtrError(true);
+    let timer = setTimeout(() => setUtrError(false), 3000);
+    return () => {
+      clearTimeout(timer);
+      return false;
     };
+  };
   const vatValidation = async () => {
-      setVatError(true);
-      let timer = setTimeout(() => setVatError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
+    setVatError(true);
+    let timer = setTimeout(() => setVatError(false), 3000);
+    return () => {
+      clearTimeout(timer);
+      return false;
     };
+  };
   const cisValidation = async () => {
-      setCisError(true);
-      let timer = setTimeout(() => setCisError(false), 3000);
-      return () => {
-        clearTimeout(timer);
-        return false;
-      };
+    setCisError(true);
+    let timer = setTimeout(() => setCisError(false), 3000);
+    return () => {
+      clearTimeout(timer);
+      return false;
     };
+  };
   const inputHadnler = (data, fieldName) => {
     switch (fieldName) {
       case 'company':
@@ -256,7 +258,7 @@ const EditCreate = props => {
             cisValidation()
           };
           if (data.length > 1)
-            for (var i=1; i<data.length; i++) {
+            for (var i = 1; i < data.length; i++) {
               if (isNaN(data[i]) === true) {
                 cisValidation();
               }
@@ -279,37 +281,37 @@ const EditCreate = props => {
         }
         break;
       case 'comment':
-        if(data.length <= 200) {
+        if (data.length <= 200) {
           setData({ ...temporaryData, comment: data });
         }
         break;
       case 'comment1':
-        if(data.length <= 100) {
+        if (data.length <= 100) {
           setData({ ...temporaryData, companyComment: data });
         }
         break;
       case 'address':
-        if(data.length <= 100) {
+        if (data.length <= 100) {
           setData({ ...temporaryData, firstPost: data });
         }
         break;
       case 'address2-client':
-        if(data.length <= 100) {
+        if (data.length <= 100) {
           setData({ ...temporaryData, secondPost: data });
         }
         break;
       case 'city':
-        if(data.length <= 100) {
+        if (data.length <= 100) {
           setData({ ...temporaryData, city: data });
         }
         break;
       case 'zip':
-        if(data.length <= 10) {
-          setData({ ...temporaryData, zipCode: data});
+        if (data.length <= 10) {
+          setData({ ...temporaryData, zipCode: data });
         }
         break;
       case 'site':
-        if(data.length <= 100) {
+        if (data.length <= 100) {
           setNewSite({ ...newSite, siteName: data });
         }
         break;
@@ -352,8 +354,8 @@ const EditCreate = props => {
       id,
       newStatus: 'Not Active'
     })
-    .then( res=> console.log('delete site response', res))
-    .catch( err => console.log(err))
+      .then(res => console.log('delete site response', res))
+      .catch(err => console.log(err))
 
     axios.delete('/client/delete-site', {
       clientId: clientId,
@@ -366,10 +368,10 @@ const EditCreate = props => {
       id: site._id,
       value
     })
-    .then(res => {
-      setData({ ...temporaryData, sites: res.data })
-    })
-    .catch(err => console.error(err))
+      .then(res => {
+        setData({ ...temporaryData, sites: res.data })
+      })
+      .catch(err => console.error(err))
 
 
     axios.put('/client/site-status', {
@@ -377,8 +379,8 @@ const EditCreate = props => {
       siteId: site._id,
       value
     })
-    .then(res => {})
-    .catch(err => console.error(err))
+      .then(res => { })
+      .catch(err => console.error(err))
   }
 
   const createNewSite = () => {
@@ -405,8 +407,8 @@ const EditCreate = props => {
           authorization: 'Bearer ' + localStorage.getItem('token')
         }
       })
-      .then(res => console.log(sites))
-      .catch(err => console.log(err))
+        .then(res => console.log(sites))
+        .catch(err => console.log(err))
     }
   }
 
@@ -418,11 +420,11 @@ const EditCreate = props => {
         id: siteId
       }
     })
-    .then( site => {
-      console.log(site.data[0])
-      setNewSite(site.data[0])
-    })
-    .catch(err => console.log(err))
+      .then(site => {
+        console.log(site.data[0])
+        setNewSite(site.data[0])
+      })
+      .catch(err => console.log(err))
   }
 
   const saveSiteChanges = () => {
@@ -434,8 +436,8 @@ const EditCreate = props => {
         authorization: 'Bearer ' + localStorage.getItem('token')
       }
     })
-    .then(res => setNewSite({ }))
-    .catch(err => console.log(err))
+      .then(res => setNewSite({}))
+      .catch(err => console.log(err))
   }
 
   const classes = useStyles();
@@ -443,414 +445,414 @@ const EditCreate = props => {
   return (
     <>
 
-        <Grid container justify='space-between' className='client-topbar'>
+      <Grid container justify='space-between' className='client-topbar'>
+        <Grid>
+          <Typography>Company Name  *</Typography>
+          <Tooltip open={companyNameError} title="The Company Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
+            <FormControl fullWidth error={companyNameError}>
+              <Input
+                value={temporaryData.companyName}
+                classes={{ input: classes.input }}
+                onChange={e => inputHadnler(e.target.value, 'company')}
+              />
+            </FormControl>
+          </Tooltip>
+        </Grid>
+        <Grid>
+          <Typography>Status</Typography>
+          <FormControl fullWidth classes={{ root: classes.inputContainer }} error={statusError}>
+            <Select
+              value={temporaryData.status}
+              onChange={e => {
+                setStatusError(false);
+                setData({ ...temporaryData, status: e.target.value });
+              }}
+            >
+              <MenuItem value={"active"}>Active</MenuItem>
+              <MenuItem value={"archived"}>Not Active</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid>
+          <Button
+            className='create-btn'
+            disabled={pending}
+            onClick={async () => {
+              validation();
+              setPending(false);
+            }}
+          >
+            SAVE
+              </Button>
+        </Grid>
+        <Grid>
+          <Button className='create-btn' onClick={closePage}>
+            Back
+              </Button>
+        </Grid>
+      </Grid>
+
+      <div className='contact-person'>Contact Person</div>
+      <div className='company-address'>Company Address and HMTRC Registration Numers</div>
+      <Grid className='content-cl'>
+
+        <div className='content-client'>
+          <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
-              <Typography>Company Name  *</Typography>
-                <Tooltip open={companyNameError} title="The Company Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                <FormControl fullWidth error={companyNameError}>
+              <Typography>First Name</Typography>
+              <Tooltip
+                open={firstnameError}
+                title='Please introduce a First Name!'
+                classes={{ tooltip: classes.errorTooltip }}
+                placement='top'
+              >
+                <FormControl error={firstnameError}>
                   <Input
-                    value={temporaryData.companyName}
+                    value={temporaryData.name}
                     classes={{ input: classes.input }}
-                    onChange={e => inputHadnler(e.target.value, 'company')}
+                    onChange={e => inputHadnler(e.target.value, 'name')}
                   />
                 </FormControl>
               </Tooltip>
             </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
-              <Typography>Status</Typography>
-                <FormControl fullWidth classes={{ root: classes.inputContainer }} error={statusError}>
-                  <Select
-                    value={temporaryData.status}
-                    onChange={e => {
-                      setStatusError(false);
-                      setData({ ...temporaryData, status: e.target.value });
-                    }}
-                  >
-                    <MenuItem value={"active"}>Active</MenuItem>
-                    <MenuItem value={"archived"}>Not Active</MenuItem>
-                  </Select>
-                </FormControl>
-            </Grid>
-            <Grid>
-              <Button
-                className='create-btn'
-                disabled={pending}
-                onClick={async () => {
-                  validation();
-                  setPending(false);
-                }}
+              <Typography>Last Name</Typography>
+              <Tooltip
+                open={lastnameError}
+                title='Please introduce a Last Name!'
+                classes={{ tooltip: classes.errorTooltip }}
+                placement='top'
               >
-                SAVE
-              </Button>
+                <FormControl error={lastnameError}>
+                  <Input
+                    value={temporaryData.lastName}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHadnler(e.target.value, 'lastName')}
+                  />
+                </FormControl>
+              </Tooltip>
             </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
             <Grid>
-              <Button className='create-btn' onClick={closePage}>
-                Back
-              </Button>
-            </Grid>
-        </Grid>
-
-        <div className='contact-person'>Contact Person</div>
-        <div className='company-address'>Company Address and HMTRC Registration Numers</div>
-        <Grid className='content-cl'>
-
-          <div className='content-client'>
-            <Grid classes={{ root: classes.inputContainer }}>
-                  <Grid>
-                    <Typography>First Name</Typography>
-                      <Tooltip
-                        open={firstnameError}
-                        title='Please introduce a First Name!'
-                        classes={{ tooltip: classes.errorTooltip }}
-                        placement='top'
-                        >
-                      <FormControl  error={firstnameError}>
-                        <Input
-                          value={temporaryData.name}
-                          classes={{ input: classes.input }}
-                          onChange={e => inputHadnler(e.target.value, 'name')}
-                        />
-                      </FormControl>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }}>
-                <Grid>
-                  <Typography>Last Name</Typography>
-                  <Tooltip
-                    open={lastnameError}
-                    title='Please introduce a Last Name!'
-                    classes={{ tooltip: classes.errorTooltip }}
-                    placement='top'
-                  >
-                    <FormControl  error={lastnameError}>
-                      <Input
-                        value={temporaryData.lastName}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'lastName')}
-                      />
-                    </FormControl>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }}>
-                <Grid>
-                <Typography>Mobile Phone Number</Typography>
-                  <Tooltip open={phoneError} title='Please provide a valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-                    <FormControl  error={phoneError}>
-                      <Input
-                        value={temporaryData.phone}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'phone')}
-                      />
-                    </FormControl>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }}>
-                <Grid>
-                <Typography>Alternative Phone Number</Typography>
-                  <Tooltip open={phoneError} title='Please provide a valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-                    <FormControl  error={phoneError}>
-                      <Input
-                        value={temporaryData.phoneScnd}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'phoneScnd')}
-                      />
-                    </FormControl>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }}>
-                <Grid>
-                  <Typography>Email</Typography>
-                  <Tooltip open={emailError} title='Please provide a valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
-                    <FormControl  error={emailError}>
-                      <Input
-                        value={temporaryData.email}
-                        classes={{ input: classes.input }}
-                        onChange={e => setData({ ...temporaryData, email: e.target.value })}
-                      />
-                    </FormControl>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }}>
-                <Grid className='select-wr'>
-                <Typography>Preferred Communication Channel</Typography>
-                    <FormControl  classes={{ root: classes.inputContainer }} >
-                      <Select
-                        value={temporaryData.communicationChannel}
-                        onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
-                      >
-                        <MenuItem value={'whatsapp'}>WhatsApp</MenuItem>
-                        <MenuItem value={'viber'}>Viber</MenuItem>
-                        <MenuItem value={'telegram'}>Telegram</MenuItem>
-                        <MenuItem value={'email'}>Email</MenuItem>
-                      </Select>
-                    </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid classes={{ root: classes.inputContainer }} className='comment' >
-                <Grid>
-                  <Typography>Comment</Typography>
-                    <FormControl>
-                      <Input
-                        value={temporaryData.comment}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'comment')}
-                      />
-                    </FormControl>
-                </Grid>
-              </Grid>
-          </div>
-
-          <div className='content-info'>
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Adress Line 1</Typography>
-                    <FormControl>
-                      <Input
-                        value={temporaryData.firstPost}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'address')}
-                      />
-                    </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Unique Taxpayer Reference (UTR)</Typography>
-                <Tooltip open={utrError} title="Warning: UTR has to have 10 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                  <FormControl fullWidth error={utrError}>
-                    <Input
-                      value={temporaryData.utr}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'utr')}
-                    />
-                  </FormControl>
-                </Tooltip>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Adress Line 2</Typography>
-                  <FormControl fullWidth error={secondPostError}>
-                    <Input
-                      value={temporaryData.secondPost}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'address2-client')}
-                    />
-                  </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>VAT Registration Number</Typography>
-                  <Tooltip open={vatError} title="Warning: VAT Number has to have 9 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                  <FormControl fullWidth error={vatError}>
-                    <Input
-                      value={temporaryData.vat}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, "vat")}
-                    />
-                  </FormControl>
-                </Tooltip>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>City</Typography>
-                <FormControl fullWidth>
+              <Typography>Mobile Phone Number</Typography>
+              <Tooltip open={phoneError} title='Please provide a valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={phoneError}>
                   <Input
-                    value={temporaryData.city}
+                    value={temporaryData.phone}
                     classes={{ input: classes.input }}
-                    onChange={e => inputHadnler(e.target.value, "city")}
+                    onChange={e => inputHadnler(e.target.value, 'phone')}
                   />
                 </FormControl>
-              </Grid>
+              </Tooltip>
             </Grid>
+          </Grid>
 
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>CIS Registration Number</Typography>
-                  <Tooltip open={cisError} title="Warning: CIS Number has to have 1 letter followed by 10 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                    <FormControl fullWidth error={cisError}>
-                      <Input
-                        value={temporaryData.cis}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'cis')}
-                      />
-                    </FormControl>
-                  </Tooltip>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Zip Code</Typography>
-                <FormControl fullWidth>
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Alternative Phone Number</Typography>
+              <Tooltip open={phoneError} title='Please provide a valid Phone Number' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={phoneError}>
                   <Input
-                    value={temporaryData.zipCode}
+                    value={temporaryData.phoneScnd}
                     classes={{ input: classes.input }}
-                    onChange={e => inputHadnler(e.target.value, 'zip')}
+                    onChange={e => inputHadnler(e.target.value, 'phoneScnd')}
                   />
                 </FormControl>
-              </Grid>
+              </Tooltip>
             </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }} className='comment2' >
-              <Grid>
-                <Typography>Comment</Typography>
-                  <FormControl>
-                    <Input
-                      value={temporaryData.companyComment}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'comment1')}
-                    />
-                  </FormControl>
-              </Grid>
-            </Grid>
-          </div>
-        </Grid>
-                      {/* =========SITE FORM=========== */}
-
-        <Grid className='site-orange'>
-          <Grid className='site-nametag'>
-            <Typography>Site</Typography>
           </Grid>
-          <Grid>
-            { editCreateSiteButton === 'Save New Site' ?
-              <Button className='save-btn' onClick={async () => {createNewSite()}}>
-                Save New Site
-              </Button>:
 
-              <Button className='save-btn' onClick={async () => {saveSiteChanges()}}>
-                Save Changes
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Email</Typography>
+              <Tooltip open={emailError} title='Please provide a valid Email' classes={{ tooltip: classes.errorTooltip }} placement='top'>
+                <FormControl error={emailError}>
+                  <Input
+                    value={temporaryData.email}
+                    classes={{ input: classes.input }}
+                    onChange={e => setData({ ...temporaryData, email: e.target.value })}
+                  />
+                </FormControl>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid className='select-wr'>
+              <Typography>Preferred Communication Channel</Typography>
+              <FormControl classes={{ root: classes.inputContainer }} >
+                <Select
+                  value={temporaryData.communicationChannel}
+                  onChange={e => setData({ ...temporaryData, communicationChannel: e.target.value })}
+                >
+                  <MenuItem value={'whatsapp'}>WhatsApp</MenuItem>
+                  <MenuItem value={'viber'}>Viber</MenuItem>
+                  <MenuItem value={'telegram'}>Telegram</MenuItem>
+                  <MenuItem value={'email'}>Email</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }} className='comment' >
+            <Grid>
+              <Typography>Comment</Typography>
+              <FormControl>
+                <Input
+                  value={temporaryData.comment}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'comment')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </div>
+
+        <div className='content-info'>
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Adress Line 1</Typography>
+              <FormControl>
+                <Input
+                  value={temporaryData.firstPost}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'address')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Unique Taxpayer Reference (UTR)</Typography>
+              <Tooltip open={utrError} title="Warning: UTR has to have 10 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth error={utrError}>
+                  <Input
+                    value={temporaryData.utr}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHadnler(e.target.value, 'utr')}
+                  />
+                </FormControl>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Adress Line 2</Typography>
+              <FormControl fullWidth error={secondPostError}>
+                <Input
+                  value={temporaryData.secondPost}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'address2-client')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>VAT Registration Number</Typography>
+              <Tooltip open={vatError} title="Warning: VAT Number has to have 9 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth error={vatError}>
+                  <Input
+                    value={temporaryData.vat}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHadnler(e.target.value, "vat")}
+                  />
+                </FormControl>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>City</Typography>
+              <FormControl fullWidth>
+                <Input
+                  value={temporaryData.city}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, "city")}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>CIS Registration Number</Typography>
+              <Tooltip open={cisError} title="Warning: CIS Number has to have 1 letter followed by 10 digits!" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl fullWidth error={cisError}>
+                  <Input
+                    value={temporaryData.cis}
+                    classes={{ input: classes.input }}
+                    onChange={e => inputHadnler(e.target.value, 'cis')}
+                  />
+                </FormControl>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Zip Code</Typography>
+              <FormControl fullWidth>
+                <Input
+                  value={temporaryData.zipCode}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'zip')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }} className='comment2' >
+            <Grid>
+              <Typography>Comment</Typography>
+              <FormControl>
+                <Input
+                  value={temporaryData.companyComment}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'comment1')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </div>
+      </Grid>
+      {/* =========SITE FORM=========== */}
+
+      <Grid className='site-orange'>
+        <Grid className='site-nametag'>
+          <Typography>Site</Typography>
+        </Grid>
+        <Grid>
+          {editCreateSiteButton === 'Save New Site' ?
+            <Button className='save-btn' onClick={async () => { createNewSite() }}>
+              Save New Site
+              </Button> :
+
+            <Button className='save-btn' onClick={async () => { saveSiteChanges() }}>
+              Save Changes
               </Button>
-            }
-          </Grid>
+          }
         </Grid>
+      </Grid>
 
-        <Grid className='content-site'>
-          <div className='site-info'>
+      <Grid className='content-site'>
+        <div className='site-info'>
           <Grid className='sitename-wr'>
-              <Grid>
-                <Typography>Site Name  *</Typography>
-                  <Tooltip open={siteNameError} title="The Site Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
-                    <FormControl error={siteNameError}>
-                      <Input
-                        value={newSite.siteName}
-                        classes={{ input: classes.input }}
-                        onChange={e => inputHadnler(e.target.value, 'site')}
-                      />
-                    </FormControl>
-                  </Tooltip>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Address Line 1</Typography>
-                  <FormControl>
-                    <Input
-                      value={newSite.address1}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'address1-site')}
-                    />
-                  </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Address Line 2</Typography>
-                  <FormControl fullWidth >
-                    <Input
-                      value={newSite.address2}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'address2-site')}
-                    />
-                  </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>City</Typography>
-                <FormControl fullWidth>
+            <Grid>
+              <Typography>Site Name  *</Typography>
+              <Tooltip open={siteNameError} title="The Site Name must contain at least 3 symbols" classes={{ tooltip: classes.errorTooltip }} placement="top">
+                <FormControl error={siteNameError}>
                   <Input
-                    value={newSite.city}
+                    value={newSite.siteName}
                     classes={{ input: classes.input }}
-                    onChange={e => inputHadnler(e.target.value, 'city-site')}
+                    onChange={e => inputHadnler(e.target.value, 'site')}
                   />
                 </FormControl>
-              </Grid>
+              </Tooltip>
             </Grid>
-            <Grid classes={{ root: classes.inputContainer }}>
-              <Grid>
-                <Typography>Zip Code</Typography>
-                <FormControl fullWidth>
-                  <Input
-                    value={newSite.zipCode}
-                    classes={{ input: classes.input }}
-                    onChange={e => inputHadnler(e.target.value, 'zip-site')}
-                  />
-                </FormControl>
-              </Grid>
-            </Grid>
+          </Grid>
 
-            <Grid classes={{ root: classes.inputContainer }} className='comment' >
-              <Grid>
-                <Typography>Comment</Typography>
-                  <FormControl>
-                    <Input
-                      value={newSite.comment}
-                      classes={{ input: classes.input }}
-                      onChange={e => inputHadnler(e.target.value, 'comment-site')}
-                    />
-                  </FormControl>
-              </Grid>
-            </Grid>
-
-          </div>
-
-
-          <div className='sites-table'>
-            <Grid className='active-sites'>
-              <Grid>
-                <SitesTable
-                  sites={temporaryData.sites}
-                  clinetId={clientId}
-                  editSite={editSite}
-                  updateStatusDB={updateStatusDB}
-                  type={'active'}
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Address Line 1</Typography>
+              <FormControl>
+                <Input
+                  value={newSite.address1}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'address1-site')}
                 />
-              </Grid>
+              </FormControl>
             </Grid>
+          </Grid>
 
-            <Grid className='inactive-sites'>
-              <Grid>
-                <SitesTable
-                  sites={temporaryData.sites}
-                  clinetId={clientId}
-                  deleteSite={deleteSite}
-                  updateStatusDB={updateStatusDB}
-                  type={'inactive'}
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Address Line 2</Typography>
+              <FormControl fullWidth >
+                <Input
+                  value={newSite.address2}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'address2-site')}
                 />
-              </Grid>
+              </FormControl>
             </Grid>
-          </div>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>City</Typography>
+              <FormControl fullWidth>
+                <Input
+                  value={newSite.city}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'city-site')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid classes={{ root: classes.inputContainer }}>
+            <Grid>
+              <Typography>Zip Code</Typography>
+              <FormControl fullWidth>
+                <Input
+                  value={newSite.zipCode}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'zip-site')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid classes={{ root: classes.inputContainer }} className='comment' >
+            <Grid>
+              <Typography>Comment</Typography>
+              <FormControl>
+                <Input
+                  value={newSite.comment}
+                  classes={{ input: classes.input }}
+                  onChange={e => inputHadnler(e.target.value, 'comment-site')}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+        </div>
+
+
+        <div className='sites-table'>
+          <Grid className='active-sites'>
+            <Grid>
+              <SitesTable
+                sites={temporaryData.sites}
+                clinetId={clientId}
+                editSite={editSite}
+                updateStatusDB={updateStatusDB}
+                type={'active'}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid className='inactive-sites'>
+            <Grid>
+              <SitesTable
+                sites={temporaryData.sites}
+                clinetId={clientId}
+                deleteSite={deleteSite}
+                updateStatusDB={updateStatusDB}
+                type={'inactive'}
+              />
+            </Grid>
+          </Grid>
+        </div>
 
       </Grid>
 

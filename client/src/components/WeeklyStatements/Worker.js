@@ -252,7 +252,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
       <ul className={`${even(rowNumber) ? '' : 'grey'} test`}>
 
         {/* GENERAL INFO */}
-        <div><li>{worker ? worker.worker.firstname + ' ' + worker.worker.lastname : null}</li></div>
+        <div><li>{worker ? worker.worker.type === 'company' ? worker.worker.companyName : worker.worker.firstname + ' ' + worker.worker.lastname : null}</li></div>
 
         <Grid item className='select-trade'>
           <Select

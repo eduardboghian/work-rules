@@ -108,7 +108,7 @@ const xlsxG = async (list, type, weekEnding) => {
   // Insert a link that allows the user to download the PDF file
   let link = document.createElement('a');
   link.innerHTML = 'Download PDF file';
-  link.download = fileName(type, weekEnding);
+  link.download = fileName(weekEnding);
   link.href = 'data:application/octet-stream;base64,' + b64;
   document.body.appendChild(link);
   link.click()
@@ -203,7 +203,7 @@ const weeklyStatement = (sites, weekEnding) => {
   let excelData = []
   sites.map((site, i) => {
     site.workers.map(worker => {
-      let rateGot = worker.rates.rateGot.length === 0 ? '0.00' : worker.rates.rateGot
+      let ratePaid = worker.rates.ratePaid.length === 0 ? '0.00' : worker.rates.ratePaid
       let hours = worker.worker.hours !== undefined ? worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours : '0.0'
 
       excelData.push({
@@ -212,7 +212,7 @@ const weeklyStatement = (sites, weekEnding) => {
         nino: worker.worker.nino,
         trade: worker.worker.category,
         hrs: makeFloat(hours),
-        rate: makeFloat(rateGot),
+        rate: makeFloat(ratePaid),
         sum: totalSum(worker)
       })
     })
@@ -231,7 +231,7 @@ const totalSum = (worker) => {
 const fileName = (weekEnding) => {
   let currentTime = moment(weekEnding).add(12, 'days').format('YYYY MMMM DD')
 
-  return `Weekending-${moment(weekEnding).format('YYYY MMMM DD')} - Payrates to be paid ${currentTime}.xlsx`
+  return `Weekending - ${moment(weekEnding).format('YYYY MMMM DD')} - To be paid before ${currentTime}.xlsx`
 }
 
 
