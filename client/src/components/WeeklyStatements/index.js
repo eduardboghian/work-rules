@@ -164,7 +164,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
         .then(res => {
           let activeSites = res.data.filter(site => site.status === 'Active')
           setNewSite(activeSites[0])
-          setMenu(activeSites)
+          setMenu([...res.data])
           dispatch(addSites(activeSites))
           resolve(res.data)
         })

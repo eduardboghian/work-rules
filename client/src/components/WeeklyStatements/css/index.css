@@ -108,6 +108,7 @@
 
 .addworker-wr {
     position: absolute;
+    z-index: 10;
     width: 40%;
     top: 50%;
     left: 50%;
