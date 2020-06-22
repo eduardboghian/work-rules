@@ -55,63 +55,63 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   }
 
   const addWorker = () => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
 
-    if (weekEnding.weekEnding === date) {
-      if (newWorker.added === undefined) {
-        newWorker.added = weekEnding.weekEnding
+    // if (weekEnding.weekEnding === date) {
+    //   if (newWorker.added === undefined) {
+    //     newWorker.added = weekEnding.weekEnding
 
-        axios.put('/worker/added', {
-          id: newWorker._id,
-          added: weekEnding.weekEnding
-        })
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
-      }
+    //     axios.put('/worker/added', {
+    //       id: newWorker._id,
+    //       added: weekEnding.weekEnding
+    //     })
+    //       .then(res => console.log(res))
+    //       .catch(err => console.log(err))
+    //   }
 
-      axios.put('/site/add-worker', {
-        siteId,
-        newWorker,
-        rates: {
-          rateGot: '0,0',
-          ratePaid: '0,0',
-        }
+    //   axios.put('/site/add-worker', {
+    //     siteId,
+    //     newWorker,
+    //     rates: {
+    //       rateGot: '0,0',
+    //       ratePaid: '0,0',
+    //     }
+    //   })
+    //     .then(res => {
+    //       console.log('this is the answer', res.data)
+    //       dispatch(addSites([res.data]))
+    //     })
+    //     .catch(error => console.log(error))
+    // } else {
+    if (newWorker.added === undefined) {
+      newWorker.added = weekEnding.weekEnding
+
+      axios.put('/worker/added', {
+        id: newWorker._id,
+        added: weekEnding.weekEnding
       })
-        .then(res => {
-          console.log('this is the answer', res.data)
-          dispatch(addSites([res.data]))
-        })
-        .catch(error => console.log(error))
-    } else {
-      if (newWorker.added === undefined) {
-        newWorker.added = weekEnding.weekEnding
-
-        axios.put('/worker/added', {
-          id: newWorker._id,
-          added: weekEnding.weekEnding
-        })
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
-      }
-
-      axios.put('/weekly/add-worker', {
-        weekEnding: weekEnding.weekEnding,
-        siteId,
-        newWorker,
-        rates: {
-          rateGot: '0,0',
-          ratePaid: '0,0'
-        }
-      })
-        .then(res => {
-          console.log(res.data.data)
-          dispatch(addSites(res.data.data))
-          dispatch(loadData(res.data.data))
-
-        })
-        .catch(error => console.log(error))
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
     }
+
+    axios.put('/weekly/add-worker', {
+      weekEnding: weekEnding.weekEnding,
+      siteId,
+      newWorker,
+      rates: {
+        rateGot: '0,0',
+        ratePaid: '0,0'
+      }
+    })
+      .then(res => {
+        console.log(res.data.data)
+        dispatch(addSites(res.data.data))
+        dispatch(loadData(res.data.data))
+
+      })
+      .catch(error => console.log(error))
+    //}
 
   }
 

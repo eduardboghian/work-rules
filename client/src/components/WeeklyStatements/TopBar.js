@@ -100,38 +100,38 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
   }
 
   const deleteSite = site => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding.weekEnding === date) {
-      axios.put('/client/site-status', {
-        clientId: client._id,
-        siteId: site._id,
-        value: 'Not Active'
-      })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
+    // if (weekEnding.weekEnding === date) {
+    //   axios.put('/client/site-status', {
+    //     clientId: client._id,
+    //     siteId: site._id,
+    //     value: 'Not Active'
+    //   })
+    //     .then(res => console.log(res))
+    //     .catch(err => console.error(err))
 
-      axios.put('/site/update-status', {
-        id: site._id,
-        value: 'Not Active'
+    //   axios.put('/site/update-status', {
+    //     id: site._id,
+    //     value: 'Not Active'
+    //   })
+    //     .then(res => {
+    //       let activeSites = res.data.filter(site => site.status === 'Active')
+    //       dispatch(addSites(activeSites))
+    //     })
+    //     .catch(err => console.log(err))
+    // } else {
+    axios.put('/weekly/remove-site', {
+      weekEnding: weekEnding,
+      removedSite: site
+    })
+      .then(res => {
+        dispatch(loadData(res.data.data))
+        dispatch(addSites(res.data.data))
       })
-        .then(res => {
-          let activeSites = res.data.filter(site => site.status === 'Active')
-          dispatch(addSites(activeSites))
-        })
-        .catch(err => console.log(err))
-    } else {
-      axios.put('/weekly/remove-site', {
-        weekEnding: weekEnding,
-        removedSite: site
-      })
-        .then(res => {
-          dispatch(loadData(res.data.data))
-          dispatch(addSites(res.data.data))
-        })
-        .catch(err => console.error(err))
+      .catch(err => console.error(err))
 
-    }
+    //}
   };
 
 

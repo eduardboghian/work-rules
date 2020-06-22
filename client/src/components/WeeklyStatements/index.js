@@ -23,8 +23,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [we, setWEs] = useState([])
   const [sitesMenu, setMenu] = useState([])
   const [newSite, setNewSite] = useState({})
-  const [removedSite, setRemovedSite] = useState({})
-  const [styleStatus, setStyle] = useState('none')
   const [styleStatus2, setStyle2] = useState('none')
 
   useEffect(() => {
@@ -38,9 +36,11 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
         )
           .then(res => {
             let activeSites = res.data.filter(site => site.status === 'Active')
-            activeSites.sort(function (a, b) {
-              var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
-              var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
+            activeSites = activeSites.sort(function (a, b) {
+              var nameA = a.companyName + ' ' + a.siteName
+              var nameB = b.companyName + ' ' + b.siteName
+              nameA = nameA.toUpperCase()
+              nameB = nameB.toUpperCase()
               if (nameA < nameB) {
                 return -1;
               }
@@ -51,10 +51,10 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
               // names must be equal
               return 0;
             });
-            setNewSite(activeSites[0])
-            dispatch(loadData([...activeSites]))
             setMenu(activeSites)
-            dispatch(addSites([...activeSites]))
+            setNewSite(activeSites[0])
+            // dispatch(loadData([...activeSites]))
+            // dispatch(addSites([...activeSites]))
             resolve(res.data)
           })
           .catch(error => {
@@ -65,14 +65,8 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
 
       axios.get('/weekly/get-all')
         .then(async res => {
-          let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
-
-          let currentWE = {
-            weekEnding: date,
-            data: await sitesRes
-          }
-
-          res.data.unshift(currentWE)
+          dispatch(loadData(res.data[0].data))
+          dispatch(addSites(res.data[0].data))
           setWEs(res.data)
         })
         .catch(err => console.log(err))
@@ -93,122 +87,115 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
 
   const selectSite = () => {
 
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding === date) {
-      axios.post('/client/get-by-name', {
-        companyName: newSite.companyName
-      })
-        .then(res => {
-          console.log(res.data[0])
-          axios.put('/client/site-status', {
-            clientId: res.data[0]._id,
-            siteId: newSite._id,
-            value: 'Active'
-          })
-            .then(res => console.log(res))
-            .catch(err => console.error(err))
-        })
-        .catch(err => console.error(err))
+    // if (weekEnding === date) {
+    //   axios.post('/client/get-by-name', {
+    //     companyName: newSite.companyName
+    //   })
+    //     .then(res => {
+    //       console.log(res.data[0])
+    //       axios.put('/client/site-status', {
+    //         clientId: res.data[0]._id,
+    //         siteId: newSite._id,
+    //         value: 'Active'
+    //       })
+    //         .then(res => console.log(res))
+    //         .catch(err => console.error(err))
+    //     })
+    //     .catch(err => console.error(err))
 
 
-      axios.put('/site/update-status', {
-        id: newSite._id,
-        value: "Active"
+    //   axios.put('/site/update-status', {
+    //     id: newSite._id,
+    //     value: "Active"
+    //   })
+    //     .then(res => {
+    //       let activeSites = res.data.filter(site => site.status === 'Active')
+    //       dispatch(addSites(activeSites))
+    //     })
+    //     .catch(err => console.log(err))
+    // } else {
+    axios.put('/weekly/add-site', {
+      weekEnding: weekEnding,
+      newSite
+    })
+      .then(res => {
+        dispatch(loadData(res.data.data))
+        dispatch(addSites(res.data.data))
+        setStyle2('none')
       })
-        .then(res => {
-          let activeSites = res.data.filter(site => site.status === 'Active')
-          dispatch(addSites(activeSites))
-        })
-        .catch(err => console.log(err))
-    } else {
-      axios.put('/weekly/add-site', {
-        weekEnding: weekEnding,
-        newSite
-      })
-        .then(res => {
-          dispatch(loadData(res.data.data))
-          dispatch(addSites(res.data.data))
-          setStyle2('none')
-        })
-        .catch(err => console.error(err))
-    }
+      .catch(err => console.error(err))
+    //}
   }
 
   const updateState = () => {
-    let sitesRes = new Promise((resolve, reject) => {
-      axios.get('/site/all', {
-        headers: {
-          authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }
-      )
-        .then(res => {
-          let activeSites = res.data.filter(site => site.status === 'Active')
-          resolve(res.data)
-        })
-        .catch(error => {
-          console.log(error)
-          reject(error)
-        })
-    })
+    // let sitesRes = new Promise((resolve, reject) => {
+    //   axios.get('/site/all', {
+    //     headers: {
+    //       authorization: 'Bearer ' + localStorage.getItem('token')
+    //     }
+    //   }
+    //   )
+    //     .then(res => {
+    //       let activeSites = res.data.filter(site => site.status === 'Active')
+    //       resolve(res.data)
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //       reject(error)
+    //     })
+    // })
     axios.get('/weekly/get-all')
       .then(async res => {
-        let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
-
-        let currentWE = {
-          weekEnding: date,
-          data: await sitesRes
-        }
-        res.data.unshift(currentWE)
         setWEs(res.data)
       })
       .catch(err => console.log(err))
   }
 
   const dataToState = () => {
-    let sitesRes = new Promise((resolve, reject) => {
-      axios.get('/site/all', {
-        headers: {
-          authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-      }
-      )
-        .then(res => {
-          let activeSites = res.data.filter(site => site.status === 'Active')
-          activeSites.sort(function (a, b) {
-            var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
+    // let sitesRes = new Promise((resolve, reject) => {
+    //   axios.get('/site/all', {
+    //     headers: {
+    //       authorization: 'Bearer ' + localStorage.getItem('token')
+    //     }
+    //   }
+    //   )
+    //     .then(res => {
+    //       let activeSites = res.data.filter(site => site.status === 'Active')
+    //       activeSites.sort(function (a, b) {
+    //         var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
+    //         var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
+    //         if (nameA < nameB) {
+    //           return -1;
+    //         }
+    //         if (nameA > nameB) {
+    //           return 1;
+    //         }
 
-            // names must be equal
-            return 0;
-          });
-          setNewSite(activeSites[0])
-          setMenu(activeSites)
-          dispatch(addSites(activeSites))
-          resolve(res.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    //         // names must be equal
+    //         return 0;
+    //       });
+    //       setNewSite(activeSites[0])
+    //       setMenu(activeSites)
+    //       dispatch(addSites(activeSites))
+    //       resolve(res.data)
+    //     })
+    //     .catch(error => {
+    //       reject(error)
+    //     })
+    // })
 
     axios.get('/weekly/get-all')
       .then(async res => {
-        let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+        // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
 
-        let currentWE = {
-          weekEnding: date,
-          data: await sitesRes
-        }
+        // let currentWE = {
+        //   weekEnding: date,
+        //   data: await sitesRes
+        // }
 
-        res.data.unshift(currentWE)
+        // res.data.unshift(currentWE)
         setWEs(res.data)
       })
       .catch(err => console.log(err))
@@ -232,15 +219,15 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
                     let currentWE = we.find(item => item.weekEnding === e.target.value);
                     dispatch(setWeekEnding(currentWE.weekEnding))
                     updateState()
-                    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
+                    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
 
-                    console.log('test for date', e.target.value, date)
-                    if (e.target.value === date) {
-                      dataToState()
-                    } else {
-                      dispatch(loadData(currentWE.data))
-                      dispatch(addSites(currentWE.data))
-                    }
+                    // console.log('test for date', e.target.value, date)
+                    // if (e.target.value === date) {
+                    //   dataToState()
+                    // } else {
+                    dispatch(loadData(currentWE.data))
+                    dispatch(addSites(currentWE.data))
+                    //}
                   }}
                 >
 

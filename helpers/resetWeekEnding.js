@@ -9,7 +9,7 @@ const restatWeekEnding = () => {
     console.log(date, 'and the day is ', date.getDay())
 
     if (date.getDay() == 0) {
-      let weekEnding = moment().day(0).format('YYYY MMMM DD')
+      let weekEnding = moment().day(7).format('YYYY MMMM DD')
       console.log(weekEnding)
       let sites = await Sites.find()
 
@@ -21,7 +21,7 @@ const restatWeekEnding = () => {
 
       let newWeekly = new WeeklyStatements({
         weekEnding: weekEnding,
-        data: sites
+        data: []
       })
       newWeekly = await newWeekly.save()
 

@@ -29,59 +29,59 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }, [worker])
 
   useEffect(() => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding === date) {
-      if (hours.includes(',') && hours !== '0,0') {
-        axios.put('/site/add-hours', {
-          siteId: site._id,
-          id: worker.worker.weId,
-          hours,
+    // if (weekEnding === date) {
+    //   if (hours.includes(',') && hours !== '0,0') {
+    //     axios.put('/site/add-hours', {
+    //       siteId: site._id,
+    //       id: worker.worker.weId,
+    //       hours,
 
-        })
-          .then(res => { })
-          .catch(err => console.log(err))
+    //     })
+    //       .then(res => { })
+    //       .catch(err => console.log(err))
 
-      }
-    } else {
-      if (hours.includes(',') && hours !== '0,0') {
-        axios.put('/weekly/add-hours', {
-          siteId: site._id,
-          id: worker.worker.weId,
-          hours,
-          weekEnding
-        })
-          .then(res => { })
-          .catch(err => console.log(err))
+    //   }
+    // } else {
+    if (hours.includes(',') && hours !== '0,0') {
+      axios.put('/weekly/add-hours', {
+        siteId: site._id,
+        id: worker.worker.weId,
+        hours,
+        weekEnding
+      })
+        .then(res => { })
+        .catch(err => console.log(err))
 
-      }
     }
+    //}
   }, [hours])
 
   useEffect(() => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
-    if (weekEnding === date) {
-      if (ratesData.rateGot !== '0,0' && ratesData.ratePaid !== '0,0') {
-        axios.put('/site/update-rates', {
-          siteId: site._id,
-          id: worker.worker.weId,
-          ratesData
-        })
-          .then(res => { })
-          .catch(err => console.log(err))
-      }
-    } else {
-      if (ratesData.rateGot !== '0,0' && ratesData.ratePaid !== '0,0') {
-        axios.put('/weekly/update-rates', {
-          siteId: site._id,
-          id: worker.worker.weId,
-          ratesData,
-          weekEnding
-        })
-          .then(res => { })
-          .catch(err => console.log(err))
-      }
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // if (weekEnding === date) {
+    //   if (ratesData.rateGot !== '0,0' && ratesData.ratePaid !== '0,0') {
+    //     axios.put('/site/update-rates', {
+    //       siteId: site._id,
+    //       id: worker.worker.weId,
+    //       ratesData
+    //     })
+    //       .then(res => { })
+    //       .catch(err => console.log(err))
+    //   }
+    // } else {
+    if (ratesData.rateGot !== '0,0' && ratesData.ratePaid !== '0,0') {
+      axios.put('/weekly/update-rates', {
+        siteId: site._id,
+        id: worker.worker.weId,
+        ratesData,
+        weekEnding
+      })
+        .then(res => { })
+        .catch(err => console.log(err))
     }
+    //}
   }, [ratesData])
 
   const makeFloat = (nr) => {
@@ -149,80 +149,91 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }
 
   const removeWorkerFromSite = (siteId, uid, weId) => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding === date) {
-      axios.post('/site/remove-worker', {
-        siteId,
-        uid,
-        weId
-      })
-        .then(res => {
-          console.log(res.data)
-          dispatch(addSites([res.data]))
-          dispatch(loadData([res.data]))
-        })
-        .catch(err => console.log(err))
-    } else {
-      axios.put('/weekly/remove-worker', {
-        siteId,
-        uid,
-        weekEnding,
-        weId
-      })
-        .then(res => dispatch(addSites(res.data.data)))
-        .catch(err => console.log(err))
-    }
+    // if (weekEnding === date) {
+    //   axios.post('/site/remove-worker', {
+    //     siteId,
+    //     uid,
+    //     weId
+    //   })
+    //     .then(res => {
+    //       console.log(res.data)
+    //       dispatch(addSites([res.data]))
+    //       dispatch(loadData([res.data]))
+    //     })
+    //     .catch(err => console.log(err))
+    // } else {
+    axios.put('/weekly/remove-worker', {
+      siteId,
+      uid,
+      weekEnding,
+      weId
+    })
+      .then(res => dispatch(addSites(res.data.data)))
+      .catch(err => console.log(err))
+    //}
+
+    axios.put('/worker/remove-trade', {
+      weekEnding,
+      trade,
+      siteId,
+      uid,
+      weId
+    })
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
 
     setPopStyle('none')
   }
 
   const updateTrade = (trade, siteId, uid, weId) => {
-    let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
+    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
 
-    if (weekEnding === date) {
-      axios.put('/site/add-category', {
-        category: trade,
-        siteId,
-        uid,
-        weId
-      })
-        .then(res => {
-          dispatch(addSites([res.data]))
-          dispatch(loadData([res.data]))
-        })
-        .catch(err => console.error(err))
+    // if (weekEnding === date) {
+    //   axios.put('/site/add-category', {
+    //     category: trade,
+    //     siteId,
+    //     uid,
+    //     weId
+    //   })
+    //     .then(res => {
+    //       dispatch(addSites([res.data]))
+    //       dispatch(loadData([res.data]))
+    //     })
+    //     .catch(err => console.error(err))
 
-      axios.put('/worker/add-trade', {
-        trade,
-        siteId,
-        uid,
-        weId
+    //   axios.put('/worker/add-trade', {
+    //     trade,
+    //     siteId,
+    //     uid,
+    //     weId
+    //   })
+    //     .then(res => console.log(res))
+    //     .catch(err => console.error(err))
+    // } else {
+    axios.put('/weekly/add-category', {
+      weekEnding,
+      category: trade,
+      siteId,
+      uid,
+      weId
+    })
+      .then(res => {
+        dispatch(addSites(res.data.data))
       })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
-    } else {
-      axios.put('/weekly/add-category', {
-        weekEnding,
-        category: trade,
-        siteId,
-        uid,
-        weId
-      })
-        .then(res => {
-          dispatch(addSites(res.data.data))
-        })
-        .catch(err => console.error(err))
+      .catch(err => console.error(err))
 
-      axios.put('/worker/add-trade', {
-        trade,
-        siteId,
-        uid,
-        weId
-      })
-        .then(res => console.log(res))
-        .catch(err => console.error(err))
-    }
+    axios.put('/worker/add-trade', {
+      weekEnding,
+      trade,
+      siteId,
+      uid,
+      weId
+    })
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
+    // }
   }
 
   const even = (nr) => {

@@ -42,8 +42,16 @@ const WorkerRow = props => {
 
       <TableCell classes={{ root: classes.cell }}>
         {item.trades.map((data, i) => {
-          if (i === 3) return
-          return <p style={{ display: 'inline-block', margin: '0 3px', fontWeight: '500', fontSize: '16px' }} key={i}>{data}{i === 2 ? null : ','} </p>
+          if (i > 2) return
+          if (typeof item.trades[0] === "object" && i > 0) {
+            if (data.value === item.trades[i - 1].value) return
+          }
+
+          if (typeof item.trades[0] === "object" && i > 1) {
+            if (data.value === item.trades[i - 2].value) return
+          }
+
+          return <p style={{ display: 'inline-block', margin: '0 3px', fontWeight: '500', fontSize: '16px' }} key={i}>{data.value}{i === 2 ? null : ','} </p>
         })}
       </TableCell>
 
