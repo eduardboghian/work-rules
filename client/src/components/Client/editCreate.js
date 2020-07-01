@@ -64,6 +64,7 @@ const EditCreate = props => {
   const closePage = () => {
     props.isDialogOpened(false);
     props.setEditData({
+      _id: "",
       companyName: "",
       peer: '',
       name: '',
@@ -83,7 +84,7 @@ const EditCreate = props => {
       email: "",
       communicationChannel: "",
       sites: [],
-      status: ""
+      status: "active"
     });
   };
 
@@ -442,7 +443,18 @@ const EditCreate = props => {
         authorization: 'Bearer ' + localStorage.getItem('token')
       }
     })
-      .then(res => setNewSite({}))
+      .then(res => {
+        setSites([...sites, {}])
+        setNewSite({
+          status: 'Active',
+          siteName: '',
+          address1: '',
+          address2: '',
+          city: '',
+          zipCode: '',
+          comment: ''
+        })
+      })
       .catch(err => console.log(err))
   }
 
@@ -480,6 +492,8 @@ const EditCreate = props => {
           </FormControl>
         </Grid>
         <Grid>
+        </Grid>
+        <Grid>
           <Button
             className='create-btn'
             disabled={pending}
@@ -487,14 +501,8 @@ const EditCreate = props => {
               validation();
               setPending(false);
             }}
-          >
-            SAVE
-              </Button>
-        </Grid>
-        <Grid>
-          <Button className='create-btn' onClick={closePage}>
-            Back
-              </Button>
+          >Back
+          </Button>
         </Grid>
       </Grid>
 

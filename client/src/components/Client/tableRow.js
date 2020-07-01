@@ -1,8 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { Typography, Tooltip, Grid } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
+
+import Button from '@material-ui/core/Button';
+import axios from "axios";
 
 const useStyles = makeStyles({
   cell: {
@@ -24,8 +30,9 @@ const ClientRow = props => {
   const { item, openDialog, setActionType, even } = props;
   const classes = useStyles();
   const data = {
+    _id: item._id,
     companyName: item.companyName,
-    peer: item.name+ ' '+item.lastName,
+    peer: item.name + ' ' + item.lastName,
     id: item.id,
     name: item.name,
     lastName: item.lastName,
@@ -45,11 +52,22 @@ const ClientRow = props => {
     sites: item.sites,
     status: item.status
   };
+  const [showDelete, setShowDelete] = useState(false)
 
-  // useEffect(() => {
-  //   setActionType("edit");
-  //   openDialog(data);
-  // }, [data])
+
+  const deleteWorker = () => {
+    axios.delete('/client/delete', {
+      data: {
+        userId: item._id
+      }
+    })
+      .then(res => {
+        console.log(res.data)
+        setShowDelete(false)
+        window.location.reload(true)
+      })
+      .catch(err => console.error(err))
+  }
 
   return (
     <TableRow style={even ? { backgroundColor: "#ececec" } : {}}>
@@ -59,11 +77,11 @@ const ClientRow = props => {
           setActionType("edit");
           openDialog(data);
         }}
-        >
+      >
         <Typography classes={{ root: classes.link }}>{item.companyName}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
-        <Typography>{item.name+ ' '+item.lastName}</Typography>
+        <Typography>{item.name + ' ' + item.lastName}</Typography>
       </TableCell>
       <TableCell classes={{ root: classes.cell }}>
         <Typography>{item.phone}</Typography>
@@ -77,6 +95,26 @@ const ClientRow = props => {
       <TableCell xs={9} classes={{ root: classes.cell }}>
         <Typography>{item.status}</Typography>
       </TableCell>
+      <TableCell style={{ width: '10px', position: 'relative' }} classes={{ root: classes.cell }}>
+        <IconButton aria-label="settings">
+          <MoreVertIcon onClick={e => setShowDelete(!showDelete)} />
+        </IconButton>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          style={showDelete ? {
+            position: 'absolute',
+            zIndex: 1,
+            top: '15px',
+            left: '-80px'
+          } : { display: 'none' }}
+          onClick={e => deleteWorker()}
+        >
+          Delete
+        </Button>
+      </TableCell>
+
 
       {/* <TableCell align="center" classes={{ root: classes.cell }}>
         {item.sites.length > 0 ? (

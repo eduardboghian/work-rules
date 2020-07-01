@@ -38,6 +38,12 @@ router.get('/get', (req, res) => {
     });
 });
 
+router.get('/get-id', async (req, res) => {
+  let worker = await Workers.find({ _id: req.query.userID })
+
+  res.send(worker)
+});
+
 router.post('/add', async (req, res) => {
 
   const token = req.headers.authorization.replace('Bearer ', '');
@@ -165,6 +171,12 @@ router.put('/added', async (req, res) => {
   if (worker.added !== undefined) return res.send(worker)
 
   worker = await Workers.findOneAndUpdate({ _id: req.body.id }, { added: req.body.added }, { new: true })
+
+  res.send(worker)
+})
+
+router.delete('/delete', async (req, res) => {
+  let worker = await Workers.findOneAndRemove({ _id: req.body.userId })
 
   res.send(worker)
 })

@@ -1,5 +1,6 @@
 const Excel = require('exceljs')
 const moment = require('moment')
+const axios = require('axios')
 
 const xlsxG = async (list, type, weekEnding) => {
   let sites = JSON.parse(JSON.stringify(list))
@@ -132,7 +133,8 @@ export default xlsxG
 
 
 const newJoinersExcel = async (sites, weekEnding) => {
-  let data = newJoiners(sites, weekEnding)
+  let data = await newJoiners(sites, weekEnding)
+  console.log(data, 'generated data')
 
   const workbook = new Excel.Workbook();
   workbook.creator = 'WorkRules';
@@ -184,7 +186,7 @@ const newJoinersExcel = async (sites, weekEnding) => {
   // Insert a link that allows the user to download the PDF file
   let link = document.createElement('a');
   link.innerHTML = 'Download PDF file';
-  link.download = `WorkRules New Joiners - Weekending ${moment(weekEnding).format('YYYY MMMM DD')}.xlsx`;
+  link.download = `WorkRules New Joiners - Week Ending ${moment(weekEnding).format('YYYY.MM.DD')}.xlsx`;
   link.href = 'data:application/octet-stream;base64,' + b64;
   document.body.appendChild(link);
   link.click()
@@ -194,9 +196,21 @@ const newJoinersExcel = async (sites, weekEnding) => {
 const weeklyStatement = (sites, weekEnding) => {
   let excelData = []
   sites.map((site, i) => {
-    site.workers.map(worker => {
+    site.workers.map(async worker => {
       let ratePaid = worker.rates.ratePaid.length === 0 ? '0.00' : worker.rates.ratePaid
       let hours = worker.worker.hours !== undefined ? worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours : '0.0'
+
+      // let user = new Promise((resolve, reject) => {
+      //   axios.get('/worker/get-id', {
+      //     params: {
+      //       userID: worker.worker._id
+      //     }
+      //   })
+      //     .then(res => {
+      //       resolve(res.data[0])
+      //     })
+      //     .catch(err => reject(err))
+      // })
 
       excelData.push({
         name: worker.worker.lastname + ' ' + worker.worker.firstname,
@@ -223,7 +237,7 @@ const totalSum = (worker) => {
 const fileName = (weekEnding) => {
   let currentTime = moment(weekEnding).add(14, 'days').format('YYYY.MM.DD')
 
-  return `Weekending - ${moment(weekEnding).format('YYYY.MM.DD')} - To be paid ${currentTime}.xlsx`
+  return `Week Ending ${moment(weekEnding).format('YYYY.MM.DD')} - To be paid ${currentTime}.xlsx`
 }
 
 
@@ -251,43 +265,61 @@ const netAmount = (sheet, length) => {
   return sum
 }
 
-const newJoiners = (sites, weekEnding) => {
+const newJoiners = async (sites, weekEnding) => {
   let excelData = []
-  sites.map((site, i) => {
-    let idList = []
-    site.workers.map(worker => {
-      if (idList.find(item => item === worker.worker._id)) return
-      let status
+  return new Promise(async (resolve, reject) => {
+    let test = await Promise.all(sites.map(async (site, i) => {
+      let idList = []
 
-      if (weekEnding === worker.worker.added) {
-        status = 'New Joiner'
-      } else {
-        status = 'Old'
-      }
 
-      excelData.push({
-        last: worker.worker.lastname,
-        first: worker.worker.firstname,
-        phone: worker.worker.phone,
-        status: status
-      })
-      idList.push(worker.worker._id)
-      return true
-    })
-    excelData.sort(function (a, b) {
-      var nameA = a.status.toUpperCase(); // ignore upper and lowercase
-      var nameB = b.status.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
+      excelData = await Promise.all(site.workers.map(async worker => {
+        if (idList.find(item => item === worker.worker._id)) return
+        let status
 
-      // names must be equal
-      return 0;
-    });
+        if (weekEnding === worker.worker.added) {
+          status = 'New Joiner'
+        } else {
+          status = 'Old'
+        }
+
+
+        return new Promise((resolve, reject) => {
+          axios.get('/worker/get-id', {
+            params: {
+              userID: worker.worker._id
+            }
+          })
+            .then(res => {
+              excelData.push({
+                last: worker.worker.lastname,
+                first: worker.worker.firstname,
+                phone: res.data[0].phone,
+                status: status
+              })
+              idList.push(worker.worker._id)
+              resolve(excelData)
+            })
+            .catch(err => reject(err))
+        })
+      }))
+
+
+      excelData = excelData[0]
+      excelData.sort(function (a, b) {
+        var nameA = a.status.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.status.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        return 0;
+      });
+      console.log(excelData)
+      return excelData
+    }))
+    resolve(test[test.length - 1])
   })
-
-  return excelData
 }

@@ -178,6 +178,7 @@ const Client = props => {
                     </TableCell>
 
                     <TableCell classes={{ root: classes.cellHeader }}>Status</TableCell>
+                    <TableCell style={{ width: '10px' }} classes={{ root: classes.cellHeader }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

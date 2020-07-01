@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import './css/index.css'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
 import { addSites } from '../../actions/siteActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
 import { connect } from 'react-redux'
@@ -65,11 +66,23 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
 
       axios.get('/weekly/get-all')
         .then(async res => {
-          dispatch(loadData(res.data[0].data))
-          dispatch(addSites(res.data[0].data))
           setWEs(res.data)
+          const cookies = new Cookies()
+          const lastWE = cookies.get('lastWE')
+          console.log(lastWE)
+
+          if (lastWE === undefined) {
+            dispatch(addSites(res.data[0].data))
+            dispatch(loadData(res.data[0].data))
+          } else {
+            let currentWE = res.data.find(item => item.weekEnding === lastWE);
+            dispatch(setWeekEnding(currentWE.weekEnding))
+            updateState()
+            dispatch(loadData(currentWE.data))
+            dispatch(addSites(currentWE.data))
+          }
         })
-        .catch(err => console.log(err))
+        .catch(err => window.location.reload(true))
     }
 
     addDataToState()
@@ -83,39 +96,15 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       dispatch(setWeekEnding(date))
     }
 
+
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   }, [])
 
   const selectSite = () => {
-
-    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
-
-    // if (weekEnding === date) {
-    //   axios.post('/client/get-by-name', {
-    //     companyName: newSite.companyName
-    //   })
-    //     .then(res => {
-    //       console.log(res.data[0])
-    //       axios.put('/client/site-status', {
-    //         clientId: res.data[0]._id,
-    //         siteId: newSite._id,
-    //         value: 'Active'
-    //       })
-    //         .then(res => console.log(res))
-    //         .catch(err => console.error(err))
-    //     })
-    //     .catch(err => console.error(err))
-
-
-    //   axios.put('/site/update-status', {
-    //     id: newSite._id,
-    //     value: "Active"
-    //   })
-    //     .then(res => {
-    //       let activeSites = res.data.filter(site => site.status === 'Active')
-    //       dispatch(addSites(activeSites))
-    //     })
-    //     .catch(err => console.log(err))
-    // } else {
     axios.put('/weekly/add-site', {
       weekEnding: weekEnding,
       newSite
@@ -126,26 +115,9 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
         setStyle2('none')
       })
       .catch(err => console.error(err))
-    //}
   }
 
   const updateState = () => {
-    // let sitesRes = new Promise((resolve, reject) => {
-    //   axios.get('/site/all', {
-    //     headers: {
-    //       authorization: 'Bearer ' + localStorage.getItem('token')
-    //     }
-    //   }
-    //   )
-    //     .then(res => {
-    //       let activeSites = res.data.filter(site => site.status === 'Active')
-    //       resolve(res.data)
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //       reject(error)
-    //     })
-    // })
     axios.get('/weekly/get-all')
       .then(async res => {
         setWEs(res.data)
@@ -154,48 +126,9 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   }
 
   const dataToState = () => {
-    // let sitesRes = new Promise((resolve, reject) => {
-    //   axios.get('/site/all', {
-    //     headers: {
-    //       authorization: 'Bearer ' + localStorage.getItem('token')
-    //     }
-    //   }
-    //   )
-    //     .then(res => {
-    //       let activeSites = res.data.filter(site => site.status === 'Active')
-    //       activeSites.sort(function (a, b) {
-    //         var nameA = a.siteName.toUpperCase(); // ignore upper and lowercase
-    //         var nameB = b.siteName.toUpperCase(); // ignore upper and lowercase
-    //         if (nameA < nameB) {
-    //           return -1;
-    //         }
-    //         if (nameA > nameB) {
-    //           return 1;
-    //         }
-
-    //         // names must be equal
-    //         return 0;
-    //       });
-    //       setNewSite(activeSites[0])
-    //       setMenu(activeSites)
-    //       dispatch(addSites(activeSites))
-    //       resolve(res.data)
-    //     })
-    //     .catch(error => {
-    //       reject(error)
-    //     })
-    // })
 
     axios.get('/weekly/get-all')
       .then(async res => {
-        // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
-
-        // let currentWE = {
-        //   weekEnding: date,
-        //   data: await sitesRes
-        // }
-
-        // res.data.unshift(currentWE)
         setWEs(res.data)
       })
       .catch(err => console.log(err))
@@ -217,17 +150,17 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
                   value={weekEnding}
                   onChange={e => {
                     let currentWE = we.find(item => item.weekEnding === e.target.value);
+
+                    let d = new Date();
+                    d.setTime(d.getTime() + (1000 * 64 * 30))
+
+                    const cookies = new Cookies()
+                    cookies.set('lastWE', currentWE.weekEnding, { path: '/', expires: d })
+
                     dispatch(setWeekEnding(currentWE.weekEnding))
                     updateState()
-                    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(+7).format('YYYY MMMM DD')
-
-                    // console.log('test for date', e.target.value, date)
-                    // if (e.target.value === date) {
-                    //   dataToState()
-                    // } else {
                     dispatch(loadData(currentWE.data))
                     dispatch(addSites(currentWE.data))
-                    //}
                   }}
                 >
 

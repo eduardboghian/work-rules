@@ -122,6 +122,7 @@ router.put('/remove-site', async (req, res) => {
     //we[0].data.push(req.body.newSite)
     console.log(req.body, we)
     let site = we[0].data.filter(site => site._id === req.body.removedSite._id)
+    site = site[0]
     let siteIndex = we[0].data.indexOf(site)
 
     we[0].data.splice(siteIndex, 1)

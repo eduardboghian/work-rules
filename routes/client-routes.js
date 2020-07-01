@@ -25,6 +25,7 @@ router.post('/get-by-name', async (req, res) => {
 })
 
 router.post('/add', async (req, res) => {
+    console.log(req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
     jwt.verify(token, 'secretkey', (err, authData) => {
         if (err) {
@@ -34,7 +35,7 @@ router.post('/add', async (req, res) => {
         if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
             switch (req.body.action) {
                 case 'edit':
-                    Clients.findOneAndUpdate({ email: req.body.data.email }, req.body.data)
+                    Clients.findOneAndUpdate({ _id: req.body.data._id }, req.body.data)
                         .then(result => res.status(200).send('client edited successffuly...'))
                         .catch(err => res.status(400).send());
                     res.status(200);
@@ -86,6 +87,12 @@ router.delete('/delete-site', async (req, res) => {
 
 
     client = await Clients.findOneAndUpdate({ _id: req.body.clientId }, client, { new: true })
+    res.send(client)
+})
+
+router.delete('/delete', async (req, res) => {
+    let client = await Clients.findOneAndRemove({ _id: req.body.userId })
+
     res.send(client)
 })
 

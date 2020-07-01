@@ -63,9 +63,39 @@ const SitesTable = props => {
     let filtratedSites
     if (sites) {
       filtratedSites = sites.filter(site => site.status === 'Active')
+      filtratedSites.sort(function (a, b) {
+        var nameA = a.companyName + ' ' + a.siteName
+        var nameB = b.companyName + ' ' + b.siteName
+        nameA = nameA.toUpperCase()
+        nameB = nameB.toUpperCase()
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
       setActiveSites(filtratedSites)
 
       filtratedSites = sites.filter(site => site.status !== 'Active')
+      filtratedSites.sort(function (a, b) {
+        var nameA = a.companyName + ' ' + a.siteName
+        var nameB = b.companyName + ' ' + b.siteName
+        nameA = nameA.toUpperCase()
+        nameB = nameB.toUpperCase()
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
       setFiltratedSites(filtratedSites)
 
     }

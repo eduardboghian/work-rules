@@ -183,6 +183,7 @@ const Worker = props => {
                     </TableCell>
 
                     <TableCell classes={{ root: classes.cellHeader }}>Comments</TableCell>
+                    <TableCell style={{ width: '10px' }} classes={{ root: classes.cellHeader }}></TableCell>
 
                   </TableRow>
                 </TableHead>
