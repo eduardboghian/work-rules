@@ -39,7 +39,7 @@ router.get('/get', (req, res) => {
 });
 
 router.get('/get-id', async (req, res) => {
-  let worker = await Workers.find({ _id: req.query.userID })
+  let worker = await Workers.findOne({ _id: req.query.userID })
 
   res.send(worker)
 });

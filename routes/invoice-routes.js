@@ -25,8 +25,8 @@ router.post('/generate-invoice', async (req, res) => {
 
     site.workers.map((item, i) => {
         let ot = isNaN(parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)
-        item.rates.rateGot = item.rates.rateGot.replace('\,', '.')
-        item.worker.hours = item.worker.hours.replace('\,', '.')
+        item.rates.rateGot = item.rates.rateGot ? item.rates.rateGot.replace('\,', '.') : 0.0
+        item.worker.hours = item.worker.hours ? item.worker.hours.replace('\,', '.') : 0.0
         let rateGot = isNaN(parseFloat(item.rates.rateGot)) ? 0 : parseFloat(item.rates.rateGot).toFixed(1)
         let hours = isNaN(parseFloat(item.worker.hours)) ? '0.0' : parseFloat(item.worker.hours).toFixed(1)
 
@@ -62,10 +62,10 @@ router.post('/generate-invoice', async (req, res) => {
     }
 
     data[0].Company = site.companyName
-    data[0].Address1 = client.firstPost ? client.firstPost : null,
-        data[0].Address2 = client.secondPost ? client.secondPost : null,
-        data[0].city = client.city ? client.city : null
-    data[0].zipCode = client.zipCode ? client.zipCode : null
+    data[0].Address1 = client ? client.firstPost ? client.firstPost : null : null
+    data[0].Address2 = client ? client.secondPost ? client.secondPost : null : null
+    data[0].city = client ? client.city ? client.city : null : null
+    data[0].zipCode = client ? client.zipCode ? client.zipCode : null : null
     data[0].dueDate = dueDate;
     data[0].Week_Ending = weekEnding
     data[0].issueDate = issueDate
@@ -76,6 +76,12 @@ router.post('/generate-invoice', async (req, res) => {
     data[0].totalNetAmount = totalNetAmount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
     invoiceStatus.push(await generatePDF(data));
+    let name = {
+        nr: req.body.invoiceNumber,
+        issueDate: issueDate,
+        client: site.companyName
+    }
+    invoiceStatus.push(name)
     res.send(invoiceStatus);
 });
 

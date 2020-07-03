@@ -37,6 +37,28 @@ const EditCreate = props => {
   const [ticket, setTicket] = useState('')
   const [popStyle, setPopStyle] = useState('none')
   const [popStyle1, setPopStyle1] = useState('none')
+  const [filtratedTrades, setTrades] = useState([])
+
+  useEffect(() => {
+    if (temporaryData) {
+      let trades = JSON.parse(JSON.stringify(temporaryData.trades))
+      //console.log(trades)
+
+      trades = trades.slice().sort((a, b) => new Date(b.weekEnding) - new Date(a.weekEnding))
+      // console.log('sortata', trades)
+
+      var obj = {};
+
+      for (var i = 0, len = trades.length; i < len; i++)
+        obj[trades[i]['value']] = trades[i];
+
+      trades = new Array();
+      for (var key in obj)
+        trades.push(obj[key]);
+
+      setTrades(trades)
+    }
+  }, [])
 
   useEffect(() => {
     let sum = +temporaryData.gotClient - +temporaryData.paidWorker;
@@ -726,8 +748,10 @@ const EditCreate = props => {
       <Grid className='trades-list'>
         <p>Trade</p>
         <Grid className='trades-wr'>
-          {temporaryData.trades.slice(0).reverse().map((trade, i) => {
-            return <div key={i} className='trades-elements'>{trade}</div>
+          {filtratedTrades.map((data, i) => {
+            if (i > 2) return
+
+            return <section style={{ display: 'inline-block', margin: '0 !important', fontWeight: '500', fontSize: '16px' }} key={i}>{data.value}{i === 2 ? null : ','} </section>
           })}
         </Grid>
       </Grid>
@@ -797,6 +821,8 @@ const EditCreate = props => {
             <button type='submit' id='submit-doc' className='none' >Send Picture</button>
           </form>
         </div>
+
+
         <div className='docs-wr'>
           {temporaryData.documents.map((data, i) => {
             return <div key={i} style={{ position: 'relative' }}>
@@ -811,20 +837,6 @@ const EditCreate = props => {
           })}
         </div>
       </div>
-
-      {/* <Grid container justify='space-around'>
-        <Button
-          style={{ marginTop: '20px' }}
-          classes={{ root: classes.button }}
-          disabled={pending}
-          onClick={async () => {
-            validation();
-            setPending(false);
-          }}
-        >
-          SAVE
-        </Button>
-      </Grid> */}
     </>
   );
 };

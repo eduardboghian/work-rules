@@ -15,7 +15,8 @@ const xlsxG = async (list, type, weekEnding) => {
     sites[i].workers = newWorkersList
   }
 
-  let data = weeklyStatement(sites, weekEnding)
+  let data = await weeklyStatement(sites, weekEnding)
+  data = data[0]
   let lastRow = parseInt(data.length + 3)
 
   const workbook = new Excel.Workbook();
@@ -134,7 +135,6 @@ export default xlsxG
 
 const newJoinersExcel = async (sites, weekEnding) => {
   let data = await newJoiners(sites, weekEnding)
-  console.log(data, 'generated data')
 
   const workbook = new Excel.Workbook();
   workbook.creator = 'WorkRules';
@@ -193,38 +193,41 @@ const newJoinersExcel = async (sites, weekEnding) => {
   link.remove()
 }
 
-const weeklyStatement = (sites, weekEnding) => {
+const weeklyStatement = async (sites, weekEnding) => {
   let excelData = []
-  sites.map((site, i) => {
-    site.workers.map(async worker => {
-      let ratePaid = worker.rates.ratePaid.length === 0 ? '0.00' : worker.rates.ratePaid
-      let hours = worker.worker.hours !== undefined ? worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours : '0.0'
+  let excelData2
+  return new Promise(async (resolve, reject) => {
+    let test = await Promise.all(sites.map(async (site, i) => {
 
-      // let user = new Promise((resolve, reject) => {
-      //   axios.get('/worker/get-id', {
-      //     params: {
-      //       userID: worker.worker._id
-      //     }
-      //   })
-      //     .then(res => {
-      //       resolve(res.data[0])
-      //     })
-      //     .catch(err => reject(err))
-      // })
+      excelData2 = await Promise.all(site.workers.map(async worker => {
+        let ratePaid = worker.rates.ratePaid.length === 0 ? '0.00' : worker.rates.ratePaid
+        let hours = worker.worker.hours !== undefined ? worker.worker.hours.length === 0 ? '0.0' : worker.worker.hours : '0.0'
 
-      excelData.push({
-        name: worker.worker.lastname + ' ' + worker.worker.firstname,
-        id: worker.worker.uniqueID,
-        nino: worker.worker.nino,
-        trade: worker.worker.category,
-        hrs: makeFloat(hours),
-        rate: makeFloat(ratePaid),
-        sum: totalSum(worker)
-      })
-    })
+        return new Promise((resolve, reject) => {
+          axios.get('/worker/get-id', {
+            params: {
+              userID: worker.worker._id
+            }
+          })
+            .then(res => {
+              excelData.push({
+                name: worker.worker.lastname + ' ' + worker.worker.firstname,
+                id: res.data.uniqueID,
+                nino: res.data.nino,
+                trade: worker.worker.category,
+                hrs: makeFloat(hours),
+                rate: makeFloat(ratePaid),
+                sum: totalSum(worker)
+              })
+              resolve(excelData)
+            })
+            .catch(err => reject(err))
+        })
+      }))
+      return excelData2
+    }))
+    resolve(test[test.length - 1])
   })
-
-  return excelData
 }
 
 
@@ -293,7 +296,7 @@ const newJoiners = async (sites, weekEnding) => {
               excelData.push({
                 last: worker.worker.lastname,
                 first: worker.worker.firstname,
-                phone: res.data[0].phone,
+                phone: res.data.phone,
                 status: status
               })
               idList.push(worker.worker._id)
@@ -317,7 +320,6 @@ const newJoiners = async (sites, weekEnding) => {
 
         return 0;
       });
-      console.log(excelData)
       return excelData
     }))
     resolve(test[test.length - 1])

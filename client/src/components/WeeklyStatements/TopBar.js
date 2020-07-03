@@ -71,7 +71,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
       invoiceNumber: number
     })
       .then(res => {
-        res.data.map(data => {
+        res.data.map((data, i) => {
+          if (i > 0) return
           function arrayBufferToBase64(buffer) {
             let binary = '';
             let bytes = new Uint8Array(buffer);
@@ -83,10 +84,12 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
           }
           let b64 = arrayBufferToBase64(data.data)
 
+          console.log(res.data)
+
           // Insert a link that allows the user to download the PDF file
           let link = document.createElement('a');
           link.innerHTML = 'Download PDF file';
-          link.download = 'file.pdf';
+          link.download = `Nr. ${res.data[1].nr} - ${res.data[1].issueDate} - ${res.data[1].client}.pdf`;
           link.href = 'data:application/octet-stream;base64,' + b64;
           document.body.appendChild(link);
           link.click()
