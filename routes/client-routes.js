@@ -27,7 +27,7 @@ router.post('/get-by-name', async (req, res) => {
 router.post('/add', async (req, res) => {
     console.log(req.body)
     const token = req.headers.authorization.replace('Bearer ', '');
-    jwt.verify(token, 'secretkey', (err, authData) => {
+    jwt.verify(token, 'secretkey', async (err, authData) => {
         if (err) {
             res.sendStatus(403);
         }
