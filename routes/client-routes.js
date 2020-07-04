@@ -42,6 +42,10 @@ router.post('/add', async (req, res) => {
                     break;
                 case 'create':
                     delete req.body.data._id
+
+                    const client = await Clients({ companyName: req.body.data.companyName })
+                    if (client) return req.status(400).send('A company with this name already exists...')
+
                     const item = new Clients(req.body.data);
                     item.save()
                         .then(result => res.status(200).send(result))
