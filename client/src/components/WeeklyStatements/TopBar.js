@@ -89,7 +89,7 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
           // Insert a link that allows the user to download the PDF file
           let link = document.createElement('a');
           link.innerHTML = 'Download PDF file';
-          link.download = `Nr. ${res.data[1].nr} - ${res.data[1].issueDate} - ${res.data[1].client}.pdf`;
+          link.download = `Nr. ${res.data[1].nr} - ${moment(res.data[1].issueDate).format('YYYY.MM.DD')} - ${res.data[1].client}.pdf`;
           link.href = 'data:application/octet-stream;base64,' + b64;
           document.body.appendChild(link);
           link.click()
