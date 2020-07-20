@@ -51,11 +51,14 @@ const EditCreate = props => {
   useEffect(() => {
     findSites();
     setNewSite({ ...newSite, companyName: temporaryData.companyName })
+    setCliId(props.companyId)
   }, [props]);
 
+
+
   useEffect(() => {
-    setCliId(props.companyId)
-  }, [props])
+    console.log(newSite)
+  }, [newSite])
 
   const findSites = async () => {
     setSites(props.data.sites);
@@ -398,6 +401,7 @@ const EditCreate = props => {
           setSites(newList);
           setNewSite({
             status: 'Active',
+            companyName: temporaryData.companyName,
             siteName: '',
             address1: '',
             address2: '',
@@ -414,6 +418,7 @@ const EditCreate = props => {
     console.log(siteId)
     setNewSite({
       status: 'Active',
+      companyName: temporaryData.companyName,
       siteName: '',
       address1: '',
       address2: '',
@@ -447,6 +452,7 @@ const EditCreate = props => {
         setSites([...sites, {}])
         setNewSite({
           status: 'Active',
+          companyName: temporaryData.companyName,
           siteName: '',
           address1: '',
           address2: '',

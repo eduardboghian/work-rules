@@ -43,7 +43,8 @@ router.post('/add', async (req, res) => {
                 case 'create':
                     delete req.body.data._id
 
-                    const client = await Clients({ companyName: req.body.data.companyName })
+                    const client = await Clients.findOne({ companyName: req.body.data.companyName })
+                    console.log(client, 'lets seeee')
                     if (client) return res.status(400).send('A company with this name already exists...')
 
                     const item = new Clients(req.body.data);

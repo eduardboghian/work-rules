@@ -39,10 +39,7 @@ const SitesTable = props => {
   const [reloader, setReloader] = useState()
 
   useEffect(() => {
-    console.log(props)
     if (props.newSite.length !== reloader) {
-      console.log('merge', props.newSite.length, reloader)
-
       // LOAD SITES FOR THE COMPANY
       axios.get('/site/all', {
         headers: {

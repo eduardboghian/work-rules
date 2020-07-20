@@ -40,6 +40,10 @@ router.post('/add', (req, res) => {
           res.status(200);
           break;
         case 'create':
+          console.log(req.body.data)
+          if (req.body.data.companyName === undefined) return res.status(400).send('the site needs a valid companyName...')
+          if (req.body.data.companyName.length < 3) return res.status(400).send('the site needs a valid companyName...')
+
           const item = new Sites(req.body.data);
           item.save()
             .then(result => res.status(200).send(result))
