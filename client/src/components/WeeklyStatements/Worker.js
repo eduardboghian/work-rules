@@ -186,12 +186,12 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     if (!value.includes(',')) {
-      return value.concat(',0')
+      return value.concat(',00')
     } else {
       let arr = value.split(',')
       let val
 
-      val = arr[0].concat(`,${arr[1].charAt(0)}`)
+      val = arr[0].concat(`,${arr[1].charAt(0)}${arr[1].charAt(1)}`)
       console.log('teeest', val)
       return val
     }
