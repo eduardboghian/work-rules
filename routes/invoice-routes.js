@@ -7,6 +7,8 @@ const moment = require('moment');
 const mondays = require('mondays');
 
 const Clients = require('../models/clients');
+const Site = require('../models/sites');
+
 
 // GENERATE INVOICE API 
 router.post('/generate-invoice', async (req, res) => {
@@ -52,14 +54,23 @@ router.post('/generate-invoice', async (req, res) => {
     dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
 
     if (req.body.type === 'site') {
-        console.log(req.body.type, site)
+        let siteFromDb = await Site.findOne({ siteName: site.siteName, companyName: site.companyName })
+
+        if (siteFromDb) {
+            data[0].siteAddress = {
+                add1: siteFromDb.address1 ? siteFromDb.address1 : null,
+                add2: siteFromDb.address2 ? siteFromDb.address2 : null,
+                city: siteFromDb.city ? siteFromDb.city : null,
+                zipCode: siteFromDb.zipCode ? siteFromDb.zipCode : null
+            }
+        }
+    } else {
         data[0].siteAddress = {
-            add1: site.address1,
-            add2: site.address2,
-            city: site.city,
-            zipCode: site.zipCode
+            add1: 'All sites'
         }
     }
+
+
 
     data[0].Company = site.companyName
     data[0].Address1 = client ? client.firstPost ? client.firstPost : null : null
