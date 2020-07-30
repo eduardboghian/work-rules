@@ -147,25 +147,8 @@ const EditCreate = props => {
           return false;
         };
       }
-      // if (temporaryData.peer.length < 3) {
-      //   setPeerError(true);
-      //   let timer = setTimeout(() => setPeerError(false), 3000);
-      //   return () => {
-      //     clearTimeout(timer);
-      //     return false;
-      //   };
-      // }
     }
 
-    // if (temporaryData.utr.length === 0) {
-    // } else if (/[0-9]{10}/g.test(temporaryData.utr) === false) {
-    //   setUtrError(true);
-    //   let timer = setTimeout(() => setUtrError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
     if (temporaryData.vat.length < 4) {
 
     } else if (/([G])([B]\s)([0-9]{9})(\s*)/g.test(temporaryData.vat) === false) {
@@ -177,15 +160,6 @@ const EditCreate = props => {
         return false;
       };
     }
-    // if (temporaryData.nino.length === 0) {
-    // } else if (/[A-Z][A-Z][0-9]{6}[A-Z]/g.test(temporaryData.nino) === false) {
-    //   setNinoError(true);
-    //   let timer = setTimeout(() => setNinoError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
 
     if (temporaryData.phone.length < 4) { }
     else if (/\+[4][4]([1234567890]{10})/g.test(temporaryData.phone) === false) {
@@ -210,15 +184,6 @@ const EditCreate = props => {
         return false;
       };
     }
-
-    // if (temporaryData.category.length === 0) {
-    //   setCategoryError(true);
-    //   let timer = setTimeout(() => setCategoryError(false), 3000);
-    //   return () => {
-    //     clearTimeout(timer);
-    //     return false;
-    //   };
-    // }
 
     setPending(true);
     await createWorker({ ...temporaryData }, props.actionType);
@@ -337,10 +302,6 @@ const EditCreate = props => {
       case 'phone':
       case 'phoneScnd':
         if (data.length <= 23) {
-          // if (data === '+4') {
-          //   setData({ ...temporaryData, [fieldName]: '+44' });
-          //   break;
-          // }
           let checked = data.slice(3);
           checked = checked.replace(/[^0-9]/g, '');
           setData({ ...temporaryData, [fieldName]: `+44${checked}` });

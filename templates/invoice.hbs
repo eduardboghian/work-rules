@@ -314,6 +314,11 @@
         height: 250px;
         background-color: inherit;
     }
+
+    .comp-name {
+        font-weight: bold;
+        font-size: 13px;
+    }
 </style>
 
 <body>
@@ -321,12 +326,13 @@
         <div class="top-bar"></div>
         <div class="top-wr">
             <div class="company-name">WORK RULES LTD</div>
-            <div class="adress">DNS, 382 Kenton Road<br />+447366969175 Harrow, Greater London HA3 8DP</div>
+            <div class="adress">11 Redhills Road,<br /> South Woodham Ferrers, <br /> Chelmsford, Essex, CM3 5UL</div>
             <div class="contact">+447366969175<br />
                 office@workrules.co.uk<br />
                 VAT: 345308410</div>
             <div class="billed-to">
-                <p>BILLED TO</p> <br /><span>{{ [0].Company }}<br />
+                <p>BILLED TO</p> <br /><span class='comp-name'>{{ [0].Company }}</span><br />
+                <span>
                     {{ [0].[Address1] }}<br />
                     {{ [0].[Address2] }}<br />
                     {{ [0].city }}<br />

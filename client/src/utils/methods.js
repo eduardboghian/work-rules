@@ -7,9 +7,9 @@ export const multiSort = (array, sortObject = {}) => {
   for (let i in array) {
     lista2.push(array[i][sortKey])
   }
-  if(sortObject[sortKey] === 'desc') {
-    for (let i=0; i<lista2.length-1; i++) {
-      for (let j=i+1; j<lista2.length; j++) {
+  if (sortObject[sortKey] === 'desc') {
+    for (let i = 0; i < lista2.length - 1; i++) {
+      for (let j = i + 1; j < lista2.length; j++) {
         if (lista2[i].toLowerCase() < lista2[j].toLowerCase()) {
           let aux = lista2[i]
           lista2[i] = lista2[j]
@@ -18,15 +18,15 @@ export const multiSort = (array, sortObject = {}) => {
       }
     }
   } else {
-      for (let i=0; i<lista2.length-1; i++) {
-        for (let j=i+1; j<lista2.length; j++) {
-          if (lista2[i].toLowerCase() > lista2[j].toLowerCase()) {
-            let aux = lista2[i]
-            lista2[i] = lista2[j]
-            lista2[j] = aux
-          }
+    for (let i = 0; i < lista2.length - 1; i++) {
+      for (let j = i + 1; j < lista2.length; j++) {
+        if (lista2[i].toLowerCase() > lista2[j].toLowerCase()) {
+          let aux = lista2[i]
+          lista2[i] = lista2[j]
+          lista2[j] = aux
         }
       }
+    }
   }
   let lista3 = []
   for (let i in lista2) {

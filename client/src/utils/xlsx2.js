@@ -122,17 +122,6 @@ const xlsxG = async (list, type, weekEnding) => {
 export default xlsxG
 
 
-
-
-
-
-
-
-
-
-
-
-
 const newJoinersExcel = async (sites, weekEnding) => {
   let data = await newJoiners(sites, weekEnding)
 

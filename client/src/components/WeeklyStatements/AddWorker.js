@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
+import Grid from '@material-ui/core/Grid';
 
 import { editCreateStyles } from '../../utils/styles';
-import { connect } from 'react-redux';
 import { addSites } from '../../actions/siteActions';
-import { loadData } from '../../actions/listActions'
+import { loadData } from '../../actions/listActions';
+import { TextField } from '@material-ui/core';
+import { connect } from 'react-redux';
 
-import moment from 'moment'
 import axios from 'axios'
 import './css/index.css'
 
@@ -21,26 +22,59 @@ import './css/index.css'
 const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const useStyles = makeStyles(editCreateStyles);
   const classes = useStyles();
+  const [completeList, setList] = useState([])
   const [workers, setWorkers] = useState([])
   const [newWorker, setNewWorker] = useState({
-    firstname: 'andrei',
-    lastname: 'el'
+    firstname: 'Prenume',
+    lastname: 'Nume'
   })
-
+  const [data, setData] = useState({
+    type: "physical",
+    peer: "",
+    companyName: "",
+    firstname: "",
+    lastname: "",
+    uniqueID: "",
+    firstPost: "",
+    secondPost: "",
+    city: '',
+    zipCode: '',
+    utr: "",
+    vat: "GB ",
+    nino: "",
+    phone: "+44",
+    phoneScnd: '+44',
+    email: "",
+    communicationChannel: "whatsapp",
+    account: '',
+    sortCode: '',
+    taxPercentage: "",
+    category: "",
+    trades: [],
+    tickets: [],
+    documents: [],
+    comment: '',
+    status: "active"
+  })
+  const [showCreateNewWorker, setCreateNewWorker] = useState(false)
   const [searchedData, setSearchedData] = useState('');
+  const [showFrom, setShowForm] = useState(false)
 
   useEffect(() => {
     getWorkersFromDB()
   }, [])
 
   useEffect(() => {
-    let data = [...workers];
+    let data = JSON.parse(JSON.stringify(completeList));
 
     if (!!searchedData) {
       data = data.filter(item => item['firstname'].toLowerCase().includes(searchedData) || item['lastname'].toLowerCase().includes(searchedData));
       if (data[0] !== undefined) {
         setWorkers(data)
         setNewWorker(data[0])
+        setCreateNewWorker(false)
+      } else {
+        setCreateNewWorker(true)
       }
     }
   }, [searchedData])
@@ -48,42 +82,15 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const getWorkersFromDB = () => {
     axios.get('/worker/get')
       .then(res => {
+        console.log('le incarca iar...')
         setWorkers(res.data)
+        setList(res.data)
         setNewWorker(res.data[0])
       })
       .catch(error => console.error(error))
   }
 
   const addWorker = () => {
-    // let date = new Date().getDay() === 0 ? moment().day(0).format('YYYY MMMM DD') : moment().day(7).format('YYYY MMMM DD')
-
-
-    // if (weekEnding.weekEnding === date) {
-    //   if (newWorker.added === undefined) {
-    //     newWorker.added = weekEnding.weekEnding
-
-    //     axios.put('/worker/added', {
-    //       id: newWorker._id,
-    //       added: weekEnding.weekEnding
-    //     })
-    //       .then(res => console.log(res))
-    //       .catch(err => console.log(err))
-    //   }
-
-    //   axios.put('/site/add-worker', {
-    //     siteId,
-    //     newWorker,
-    //     rates: {
-    //       rateGot: '0,0',
-    //       ratePaid: '0,0',
-    //     }
-    //   })
-    //     .then(res => {
-    //       console.log('this is the answer', res.data)
-    //       dispatch(addSites([res.data]))
-    //     })
-    //     .catch(error => console.log(error))
-    // } else {
     if (newWorker.added === undefined) {
       newWorker.added = weekEnding.weekEnding
 
@@ -111,40 +118,87 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
 
       })
       .catch(error => console.log(error))
-    //}
+  }
 
+  const handleSubmit = () => {
+    if (data.type === 'company') {
+      if (data.companyName = '') return console.error('enter a copanyName')
+    } else {
+      if (data.firstnam === '' || data.lastname === '') return console.error('please enter valid data')
+    }
+
+    axios.post('/worker/add', {
+      action: 'create',
+      data
+    }, {
+      headers: {
+        authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+      .then(res => {
+        console.log(res.data)
+        setWorkers([...workers, res.data])
+        setShowForm(!showFrom)
+        setNewWorker(res.data)
+      })
+      .catch(err => console.error(err))
   }
 
   return (
-    <div className={`${formClass} addworker-wr`}>
+    <div
+      className={`${formClass} addworker-wr`}
+      style={showFrom ? { height: '68%' } : { height: 'auto' }}
+    >
       <p className='title-add-worker'>Add Worker</p>
       <div className="close-btn" onClick={e => close()}>X</div>
 
 
-      <Grid classes={{ root: classes.pageHeaderText, container: classes.pageHeaderContainer }} container>
+      <Grid style={{
+        display: 'flex',
+        flexDirection: 'row',
+        position: 'relative',
+        width: '100%',
+        height: '40px',
+        marginBottom: '30px'
+      }}
+        className='search-worker-main'
+      >
         <Typography style={{ paddingRight: "10px" }}>Worker</Typography>
-        <SearchIcon style={{ color: '#777' }} />
-        <Grid item xs={9}>
-          <FormControl fullWidth>
-            <Input
-              value={searchedData}
-              placeholder='John Smith'
-              className='input-worker'
-              onChange={e => setSearchedData(e.target.value.toLowerCase())}
-            />
-          </FormControl>
+        <SearchIcon style={{ color: '#777', marginTop: '8px', marginRight: '50px' }} />
+        <Grid xs={9}>
+          <TextField
+            size="small"
+            variant="outlined"
+            value={searchedData}
+            placeholder='John Smith'
+            className='input-worker'
+            onChange={e => setSearchedData(e.target.value.toLowerCase())}
+          />
         </Grid>
       </Grid>
 
 
-      <Grid className='select-wr' container direction='row' classes={{ root: classes.inputContainer }}>
-        <Grid item xs={3}>
+      <Grid
+        className='select-wr'
+        container direction='row'
+        classes={{ root: classes.inputContainer }}
+        style={{
+          height: '55px'
+        }}
+      >
+        <Grid item xs={2} style={{
+          marginRight: '30px'
+        }}>
           <Typography>Chose Worker</Typography>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={7}>
           <FormControl fullWidth classes={{ root: classes.inputContainer }}>
             <Select
-              style={{ width: '80%' }}
+              style={{
+                height: '40px !important'
+              }}
+              variant="outlined"
+              size='samll'
               renderValue={() => {
                 return newWorker ? newWorker.firstname + ' ' + newWorker.lastname : ''
               }}
@@ -163,6 +217,75 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
       </Grid>
 
       <button type='submit' className='add-worker-btn' onClick={e => addWorker(e)}>Add Worker</button>
+
+      <div className="add-question" style={showCreateNewWorker ? {} : { display: 'none' }}>
+        <p>There is no worker with this name! Would you like to create a new one?</p>
+        <button onClick={e => {
+          setShowForm(!showFrom)
+          setCreateNewWorker(!showCreateNewWorker)
+        }}>Create New Worker</button>
+      </div>
+
+      <div className="create-new-worker" style={showFrom ? {} : { display: 'none' }}>
+        <Grid className='switcher'>
+          <Typography>Person</Typography>
+          <Switch
+            classes={{ root: classes.switch }}
+            checked={data.type === 'physical' ? false : true}
+            onClick={e => {
+              console.log('change...', e.target.value)
+              data.type === 'physical' ? setData({ ...data, type: 'company' }) : setData({ ...data, type: 'physical' })
+            }}
+          />
+          <Typography>Company</Typography>
+        </Grid>
+
+        {data.type === 'company' ?
+          <Grid className='create-field'>
+            <Grid>
+
+              <Typography>Company Name</Typography>
+              <Input
+                value={data.companyName}
+                classes={{ input: classes.input }}
+                onChange={e => setData({ ...data, companyName: e.target.value })}
+              />
+            </Grid>
+          </Grid>
+          : <div></div>}
+
+        <Grid className='create-field' >
+          <Grid>
+            <Typography>Firstname</Typography>
+            <Input
+              value={data.firstname}
+              classes={{ input: classes.input }}
+              onChange={e => setData({ ...data, firstname: e.target.value })}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid className='create-field'  >
+          <Grid>
+            <Typography>Lastname</Typography>
+            <Input
+              value={data.lastname}
+              classes={{ input: classes.input }}
+              onChange={e => setData({ ...data, lastname: e.target.value })}
+            />
+          </Grid>
+        </Grid>
+
+        <button
+          className="submit"
+          onClick={e => handleSubmit()}
+        >Create New Worker</button>
+        <button
+          className="cancel-btn"
+          onClick={e => setShowForm(!showFrom)}
+        >Cancel</button>
+
+      </div>
     </div>
   )
 }

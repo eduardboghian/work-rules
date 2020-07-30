@@ -107,14 +107,13 @@
 
 
 .addworker-wr {
-    position: absolute;
+    position: fixed;
     z-index: 10;
     width: 40%;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
     background-color: #fff;
-    height: 40%;
     padding: 20px;
     box-shadow: 0 0 10px 3px #aaa;
     border-radius: 5px;
@@ -127,7 +126,8 @@
     height: 30px;
     background-color: #fff;
     border: none;
-    left: 45%;
+    left: 50%;
+    transform: translatex(-50%);
     border: 1px solid #777;
     border-radius: 5px;
     margin: 20px auto;
@@ -135,12 +135,17 @@
 }
 .title-add-worker {
     font-size: 22px;
+    width: 90%;
     color: #000 !important;
     float: left;
     margin-bottom: 20px;
 }
 .select-wr {
     margin: 10px 0;
+}
+.select-wr p {
+    line-height: 55px;
+    margin: 0 !important;
 }
 
 
@@ -232,6 +237,7 @@
     border-radius: 5px;
     margin-left: 30px;
     margin-top: -3px;
+    height: 40px !important;
 }
 
 .input-worker:active {
@@ -474,4 +480,78 @@
     font-weight: bolder;
     border-radius: 5px;
     line-height: 35px !important;
+}
+
+.search-worker-main input {
+    border: none !important;
+    font-weight: 400;
+}
+.search-worker-main p {
+    line-height: 40px;
+}
+
+.add-question button, .submit {
+    width: 180px;
+    height: 40px;
+    color: #fff;
+    background-color: #ffa500;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.add-question p {
+    padding-top: 20px;
+    color: red;
+    text-align: center;
+}
+
+.create-new-worker {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 80px;
+    margin-top: 30px;
+    border-top: .5px solid black;
+    padding-top: 30px;
+}
+.create-new-worker p {
+    color: #000;
+}
+
+.create-field input {
+    height: 40px !important;
+    width: 300px !important;
+    font-weight: 500;
+}
+
+.create-new-worker .switcher {
+    display: flex;
+    flex-direction: row;
+    height: 38px !important;
+    position: relative;
+    margin-top: 30px;
+}
+
+
+.create-new-worker button {
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    width: 180px;
+    height: 40px;
+    color: #fff;
+    background-color: #aaa;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }

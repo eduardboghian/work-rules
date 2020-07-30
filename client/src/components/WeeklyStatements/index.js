@@ -27,6 +27,12 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [styleStatus2, setStyle2] = useState('none')
 
   useEffect(() => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+
     const addDataToState = () => {
       let sitesRes = new Promise((resolve, reject) => {
         axios.get('/site/all', {
@@ -48,14 +54,10 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
               if (nameA > nameB) {
                 return 1;
               }
-
-              // names must be equal
               return 0;
             });
             setMenu(activeSites)
             setNewSite(activeSites[0])
-            // dispatch(loadData([...activeSites]))
-            // dispatch(addSites([...activeSites]))
             resolve(res.data)
           })
           .catch(error => {
@@ -96,12 +98,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       dispatch(setWeekEnding(date))
     }
 
-
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
   }, [])
 
   const selectSite = () => {

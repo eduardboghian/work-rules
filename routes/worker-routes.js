@@ -148,9 +148,9 @@ router.post('/upload-document/:id', upload.single('avatar'), async (req, res) =>
 
   documents.push(req.file.path)
 
-  let doc = await Workers.findOneAndUpdate({ _id: req.params.id }, { documents }, { new: true })
+  await Workers.findOneAndUpdate({ _id: req.params.id }, { documents }, { new: true })
 
-  res.send(doc)
+  res.redirect('/workers')
 })
 
 router.post('/delete-document', async (req, res) => {

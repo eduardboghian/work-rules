@@ -16,6 +16,12 @@ const Search = props => {
     }
     let filteredData = [...props.data];
     filteredData = filteredData.filter(item => {
+
+      let fullName = item.firstname + '  ' + item.lastname
+      if (/'andreea'/.test(fullName)) {
+        console.log('worked....', typeof fullName, data)
+      }
+
       if (JSON.stringify(item).toLowerCase().includes(data.toLowerCase())) {
         return true
       }
