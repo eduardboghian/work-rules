@@ -1,7 +1,8 @@
+/* eslint-disable */
+
 import React, { useEffect, useState } from 'react'
 import { updateHours, updateRatesAction, addSites } from '../../actions/siteActions'
 import { connect } from 'react-redux'
-import moment from 'moment'
 import './css/index.css'
 import axios from 'axios'
 

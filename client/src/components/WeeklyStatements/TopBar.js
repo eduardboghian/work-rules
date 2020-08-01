@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import axios from 'axios'
@@ -12,6 +14,7 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
   const [client, setClient] = useState()
   const [invoiceNumber, setInvoiceNr] = useState('none')
   const [invoiceNumber2, setInvoiceNr2] = useState('none')
+  const [popStyle, setPopStyle] = useState('none')
   const [number, setNr] = useState(0)
 
   useEffect(() => {
@@ -164,7 +167,12 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
           } else { setInvoiceNr2('none') }
         }}>Generate Invoice for Client</div>
         <div className='add-worker' onClick={e => addWorkerToSite()}>Add Worker</div>
-        <div className='remove-site' onClick={e => deleteSite(site)}>Remove this Site</div>
+        <div className='remove-site' onClick={e => setPopStyle('')}>Remove this Site</div>
+        <section className={`${popStyle} pop-out`}>
+          Do you want DELETE<br /> {site ? site.siteName : null}
+          <button className='ok' onClick={e => deleteSite(site)}>OK</button>
+          <button className='cancel' onClick={e => setPopStyle('none')}>Cancel</button>
+        </section>
       </div>
       <ul>
         <div><li>Worker Name</li></div>

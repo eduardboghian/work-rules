@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -115,26 +115,6 @@ const ClientRow = props => {
         </Button>
       </TableCell>
 
-
-      {/* <TableCell align="center" classes={{ root: classes.cell }}>
-        {item.sites.length > 0 ? (
-          <Tooltip
-            placement="top"
-            classes={{ tooltip: classes.tooltip }}
-            title={
-              <Grid container direction="column">
-                {item.sites.map((site, index) => (
-                  <Typography key={index}>{site.siteName}</Typography>
-                ))}
-              </Grid>
-            }
-          >
-            <Typography style={{ textAlign: "center", textDecoration: "underline", cursor: "pointer", color: "darkorange" }}>
-              {item.sites.length}
-            </Typography>
-          </Tooltip>
-        ) : null}
-      </TableCell> */}
     </TableRow>
   );
 };

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const Excel = require('exceljs')
 const moment = require('moment')
 const axios = require('axios')

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+
+import React from 'react';
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import { Drawer, Button, Divider } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -53,14 +55,6 @@ class Dashboard extends React.Component {
     this.changePage()
     window.addEventListener('scroll', this.scrollHandler);
     window.addEventListener('click', this.setState({ drawer: false }));
-
-
-    // let bg = document.getElementsByClassName('weekly-wr')
-    // bg = bg[0]
-    // bg.addEventListener('click', () => {
-    //   console.log('clicked')
-    //   this.setState({ drawer: false })
-    // })
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler);
@@ -101,7 +95,9 @@ class Dashboard extends React.Component {
           onClose={this.toggleDrawer(false)}
           onOpen={this.toggleDrawer(true)}
           open={this.state.drawer}>
-          <Grid container direction='column' justify='space-around'>
+          <Grid container direction='column' justify='space-around'
+            style={{ width: '350px' }}
+          >
             <Button
               style={styles.navbarButtons}
               // classes={{ root: classes.navbarButtons }}

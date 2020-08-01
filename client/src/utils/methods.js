@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export const multiSort = (array, sortObject = {}) => {
   let objectCopy = { ...sortObject };
   const sortKey = Object.keys(sortObject);

@@ -1,17 +1,19 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from "react";
-import axios from 'axios'
-import Grid from "@material-ui/core/Grid";
-import Tooltip from "@material-ui/core/Tooltip";
-import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
+import MenuItem from "@material-ui/core/MenuItem";
+import Tooltip from "@material-ui/core/Tooltip";
+import Select from "@material-ui/core/Select";
+import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
+import Grid from "@material-ui/core/Grid";
+import axios from 'axios'
 import './style.css'
 
-import { createClient, createSite } from "../../utils/api";
+import { createClient } from "../../utils/api";
 
 import SitesTable from "./sitesTable";
 
@@ -21,13 +23,10 @@ const useStyles = makeStyles(editCreateStyles);
 
 const EditCreate = props => {
   const [temporaryData, setData] = useState({ ...props.data });
-  const [newSiteName, setSiteName] = useState("");
   const [sites, setSites] = useState([]);
   const [companyNameError, setCompanyNameError] = useState(false);
-  const [peerError, setPeerError] = useState(false);
   const [firstnameError, setFirstnameError] = useState(false);
   const [lastnameError, setLastnameError] = useState(false);
-  const [firstPostError, setFirstPostError] = useState(false);
   const [secondPostError, setSecondPostError] = useState(false);
   const [utrError, setUtrError] = useState(false);
   const [vatError, setVatError] = useState(false);
@@ -35,12 +34,10 @@ const EditCreate = props => {
   const [phoneError, setPhoneError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [commChannelError, setCommChannelError] = useState(false);
-  const [sitesError, setSitesError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [pending, setPending] = useState(false);
   const [clientId, setCliId] = useState('')
   const [categoryError, setCategoryError] = useState(false);
-  const [ninoError, setNinoError] = useState(false);
   const [editCreateSiteButton, setSiteButton] = useState('Save New Site')
   const [newSite, setNewSite] = useState({
     status: 'Active',
