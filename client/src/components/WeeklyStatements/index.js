@@ -6,27 +6,32 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
 
-import './css/index.css'
-import axios from 'axios'
-import Cookies from 'universal-cookie'
-import { addSites } from '../../actions/siteActions'
 import { setWeekEnding } from '../../actions/weekEndingAction'
+import { loadData } from '../../actions/listActions';
+import { addSites } from '../../actions/siteActions'
+import AddSite from './AddSite'
+import Cookies from 'universal-cookie'
 import { connect } from 'react-redux'
+import axios from 'axios'
+import './css/index.css'
 
 import TopBar from './TopBar'
 import Worker from './Worker'
 import moment from 'moment'
 import Dashboard from '../../pages/Dashboard'
-import { loadData } from '../../actions/listActions';
 
 import xlsxG from '../../utils/xlsx2'
 
 const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [we, setWEs] = useState([])
+  const [allSites, setSites] = useState([])
   const [sitesMenu, setMenu] = useState([])
   const [newSite, setNewSite] = useState({})
   const [styleStatus2, setStyle2] = useState('none')
+  const [createSite, setCreateSite] = useState(false)
+  const [popup, setPopup] = useState(false)
 
   useEffect(() => {
     window.scroll({
@@ -59,6 +64,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
               return 0;
             });
             setMenu(activeSites)
+            setSites(activeSites)
             setNewSite(activeSites[0])
             resolve(res.data)
           })
@@ -102,6 +108,12 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
 
   }, [])
 
+  useEffect(() => {
+    if (popup === false) {
+      setCreateSite(false)
+    }
+  }, [popup])
+
   const selectSite = () => {
     axios.put('/weekly/add-site', {
       weekEnding: weekEnding,
@@ -123,13 +135,14 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
       .catch(err => console.log(err))
   }
 
-  const dataToState = () => {
+  const filterSites = (value) => {
+    let rez = allSites.filter(item => item.siteName.toLowerCase().includes(value.toLowerCase()))
+    setMenu(rez)
+    setNewSite(rez[0])
 
-    axios.get('/weekly/get-all')
-      .then(async res => {
-        setWEs(res.data)
-      })
-      .catch(err => console.log(err))
+    // show create new site if there is no site with this name
+    if (!rez[0]) setCreateSite(!createSite)
+    if (rez[0]) setCreateSite(false)
   }
 
 
@@ -175,10 +188,29 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           <div onClick={e => xlsxG(sites, 'Rob', weekEnding)} className='first-row-element' >Generate Excel for Rob</div>
           <div className="add-site-wr">
             <div className='add-site-top' onClick={e => setStyle2('')}>Add New Site</div>
-            <div className={`${styleStatus2}`}>
-              <Grid container direction='row' style={{ width: '450px' }}>
+
+            <div className={`${styleStatus2} add-site-wraper`}>
+              <div className="search-area">
+                <SearchIcon style={{
+                  color: '#000000',
+                  margin: '3px 10px 0',
+                  cursor: 'pointer'
+                }} />
+                <input
+                  type="text"
+                  className="input-wr"
+                  onChange={e => filterSites(e.target.value)}
+                />
+              </div>
+
+              <Grid
+                container
+                style={{ width: '450px' }}
+                direction='row'
+              >
                 <Grid item xs={9}>
-                  <FormControl fullWidth >
+                  <p style={createSite ? {} : { display: 'none' }} className='no-site-msg'>There is no site with this name!</p>
+                  <FormControl fullWidth style={createSite ? { display: 'none' } : {}} >
                     <Select
                       style={{ width: '80%' }}
                       renderValue={() => {
@@ -196,11 +228,26 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <button className="ok-btn" onClick={e => selectSite()}>OK</button>
+
+                <button
+                  className="ok-btn"
+                  style={createSite ? { display: 'none' } : {}}
+                  onClick={e => selectSite()}
+                >OK</button>
+
+                <button
+                  className="ok-btn"
+                  style={createSite ? { width: '110px', height: '35px' } : { display: 'none' }}
+                  onClick={e => setPopup(true)}
+                >Create New Site</button>
+
               </Grid>
             </div>
+
           </div>
         </div>
+
+        <AddSite popup={popup} setPopup={setPopup} setSelectedSite={setNewSite} />
 
         {sites ? sites.map((site, i) => {
           return <div key={i}>

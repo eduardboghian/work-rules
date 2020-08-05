@@ -1,0 +1,48 @@
+.add-site-popup {
+  width: 40%;
+  height: 480px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows:  30px 90px 90px 90px 90px 50px;
+  padding-left: 20px;
+  box-shadow: 0 0 10px 3px #bbb;
+  border-radius: 5px;
+  padding-top: 10px;
+  z-index: 10;
+  background-color: #fff !important;
+}
+
+#add-site-popup.add-site-popup .MuiInputBase-root input{
+  background-color: #fff !important;
+  height: 40px !important;
+  width: 100%;
+}
+#add-site-popup.add-site-popup .MuiInput-underline::before {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.425) !important;
+}
+#add-site-popup.add-site-popup .MuiGrid-root {
+  width: 97% !important;
+}
+#add-site-popup.add-site-popup .MuiTypography-root {
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+#new-site-btn.new-site-btn .save-btn {
+  margin: 20px 0 0 !important;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.comment, .new-site-btn {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+#address1.address1 .MuiInputBase-input {
+  width: 310px !important;
+}

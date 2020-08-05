@@ -555,3 +555,36 @@
     left: 50%;
     transform: translateX(-50%);
 }
+
+.add-site-wraper  {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    right: -730px;
+}
+.input-wr {
+    width: 82% !important;
+    font-weight: 400 !important;
+    height: 35px !important;
+    position: relative;
+    top: -9px;
+}
+.input-wr2 {
+    width: 300px !important;
+    font-weight: 400 !important;
+    height: 35px !important;
+    position: relative;
+    top: -9px;
+    border: 1px Solid #000 !important;
+}
+.search-area {
+    width: 280px;
+    display: flex;
+    flex-direction: row;
+}
+.no-site-msg {
+    position: relative;
+    top: -8px;
+    left: 30px;
+    color: red;
+}

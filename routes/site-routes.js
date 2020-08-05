@@ -25,12 +25,13 @@ router.get('/all', (req, res) => {
   });
 });
 
-router.post('/add', (req, res) => {
+router.post('/add', async (req, res) => {
   const token = req.headers.authorization.replace('Bearer ', '');
-  jwt.verify(token, 'secretkey', (err, authData) => {
+  jwt.verify(token, 'secretkey', async (err, authData) => {
     if (err) {
       res.sendStatus(403);
     }
+
     if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
       switch (req.body.action) {
         case 'edit':
@@ -44,11 +45,10 @@ router.post('/add', (req, res) => {
           if (req.body.data.companyName === undefined) return res.status(400).send('the site needs a valid companyName...')
           if (req.body.data.companyName.length < 3) return res.status(400).send('the site needs a valid companyName...')
 
-          const item = new Sites(req.body.data);
-          item.save()
-            .then(result => res.status(200).send(result))
-            .catch(err => res.status(400).send());
-          res.send('site created...')
+          let item = new Sites(req.body.data);
+          item = await item.save()
+
+          res.send(item)
           break;
         default:
           break;
