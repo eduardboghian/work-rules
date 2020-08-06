@@ -51,7 +51,8 @@ router.post('/generate-invoice', async (req, res) => {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     let issueDate = new Date(issueDateCode).getFullYear() + ' ' + monthNames[new Date(issueDateCode).getMonth()] + ' ' + new Date(issueDateCode).getDate()
 
-    dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
+    // dueDate = mondays.getNextMonday(new Date(issueDateCode)).toDateString();
+    dueDate = moment(weekEnding).add(5, 'days').format('dddd MMMM DD YYYY')
 
     if (req.body.type === 'site') {
         let siteFromDb = await Site.findOne({ siteName: site.siteName, companyName: site.companyName })
@@ -72,7 +73,7 @@ router.post('/generate-invoice', async (req, res) => {
 
 
 
-    data[0].Company = site.companyName
+    data[0].Company = site.companyName.toUpperCase()
     data[0].Address1 = client ? client.firstPost ? client.firstPost : null : null
     data[0].Address2 = client ? client.secondPost ? client.secondPost : null : null
     data[0].city = client ? client.city ? client.city : null : null
