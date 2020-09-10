@@ -14,7 +14,7 @@ const Site = require('../models/sites');
 router.post('/generate-invoice', async (req, res) => {
     // [ ] STORE THE BUFFER TO DB
 
-    console.log('request informations', req.body.site)
+    console.log('request informations', req.body)
     let site = req.body.site
     let client = await Clients.findOne({ companyName: site.companyName })
 
@@ -45,6 +45,21 @@ router.post('/generate-invoice', async (req, res) => {
         totalNetAmount = totalNetAmount + (rateGot * hours + ot)
 
     });
+
+    let adminFee = req.body.adminFee ? parseFloat(req.body.adminFee).toFixed(1): 0.0
+    let payload = {
+        Worker: 'Admin Fee',
+        UnitCost: adminFee,
+        WorkedHours: '',
+        NetAmount: adminFee,
+        CIS: (adminFee * 0.2).toFixed(2),
+        VAT: (adminFee * 0.2).toFixed(2),
+    }
+    data.push(payload)
+    totalTaxAmount = totalTaxAmount + ((adminFee * 1) * 0.2)
+    totalNetAmount = totalNetAmount + (adminFee * 1)
+
+
 
     date = new Date(weekEnding);
     let issueDateCode = date.setDate(date.getDate() + 7)

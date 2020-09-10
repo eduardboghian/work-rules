@@ -445,7 +445,7 @@
     background: #fff;
     top: -40px;
     left: 61%;
-    width: 200px;
+    width: 350px;
     height: 35px;
     box-shadow: 0 0 0 1px #00000028;
     border-radius: 5px;
@@ -465,11 +465,13 @@
     position: absolute;
     top: -40px;
     left: 73.5%;
-    width: 200px;
+    width: 350px;
     height: 35px;
     box-shadow: 0 0 0 1px #00000028;
     border-radius: 5px;
     background: #fff;
+    display: flex;
+    flex-direction: row;
 }
 
 .theSubmit {

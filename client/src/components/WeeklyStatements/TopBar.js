@@ -16,6 +16,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
   const [invoiceNumber2, setInvoiceNr2] = useState('none')
   const [popStyle, setPopStyle] = useState('none')
   const [number, setNr] = useState(0)
+  const [adminFee, setAdminFee] = useState(0)
+
 
   useEffect(() => {
     axios.post('/client/get-by-name', {
@@ -71,7 +73,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
       site,
       weekEnding: weekEnding.weekEnding,
       type,
-      invoiceNumber: number
+      invoiceNumber: number,
+      adminFee
     })
       .then(res => {
         res.data.map((data, i) => {
@@ -148,6 +151,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
 
         <form className={`${invoiceNumber} invoiceNr`}>
           <input type="text" placeholder='Invoice Number' className='invoice-input' onChange={e => setNr(e.target.value)} />
+          <input type="text" placeholder='Admin Fee' className='invoice-input' onChange={e => setAdminFee(e.target.value)} />
+
           <div className='theSubmit' onClick={e => {
             generateInvoice(site, 'site')
             setInvoiceNr('none')
@@ -156,6 +161,8 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
 
         <form className={`${invoiceNumber2} invoiceNr2`}>
           <input type="text" placeholder='Invoice Number' className='invoice-input' onChange={e => setNr(e.target.value)} />
+          <input type="text" placeholder='Admin Fee' className='invoice-input' onChange={e => setAdminFee(e.target.value)} />
+
           <div className='theSubmit' onClick={e => {
             generateInvoice(sites, 'client')
             setInvoiceNr2('none')
