@@ -29,7 +29,7 @@ router.post('/generate-invoice', async (req, res) => {
         let ot = isNaN(parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)) ? 0 : parseFloat(item.rates.otRate) * parseFloat(item.worker.hoursOT)
         item.rates.rateGot = item.rates.rateGot ? item.rates.rateGot.replace('\,', '.') : 0.0
         item.worker.hours = item.worker.hours ? item.worker.hours.replace('\,', '.') : 0.0
-        let rateGot = isNaN(parseFloat(item.rates.rateGot)) ? 0 : parseFloat(item.rates.rateGot).toFixed(1)
+        let rateGot = isNaN(parseFloat(item.rates.rateGot)) ? 0 : parseFloat(item.rates.rateGot).toFixed(2)
         let hours = isNaN(parseFloat(item.worker.hours)) ? '0.0' : parseFloat(item.worker.hours).toFixed(1)
 
         let payload = {
@@ -47,17 +47,19 @@ router.post('/generate-invoice', async (req, res) => {
     });
 
     let adminFee = req.body.adminFee ? parseFloat(req.body.adminFee).toFixed(1): 0.0
-    let payload = {
-        Worker: 'Admin Fee',
-        UnitCost: adminFee,
-        WorkedHours: '',
-        NetAmount: adminFee,
-        CIS: (adminFee * 0.2).toFixed(2),
-        VAT: (adminFee * 0.2).toFixed(2),
+    if(adminFee > 0) {
+        let payload = {
+            Worker: 'Admin Fee',
+            UnitCost: adminFee,
+            WorkedHours: '',
+            NetAmount: adminFee,
+            CIS: (adminFee * 0.2).toFixed(2),
+            VAT: (adminFee * 0.2).toFixed(2),
+        }
+        data.push(payload)
+        totalTaxAmount = totalTaxAmount + ((adminFee * 1) * 0.2)
+        totalNetAmount = totalNetAmount + (adminFee * 1)
     }
-    data.push(payload)
-    totalTaxAmount = totalTaxAmount + ((adminFee * 1) * 0.2)
-    totalNetAmount = totalNetAmount + (adminFee * 1)
 
 
 
