@@ -47,7 +47,7 @@ router.post('/generate-invoice', async (req, res) => {
     });
 
     let adminFee = req.body.adminFee ? parseFloat(req.body.adminFee).toFixed(1): 0.0
-    if(adminFee > 0) {
+    if(adminFee !== 0) {
         let payload = {
             Worker: 'Admin Fee',
             UnitCost: adminFee,
