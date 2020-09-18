@@ -53,11 +53,11 @@ router.post('/generate-invoice', async (req, res) => {
             UnitCost: adminFee,
             WorkedHours: '',
             NetAmount: adminFee,
-            CIS: (adminFee * 0.2).toFixed(2),
-            VAT: (adminFee * 0.2).toFixed(2),
+            CIS: 0,
+            VAT: 0,
         }
         data.push(payload)
-        totalTaxAmount = totalTaxAmount + ((adminFee * 1) * 0.2)
+        totalTaxAmount = totalTaxAmount + ((adminFee * 1))
         totalNetAmount = totalNetAmount + (adminFee * 1)
     }
 
