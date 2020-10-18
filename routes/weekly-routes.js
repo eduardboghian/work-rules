@@ -73,6 +73,8 @@ router.put('/update-selected', async (req, res) => {
     let index = site.workers.indexOf(worker)
     worker.worker.selected = req.body.selected
 
+    console.log('this is the new worker', worker.worker)
+
     site.workers[index] = worker
 
     we[0].data[siteIndex] = site
