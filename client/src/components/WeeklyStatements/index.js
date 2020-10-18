@@ -34,6 +34,10 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [popup, setPopup] = useState(false)
 
   useEffect(() => {
+    console.log('this are the sites on the first page...', sites)
+  }, [weekEnding])
+
+  useEffect(() => {
     window.scroll({
       top: 0,
       left: 0,
@@ -46,8 +50,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           headers: {
             authorization: 'Bearer ' + localStorage.getItem('token')
           }
-        }
-        )
+        })
           .then(res => {
             let activeSites = res.data.filter(site => site.status === 'Active')
             activeSites = activeSites.sort(function (a, b) {

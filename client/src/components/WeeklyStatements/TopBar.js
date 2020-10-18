@@ -129,6 +129,7 @@ const TopBar = ({ dispatch, site, weekEnding, sites }) => {
     setClass('none')
   }
 
+
   return (
     <div className='topbar-wr'>
       <div className='topbar-btns'>

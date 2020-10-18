@@ -175,9 +175,25 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   const updateSelected = (e, siteId, worker) => {
     if (e.target.checked) {
       dispatch(addWr(siteId, worker))
+
+      axios.put('/weekly/add-hours', {
+        siteId: site._id,
+        id: worker.worker.weId,
+        hours,
+        weekEnding,
+        selected: true
+      }).catch(err => console.log(err))
     }
     else {
       dispatch(removeWr(siteId, worker))
+
+      axios.put('/weekly/add-hours', {
+        siteId: site._id,
+        id: worker.worker.weId,
+        hours,
+        weekEnding,
+        selected: false
+      }).catch(err => console.log(err))
     }
   }
 
@@ -294,7 +310,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
           <button className='cancel' onClick={e => setPopStyle('none')}>Cancel</button>
         </section>
         <label className="container">
-          <input type="checkbox" defaultChecked onChange={e => updateSelected(e, site._id, worker)} />
+          <input type="checkbox" defaultChecked value={ worker.worker.selected !== undefined ? worker.worker.selected : true } onChange={e => updateSelected(e, site._id, worker)} />
           <span className="checkmark"></span>
         </label>
       </ul>
