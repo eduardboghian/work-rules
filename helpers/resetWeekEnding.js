@@ -8,7 +8,7 @@ const restatWeekEnding = () => {
     let date = new Date()
 
     //Check if is Sunday
-    if (date.getDay() == 0) {
+    if (date.getDay() == 1) {
       let weekEnding = moment().day(7).format('YYYY MMMM DD')
       let previousWeekEnding =  moment().day(0).format('YYYY MMMM DD')
 
@@ -17,7 +17,7 @@ const restatWeekEnding = () => {
         return console.log('Already Stored!')
       }
 
-      let previousData = await WeeklyStatements.find({ weekEnding: previousWeekEnding })
+      let previousData = await WeeklyStatements.findOne({ weekEnding: previousWeekEnding })
       let newData = generateNewData(previousData)
 
       let newWeekly = new WeeklyStatements({
@@ -32,24 +32,26 @@ const restatWeekEnding = () => {
 
 }
 
-const generateNewData = (data) => {
-  let { data: sites } = data
+const generateNewData = (weData) => {
+  let { data: sites } = weData
 
   for (let i = 0; i < sites.length; i++) {
     for (let j = 0; j < sites[i].workers.length; j++) {
-      if (sites.workers[j].worker.selected === undefined) {
-        sites.workers[j].worker.selected === true
+      if (sites[i].workers[j].worker.selected === undefined) {
+        sites[i].workers[j].worker.selected === true
       }
 
-      if (sites.workers[j].worker.selected === false) {
-        workers.slice(j, 1)
+      if (sites[i].workers[j].worker.selected === false) {
+        sites[i].workers.splice(j, 1)
+      } else {
+        sites[i].workers[j].worker.hours = '0,0'
       }
     }
   }
 
   for (let i = 0; i < sites.length; i++) { 
     if(sites[i].workers.length < 1) {
-      sites.slice(i, 1)
+      sites.splice(i, 1)
     }
   }
 
