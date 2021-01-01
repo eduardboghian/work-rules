@@ -34,10 +34,6 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [popup, setPopup] = useState(false)
 
   useEffect(() => {
-    console.log('this are the sites on the first page...', sites)
-  }, [weekEnding])
-
-  useEffect(() => {
     window.scroll({
       top: 0,
       left: 0,
@@ -82,8 +78,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           setWEs(res.data)
           const cookies = new Cookies()
           const lastWE = cookies.get('lastWE')
-          console.log(lastWE)
-
+          
           if (lastWE === undefined) {
             dispatch(addSites(res.data[0].data))
             dispatch(loadData(res.data[0].data))

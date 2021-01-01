@@ -5,6 +5,7 @@ import { updateHours, updateRatesAction, addSites } from '../../actions/siteActi
 import { connect } from 'react-redux'
 import './css/index.css'
 import axios from 'axios'
+import moment from 'moment'
 
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
@@ -51,7 +52,7 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
         ratesData,
         weekEnding
       })
-        .then(res => { })
+        .then(res => {})
         .catch(err => console.log(err))
     }
   }, [ratesData])
@@ -172,33 +173,16 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
     return false
   }
 
-  const updateSelected = (e, siteId, worker) => {
-    if (e.target.checked) {
-      dispatch(addWr(siteId, worker))
-
-      axios.put('/weekly/update-selected', {
-        siteId: site._id,
-        id: worker.worker.weId,
-        hours,
-        weekEnding,
-        selected: true
-      })
-      .then(res => console.log('selected', res))
-      .catch(err => console.log(err))
-    }
-    else {
-      dispatch(removeWr(siteId, worker))
-
-      axios.put('/weekly/update-selected', {
-        siteId: site._id,
-        id: worker.worker.weId,
-        hours,
-        weekEnding,
-        selected: false
-      })
-      .then(res => console.log('selected', res))
-      .catch(err => console.log(err))
-    }
+  const addWorkerToNextWeekEnding = (e, site, worker) => {
+    axios.post('/weekly/update-checkbox', {
+      checked: e.target.checked,
+      site,
+      worker,
+      weekEnding: moment(weekEnding).add(7, 'days').format('YYYY MMMM DD'),
+      prevWeekEnding: weekEnding
+    })
+    .then(res => console.log('updted checkbox...', res.data))
+    .catch(err => console.error(err))
   }
 
   const updateOnBlur = (value) => {
@@ -313,10 +297,16 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
           <button className='ok' onClick={e => removeWorkerFromSite(site._id, worker.worker._id, worker.worker.weId)}>OK</button>
           <button className='cancel' onClick={e => setPopStyle('none')}>Cancel</button>
         </section>
+
         <label className="container">
-          <input type="checkbox" checked={ worker.worker.selected !== undefined ? worker.worker.selected : true } onChange={e => updateSelected(e, site._id, worker)} />
+          <input 
+            type="checkbox" 
+            checked={ worker.worker.selected !== undefined ? worker.worker.selected : false } 
+            onChange={e => addWorkerToNextWeekEnding(e, site, worker)} 
+          />
           <span className="checkmark"></span>
         </label>
+
       </ul>
     </div>
   )

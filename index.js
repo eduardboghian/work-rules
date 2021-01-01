@@ -36,7 +36,6 @@ app.use('/api', generateInvoice)
 app.use('/weekly', weekly)
 
 // PINGER
-
 app.get('/api', (req, res) => {
     res.send('pinged')
 })
@@ -45,7 +44,6 @@ const pinger = require('./helpers/pinger')
 pinger()
 
 // BUILD THE CLIENT SIDE
-
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'))
     app.get('*', (req, res) => {
@@ -53,9 +51,10 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
+// CLUSTERING
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`)
-    restartWeekEnding()
+    // restartWeekEnding()
     db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
     for (let i = 0; i < 2; i++) {

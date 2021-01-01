@@ -84,7 +84,6 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const getWorkersFromDB = () => {
     axios.get('/worker/get')
       .then(res => {
-        console.log('le incarca iar...')
         setWorkers(res.data)
         setList(res.data)
         setNewWorker(res.data[0])

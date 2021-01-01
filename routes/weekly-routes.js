@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const uuid = require('uuid-v4')
+const moment = require('moment')
 const WeeklyStatements = require('../models/weeklyStatement')
 
 router.get('/get/:id', async (req, res) => {
@@ -62,24 +63,30 @@ router.put('/update-rates', async (req, res) => {
     res.send(response)
 })
 
-router.put('/update-selected', async (req, res) => {
-    let we = await WeeklyStatements.find({ weekEnding: req.body.weekEnding })
-    if (!we) return res.send('no site with this id was found')
+router.post('/update-checkbox', async (req, res) => {
+    const { checked, site, worker, weekEnding, prevWeekEnding } = req.body
+    
+    let weeklyStatement = await WeeklyStatements.findOne({ weekEnding })
+    if(!weeklyStatement) {
+        let newWeekEnding = new WeeklyStatements({ weekEnding, data: [] })
+        weeklyStatement = await newWeekEnding.save()
+    }
 
-    let site = we[0].data.find(item => item._id == req.body.siteId)
-    let siteIndex = we[0].data.indexOf(site)
+    let nextWeekSite = weeklyStatement.data.find(item => item._id === site._id)
+    if(!nextWeekSite) nextWeekSite = {...site, workers: [ worker ]}
+    else {
+        let nextWorker = nextWeekSite.workers.find(item => item.worker.weId === worker.worker.weId)
+        if(!nextWorker) nextWeekSite.workers.push(worker)
+    }
 
-    let worker = site.workers.find(item => item.worker.weId === req.body.id)
-    let index = site.workers.indexOf(worker)
-    worker.worker.selected = req.body.selected
+    let siteIndex = weeklyStatement.data.indexOf(nextWeekSite)
+    if(siteIndex >= 0) weeklyStatement.data[siteIndex] = nextWeekSite
+    else weeklyStatement.data.push(nextWeekSite)
 
-    console.log('this is the new worker', worker.worker)
+    const response = await WeeklyStatements.findOneAndUpdate({weekEnding}, {data: weeklyStatement.data}, {new: true})
 
-    site.workers[index] = worker
-
-    we[0].data[siteIndex] = site
-
-    let response = await WeeklyStatements.findOneAndUpdate({ weekEnding: req.body.weekEnding }, we[0], { new: true })
+    updateCheckbox( prevWeekEnding, site._id, worker.worker.weId)
+    
     res.send(response)
 })
 
@@ -170,11 +177,19 @@ router.put('/remove-worker', async (req, res) => {
 
 module.exports = router
 
-const makeFloat = (nr) => {
-    if (typeof nr === 'number') nr = nr.toString()
-    if (typeof nr === "undefined") nr = '0,0'
-    let test = nr.split('.').join('')
-    test = test.replace('\,', '.')
+const updateCheckbox = async (weekEnding, siteId, id) => {
+    let we = await WeeklyStatements.findOne({ weekEnding })
+    if (!we) return res.send('no site with this id was found')
 
-    return test
+    let site = we.data.find(item => item._id == siteId)
+    let siteIndex = we.data.indexOf(site)
+
+    let worker = site.workers.find(item => item.worker.weId === id)
+    let index = site.workers.indexOf(worker)
+    worker.worker.selected = true
+
+    site.workers[index] = worker
+    we.data[siteIndex] = site
+
+    await WeeklyStatements.findOneAndUpdate({ weekEnding }, we, { new: true })
 }
