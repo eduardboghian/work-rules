@@ -11,8 +11,6 @@ import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { removeWr, addWr, loadData } from '../../actions/listActions'
-
 import { floatFormat } from '../../utils/floatFormatting'
 
 function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
@@ -174,6 +172,8 @@ function Worker({ dispatch, worker, site, weekEnding, rowNumber }) {
   }
 
   const addWorkerToNextWeekEnding = (e, site, worker) => {
+    worker.worker.hours = '0,00'
+
     axios.post('/weekly/update-checkbox', {
       checked: e.target.checked,
       site,

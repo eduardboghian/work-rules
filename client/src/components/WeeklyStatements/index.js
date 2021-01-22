@@ -19,6 +19,7 @@ import './css/index.css'
 
 import TopBar from './TopBar'
 import Worker from './Worker'
+import AddSiteComp from './AddSiteComp'
 import moment from 'moment'
 import Dashboard from '../../pages/Dashboard'
 
@@ -32,6 +33,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
   const [styleStatus2, setStyle2] = useState('none')
   const [createSite, setCreateSite] = useState(false)
   const [popup, setPopup] = useState(false)
+  const [formClass, setClass] = useState('none')
 
   useEffect(() => {
     window.scroll({
@@ -143,6 +145,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
     if (rez[0]) setCreateSite(false)
   }
 
+  const closeAddSite = () => { setClass('none') }
 
   return (
     <div>
@@ -187,7 +190,7 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
           <div className="add-site-wr">
             <div className='add-site-top' onClick={e => setStyle2('')}>Add New Site</div>
 
-            <div className={`${styleStatus2} add-site-wraper`}>
+            <div className={`${styleStatus2} add-site-wraper`} style={{zIndex: '100'}}>
               <div className="search-area">
                 <SearchIcon style={{
                   color: '#000000',
@@ -223,7 +226,21 @@ const WeeklyStatemnt = ({ dispatch, sites, weekEnding }) => {
                       {sitesMenu.map((site, i) => (
                         <MenuItem key={i} value={site._id}>{site.companyName + ' ' + site.siteName}</MenuItem>
                       ))}
+                      <MenuItem style={{
+                        width: '100%'
+                      }}>
+                        <div className='create-site-button-wr' onClick={() => { setClass('')}}>Create New Site</div>
+                      </MenuItem>
                     </Select>
+                    <div>
+                      <AddSiteComp 
+                        close={closeAddSite} 
+                        formClass={formClass} 
+                        addSite={setMenu} 
+                        updateSelectSiteValue={setNewSite}
+                        sites={sitesMenu} 
+                      />
+                    </div>
                   </FormControl>
                 </Grid>
 

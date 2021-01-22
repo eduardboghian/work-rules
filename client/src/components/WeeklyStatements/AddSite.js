@@ -28,7 +28,8 @@ export default function AddSite(props) {
     })
       .then(res => {
         setClientList(res.data)
-        setNewSite({ ...newSite, companyName: res.data[0].companyName })
+        // setNewSite({ ...newSite, companyName: res.data[0].companyName })
+        setNewSite(data =>  { return { ...data, companyName: res.data[0].companyName } })
       })
       .catch(err => console.error(err))
   }, [])

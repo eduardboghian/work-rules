@@ -20,7 +20,6 @@ import { connect } from 'react-redux';
 import axios from 'axios'
 import './css/index.css'
 
-
 const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
   const useStyles = makeStyles(editCreateStyles);
   const classes = useStyles();
@@ -30,6 +29,9 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
     firstname: 'Prenume',
     lastname: 'Nume'
   })
+  const [showCreateNewWorker, setCreateNewWorker] = useState(false)
+  const [searchedData, setSearchedData] = useState('');
+  const [showFrom, setShowForm] = useState(false)
   const [data, setData] = useState({
     type: "physical",
     peer: "",
@@ -58,9 +60,6 @@ const AddWorker = ({ dispatch, formClass, close, siteId, weekEnding }) => {
     comment: '',
     status: "active"
   })
-  const [showCreateNewWorker, setCreateNewWorker] = useState(false)
-  const [searchedData, setSearchedData] = useState('');
-  const [showFrom, setShowForm] = useState(false)
 
   useEffect(() => {
     getWorkersFromDB()

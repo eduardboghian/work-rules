@@ -31,7 +31,7 @@ router.post('/add', async (req, res) => {
     if (err) {
       res.sendStatus(403);
     }
-
+    
     if (authData.user.role === 'superuser' || authData.user.role === 'agent') {
       switch (req.body.action) {
         case 'edit':
@@ -41,7 +41,6 @@ router.post('/add', async (req, res) => {
           res.status(200);
           break;
         case 'create':
-          console.log(req.body.data)
           if (req.body.data.companyName === undefined) return res.status(400).send('the site needs a valid companyName...')
           if (req.body.data.companyName.length < 3) return res.status(400).send('the site needs a valid companyName...')
 

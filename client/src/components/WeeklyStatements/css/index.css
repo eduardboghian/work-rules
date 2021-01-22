@@ -108,7 +108,7 @@
 
 .addworker-wr {
     position: fixed;
-    z-index: 10;
+    z-index: 100;
     width: 40%;
     top: 50%;
     left: 50%;
@@ -589,4 +589,72 @@
     top: -8px;
     left: 30px;
     color: red;
+}
+
+.create-site-button-wr {
+    background-color: #38f170;
+    border-radius: 5px;
+    padding: 5px 0;
+    width: 100%;
+    text-indent: 14px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.add-site-button {
+    border: none;
+    background-color: #38f170;
+    border-radius: 5px;
+    padding: 8px 30px;
+    text-align: center !important;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-wrapper {
+    width: 100%;
+    padding: 0 0 20px;
+}
+
+.form-wrapper > div {
+    width: 500px;
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+}
+
+.form-wrapper input {
+    height: 40px;
+    width: 300px;
+    margin-left: 20px;
+    border: 1px solid #bbb !important;
+}
+
+.form-wrapper input:hover {
+    border: 1px solid #282828 !important;
+    cursor: pointer;
+}
+
+.form-wrapper input:focus {
+    outline: none;
+}
+
+.form-wrapper .MuiInputBase-root, .form-wrapper .MuiSelect-root {
+    width: 300px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0;
+    padding-right: 0 !important;
+    height: 40px;
+}
+
+.form-wrapper .MuiInputBase-root {
+    margin-left: 52px;
+}
+
+.form-wrapper div p {
+    color: #000;
+    line-height: 40px;
 }
